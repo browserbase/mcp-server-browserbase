@@ -8,6 +8,8 @@ This server provides cloud browser automation capabilities using [Browserbase](h
 
 To learn to get started with Browserbase, check out ['browserbase/README.md'](./browserbase/README.md) or [Stagehand MCP](./stagehand/README.md).
 
+<a href="https://glama.ai/mcp/servers/0kznte4aoh"><img width="380" height="200" src="https://glama.ai/mcp/servers/0kznte4aoh/badge" alt="mcp-server-browserbase MCP server" /></a>
+
 ## Getting Started with available MCPs
 
 🌐 **Browserbase MCP** - Located in [`browserbase/`](./browserbase/)
