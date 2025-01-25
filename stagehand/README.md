@@ -1,11 +1,21 @@
 # Stagehand MCP Server
 
+[![smithery badge](https://smithery.ai/badge/@browserbasehq/mcp-stagehand)](https://smithery.ai/server/@browserbasehq/mcp-stagehand)
 ![cover](../assets/stagehand-mcp.png)
 
 A Model Context Protocol (MCP) server that provides AI-powered web automation capabilities using [Stagehand](https://github.com/browserbase/stagehand). This server enables LLMs to interact with web pages, perform actions, extract data, and observe possible actions in a real browser environment.
 
 ## Get Started
 
+### Installing via Smithery
+
+To install Stagehand for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@browserbasehq/mcp-stagehand):
+
+```bash
+npx -y @smithery/cli install @browserbasehq/mcp-stagehand --client claude
+```
+
+### Manual Installation
 1. Run `npm install` to install the necessary dependencies, then run `npm run build` to get `dist/index.js`.
 
 2. Set up your Claude Desktop configuration to use the server.  
