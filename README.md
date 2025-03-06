@@ -12,6 +12,8 @@ To learn to get started with Browserbase, check out ['browserbase/README.md'](./
 
 🌐 **Browserbase MCP** - Located in [`browserbase/`](./browserbase/)
 
+[![smithery badge](https://smithery.ai/badge/@browserbasehq/mcp-browserbase)](https://smithery.ai/server/@browserbasehq/mcp-browserbase)
+
 | Feature | Description |
 |---------|-------------|
 | Browser Automation | Control and orchestrate cloud browsers |
@@ -22,6 +24,8 @@ To learn to get started with Browserbase, check out ['browserbase/README.md'](./
 | Web Interaction | Navigate, click, and fill forms with ease |
 
 🤘 **Stagehand MCP** - Located in [`stagehand/`](./stagehand/) 
+
+[![smithery badge](https://smithery.ai/badge/@browserbasehq/mcp-stagehand)](https://smithery.ai/server/@browserbasehq/mcp-stagehand)
 
 | Feature | Description |
 |---------|-------------|
