@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@browserbasehq/sdk": "^2.0.0",
-    "@browserbasehq/stagehand": "^1.12.0",
+    "@browserbasehq/stagehand": "^1.14.0",
 		"@modelcontextprotocol/sdk": "^1.0.3",
     "@modelcontextprotocol/server-stagehand": "file:",
     "@playwright/test": "^1.49.0"

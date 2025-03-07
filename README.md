@@ -26,7 +26,7 @@ To learn to get started with Browserbase, check out [Browserbase MCP](./browserb
 | Feature             | Description                                                                                                                                                    |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Atomic Instructions | Execute precise actions like `act("click the login button")` or `extract("find the red shoes")`                                                                |
-| Model Flexibility   | Supports multiple models, including OpenAI's GPT-4 and Anthropic's Claude-3.5 Sonnet                                                                           |
+| Model Flexibility   | Supports multiple models, including OpenAI's GPT-4 and Anthropic's Claude-3.7 Sonnet                                                                           |
 | Modular Design      | Easily integrate new models with minimal changes                                                                                                               |
 | Vision Support      | Use annotated screenshots for complex DOMs                                                                                                                     |
 | Open Source         | Contribute to the project and join the [Slack community](https://join.slack.com/t/stagehand-dev/shared_invite/zt-2uvuobu50-~wVSx2Si75CPa3332hwVEw) for support |
