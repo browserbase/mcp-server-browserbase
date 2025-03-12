@@ -16,7 +16,8 @@
       "args": ["path/to/mcp-server-browserbase/browserbase/dist/index.js"],
       "env": {
         "BROWSERBASE_API_KEY": "<YOUR_BROWSERBASE_API_KEY>",
-        "BROWSERBASE_PROJECT_ID": "<YOUR_BROWSERBASE_PROJECT_ID>"
+        "BROWSERBASE_PROJECT_ID": "<YOUR_BROWSERBASE_PROJECT_ID>",
+        "BROWSERBASE_CONTEXT_ID": "<OPTIONAL_CONTEXT_ID>" // Optional - for session persistence
       }
     }
   }
@@ -104,6 +105,7 @@ The server provides access to two types of resources:
 - Screenshot capabilities
 - JavaScript execution
 - Basic web interaction (navigation, clicking, form filling)
+- Session persistence using Browserbase Context
 
 ## License
 

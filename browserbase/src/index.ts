@@ -32,13 +32,29 @@ const consoleLogs: string[] = [];
 const screenshots = new Map<string, string>();
 
 // 3. Helper Functions
+
+
 async function createNewBrowserSession(sessionId: string) {
   const bb = new Browserbase({
     apiKey: process.env.BROWSERBASE_API_KEY!,
   });
-  const session = await bb.sessions.create({
+  
+  const sessionConfig: any = {
     projectId: process.env.BROWSERBASE_PROJECT_ID!,
-  });
+  };
+  
+  
+  if (process.env.BROWSERBASE_CONTEXT_ID) {
+    sessionConfig.browserSettings = {
+      context: {
+        id: process.env.BROWSERBASE_CONTEXT_ID,
+        persist: true,
+      },
+    };
+  }
+  
+  const session = await bb.sessions.create(sessionConfig);
+  
   const browser = await puppeteer.connect({
     browserWSEndpoint: session.connectUrl,
   });
