@@ -74,9 +74,71 @@ The server provides access to two types of resources:
    - Browser console output in text format
    - Includes all console messages from the browser
 
-2. **Screenshots** (`screenshot://<name>`)
+2. **Screenshots** (`screenshot://<n>`)
    - PNG images of captured screenshots
    - Accessible via the screenshot name specified during capture
+
+## File Structure
+
+The codebase is organized into the following modules:
+
+- **index.ts**: Entry point that initializes and runs the server.
+- **server.ts**: Core server logic, including server creation, configuration, and request handling.
+- **tools.ts**: Definitions and implementations of tools that can be called by MCP clients.
+- **prompts.ts**: Prompt templates that can be used by MCP clients.
+- **resources.ts**: Resource definitions and handlers for resource-related requests.
+- **logging.ts**: Comprehensive logging system with rotation and formatting capabilities.
+- **utils.ts**: Utility functions including JSON Schema to Zod schema conversion and message sanitization.
+
+## Module Descriptions
+
+### index.ts
+
+The main entry point for the application. It:
+- Initializes the logging system
+- Creates the server instance
+- Connects to the stdio transport to receive and respond to requests
+
+### server.ts
+
+Contains core server functionality:
+- Creates and configures the MCP server
+- Defines Stagehand configuration
+- Sets up request handlers for all MCP operations
+- Manages the Stagehand browser instance
+
+### tools.ts
+
+Implements the tools that can be called by MCP clients:
+- `stagehand_navigate`: Navigate to URLs
+- `stagehand_act`: Perform actions on web elements
+- `stagehand_extract`: Extract structured data from web pages
+- `stagehand_observe`: Observe elements on the page
+- `screenshot`: Take screenshots of the current page
+
+### prompts.ts
+
+Defines prompt templates for MCP clients:
+- `click_search_button`: Template for clicking search buttons
+
+### resources.ts
+
+Manages resources in the MCP protocol:
+- Currently provides empty resource and resource template lists
+
+### logging.ts
+
+Implements a comprehensive logging system:
+- File-based logging with rotation
+- In-memory operation logs
+- Log formatting and sanitization
+- Console logging for debugging
+
+### utils.ts
+
+Provides utility functions:
+- `jsonSchemaToZod`: Converts JSON Schema to Zod schema for validation
+- `sanitizeMessage`: Ensures messages are properly formatted JSON
 
 ## Key Features
 
@@ -86,6 +148,26 @@ The server provides access to two types of resources:
 - Observe possible actions on web pages
 - Simple and extensible API
 - Model-agnostic support for various LLM providers
+
+## Environment Variables
+
+- `BROWSERBASE_API_KEY`: API key for BrowserBase authentication
+- `BROWSERBASE_PROJECT_ID`: Project ID for BrowserBase
+- `OPENAI_API_KEY`: API key for OpenAI (used by Stagehand)
+- `DEBUG`: Enable debug logging
+
+## MCP Capabilities
+
+This server implements the following MCP capabilities:
+
+- **Tools**: Allows clients to call tools that control a browser instance
+- **Prompts**: Provides prompt templates for common operations
+- **Resources**: (Currently empty but structured for future expansion)
+- **Logging**: Provides detailed logging capabilities
+
+For more information about the Model Context Protocol, visit:
+- [MCP Documentation](https://modelcontextprotocol.io/docs)
+- [MCP Specification](https://spec.modelcontextprotocol.io/)
 
 ## License
 
