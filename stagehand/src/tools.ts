@@ -6,6 +6,7 @@ import { formatLogResponse, log, operationLogs } from "./logging.js";
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import { createTask, completeTask, failTask, TaskStatus, updateTask } from "./resources.js";
 
 // Get the directory name for the current module
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -174,6 +175,20 @@ export const TOOLS: Tool[] = [
       }
     },
   },
+  {
+    name: "check_task_status",
+    description: "Check the status of a long-running task",
+    inputSchema: {
+      type: "object",
+      properties: {
+        taskId: { 
+          type: "string", 
+          description: "The ID of the task to check" 
+        }
+      },
+      required: ["taskId"]
+    },
+  },
 ];
 
 // Handle tool calls
@@ -182,104 +197,151 @@ export async function handleToolCall(
   args: any,
   stagehand: Stagehand
 ): Promise<CallToolResult> {
+  
+  // For potentially long-running operations, create a task and return immediately
+  if (name === 'stagehand_navigate' || name === 'stagehand_extract' || name === 'stagehand_act') {
+    const task = createTask(name);
+    
+    // Start the operation in the background
+    (async () => {
+      try {
+        updateTask(task.id, { status: TaskStatus.RUNNING });
+        
+        let result;
+        switch (name) {
+          case "stagehand_navigate":
+            await stagehand.page.goto(args.url);
+            result = `Navigated to: ${args.url}`;
+            break;
+            
+          case "stagehand_act":
+            await stagehand.page.act({
+              action: args.action,
+              variables: args.variables,
+              slowDomBasedAct: false,
+            });
+            result = `Action performed: ${args.action}`;
+            break;
+            
+          case "stagehand_extract":
+            const zodSchema = jsonSchemaToZod(args.schema) as AnyZodObject;
+            const extractResult = await stagehand.page.extract({
+              instruction: args.instruction,
+              schema: zodSchema,
+              useTextExtract: true,
+            });
+            result = extractResult;
+            break;
+        }
+        
+        // Mark task as completed with result
+        completeTask(task.id, result);
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : String(error);
+        failTask(task.id, errorMsg);
+      }
+    })();
+    
+    // Return immediate response with task ID
+    return {
+      content: [
+        {
+          type: "text",
+          text: `Task started with ID: ${task.id}. You can check the status using the check_task_status tool.`,
+        },
+      ],
+      isError: false,
+    };
+  }
+  
+  // Handle the check_task_status tool
+  if (name === "check_task_status") {
+    try {
+      const taskId = args.taskId;
+      
+      // Import within function to avoid circular dependency
+      const { getTask } = await import('./resources.js');
+      const task = getTask(taskId);
+      
+      if (!task) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Task with ID ${taskId} not found`,
+            },
+          ],
+          isError: true,
+        };
+      }
+      
+      // Return different responses based on task status
+      switch (task.status) {
+        case TaskStatus.PENDING:
+        case TaskStatus.RUNNING:
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Task ${taskId} is ${task.status}${task.progress ? ` (${task.progress}% complete)` : ''}`,
+              },
+            ],
+            isError: false,
+          };
+          
+        case TaskStatus.COMPLETED:
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Task ${taskId} is completed`,
+              },
+              {
+                type: "text",
+                text: `Result: ${JSON.stringify(task.result)}`,
+              },
+            ],
+            isError: false,
+          };
+          
+        case TaskStatus.FAILED:
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Task ${taskId} failed: ${task.error}`,
+              },
+            ],
+            isError: true,
+          };
+          
+        case TaskStatus.CANCELLED:
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Task ${taskId} was cancelled`,
+              },
+            ],
+            isError: true,
+          };
+      }
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Failed to check task status: ${errorMsg}`,
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+  
+  // Fall back to the original synchronous handling for other tools
   switch (name) {
-    case "stagehand_navigate":
-      try {
-        await stagehand.page.goto(args.url);
-        return {
-          content: [
-            {
-              type: "text",
-              text: `Navigated to: ${args.url}`,
-            },
-          ],
-          isError: false,
-        };
-      } catch (error) {
-        const errorMsg = error instanceof Error ? error.message : String(error);
-        return {
-          content: [
-            {
-              type: "text",
-              text: `Failed to navigate: ${errorMsg}`,
-            },
-            {
-              type: "text",
-              text: `Operation logs:\n${formatLogResponse(operationLogs)}`,
-            },
-          ],
-          isError: true,
-        };
-      }
-
-    case "stagehand_act":
-      try {
-        await stagehand.page.act({
-          action: args.action,
-          variables: args.variables,
-          slowDomBasedAct: false,
-        });
-        return {
-          content: [
-            {
-              type: "text",
-              text: `Action performed: ${args.action}`,
-            },
-          ],
-          isError: false,
-        };
-      } catch (error) {
-        const errorMsg = error instanceof Error ? error.message : String(error);
-        return {
-          content: [
-            {
-              type: "text",
-              text: `Failed to perform action: ${errorMsg}`,
-            },
-            {
-              type: "text",
-              text: `Operation logs:\n${formatLogResponse(operationLogs)}`,
-            },
-          ],
-          isError: true,
-        };
-      }
-
-    case "stagehand_extract":
-      try {
-        // Convert the JSON schema from args.schema to a zod schema
-        const zodSchema = jsonSchemaToZod(args.schema) as AnyZodObject;
-        const data = await stagehand.page.extract({
-          instruction: args.instruction,
-          schema: zodSchema,
-          useTextExtract: true,
-        });
-        log(`Extraction result: ${JSON.stringify(data)}`, 'info');
-        return {
-          content: [
-            {
-              type: "text",
-              text: `Extraction result: ${JSON.stringify(data)}`,
-            }
-          ],
-          isError: false,
-        };
-      } catch (error) {
-        const errorMsg = error instanceof Error ? error.message : String(error);
-        return {
-          content: [
-            {
-              type: "text",
-              text: `Failed to extract: ${errorMsg}`,
-            },
-            {
-              type: "text",
-              text: `Operation logs:\n${formatLogResponse(operationLogs)}`,
-            },
-          ],
-          isError: true,
-        };
-      }
     case "stagehand_observe":
       try {
         const observations = await stagehand.page.observe({

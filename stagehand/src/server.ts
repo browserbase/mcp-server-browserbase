@@ -5,7 +5,9 @@ import {
   ListResourcesRequestSchema, 
   ListResourceTemplatesRequestSchema,
   ListPromptsRequestSchema,
-  GetPromptRequestSchema
+  GetPromptRequestSchema,
+  ReadResourceRequestSchema,
+  ListResourcesRequestSchema as ListResourcesOfTypeRequestSchema
 } from "@modelcontextprotocol/sdk/types.js";
 import { Stagehand } from "@browserbasehq/stagehand";
 import type { ConstructorParams } from "@browserbasehq/stagehand";
@@ -14,7 +16,12 @@ import { sanitizeMessage } from "./utils.js";
 import { log, logRequest, logResponse, operationLogs, setServerInstance } from "./logging.js";
 import { TOOLS, handleToolCall } from "./tools.js";
 import { PROMPTS, getPrompt } from "./prompts.js";
-import { listResources, listResourceTemplates } from "./resources.js";
+import { 
+  listResources, 
+  listResourceTemplates, 
+  getResource, 
+  listResourcesOfType 
+} from "./resources.js";
 
 // Define Stagehand configuration
 export const stagehandConfig: ConstructorParams = {
@@ -63,7 +70,9 @@ export function createServer() {
     },
     {
       capabilities: {
-        resources: {},
+        resources: {
+          enabled: true
+        },
         tools: {},
         logging: {},
         prompts: {}
@@ -211,6 +220,42 @@ export function createServer() {
       } catch (error) {
         throw new Error(`Invalid prompt name: ${request.params?.name}`);
       }
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      return {
+        error: {
+          code: -32603,
+          message: `Internal error: ${errorMsg}`,
+        },
+      };
+    }
+  });
+
+  server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+    try {
+      logRequest('GetResource', request.params);
+      const resource = getResource(request.params?.id as string || "");
+      const sanitizedResponse = sanitizeMessage(resource);
+      logResponse('GetResource', JSON.parse(sanitizedResponse));
+      return JSON.parse(sanitizedResponse);
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      return {
+        error: {
+          code: -32603,
+          message: `Internal error: ${errorMsg}`,
+        },
+      };
+    }
+  });
+
+  server.setRequestHandler(ListResourcesOfTypeRequestSchema, async (request) => {
+    try {
+      logRequest('ListResourcesOfType', request.params);
+      const resources = listResourcesOfType(request.params?.type as string || "");
+      const sanitizedResponse = sanitizeMessage(resources);
+      logResponse('ListResourcesOfType', JSON.parse(sanitizedResponse));
+      return JSON.parse(sanitizedResponse);
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       return {
