@@ -4,7 +4,7 @@
 
 ## Get Started
 
-1. Run `npm install` to install the necessary dependencies, then run `npm run build` to get `dist/index.js`.
+1. Run `npm install` to install the necessary dependencies, then run `npm run build` to get `dist/mcp-server.js`.
 
 2. Set up your Claude Desktop configuration to use the server.  
 
@@ -13,7 +13,7 @@
   "mcpServers": {
     "browserbase": {
       "command": "node",
-      "args": ["path/to/mcp-server-browserbase/browserbase/dist/index.js"],
+      "args": ["path/to/mcp-server-browserbase/browserbase/dist/mcp-server.js"],
       "env": {
         "BROWSERBASE_API_KEY": "<YOUR_BROWSERBASE_API_KEY>",
         "BROWSERBASE_PROJECT_ID": "<YOUR_BROWSERBASE_PROJECT_ID>"
