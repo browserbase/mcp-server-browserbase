@@ -72,10 +72,10 @@
   - Execute JavaScript in the browser console
   - Input: `script` (string): JavaScript code to execute
 
-- **browserbase_get_content**
+- **browserbase_get_text**
 
-  - Extract all content from the current page
-  - Input: `selector` (string, optional): CSS selector to get content from specific elements
+  - Extract all text content from the current page
+
 
 - **browserbase_parallel_sessions**
   - Create multiple browser sessions and navigate to different URLs

@@ -156,17 +156,11 @@ const TOOLS: Tool[] = [
     },
   },
   {
-    name: "browserbase_get_content",
-    description: "Extract all content from the current page",
+    name: "browserbase_get_text",
+    description: "Extract all text content from the current page",
     inputSchema: {
       type: "object",
-      properties: {
-        selector: {
-          type: "string",
-          description:
-            "Optional CSS selector to get content from specific elements (default: returns whole page)",
-        },
-      },
+      properties: {},
       required: [],
     },
   }
@@ -493,45 +487,52 @@ async function handleToolCall(
         };
       }
 
-    case "browserbase_get_content":
-      try {
-        let content;
-        if (args.selector) {
-          // If selector is provided, get content from specific elements
-          content = await defaultSession!.page.evaluate((selector) => {
-            const elements = document.querySelectorAll(selector);
-            return Array.from(elements).map((el) => el.textContent || "");
-          }, args.selector);
-        } else {
-          // If no selector is provided, get content from the whole page
-          content = await defaultSession!.page.evaluate(() => {
-            return Array.from(document.querySelectorAll("*")).map(
-              (el) => el.textContent || ""
-            );
-          });
+      case "browserbase_get_text": {
+        try {
+          const bodyText = await defaultSession!.page.evaluate(() => document.body.innerText);
+          const content = bodyText
+            .split('\n')
+            .map(line => line.trim())
+            .filter(line => {
+              if (!line) return false;
+              
+              if (
+                  (line.includes('{') && line.includes('}')) ||         
+                  line.includes('@keyframes') ||                         // Remove CSS animations
+                  line.match(/^\.[a-zA-Z0-9_-]+\s*{/) ||               // Remove CSS lines starting with .className {
+                  line.match(/^[a-zA-Z-]+:[a-zA-Z0-9%\s\(\)\.,-]+;$/)  // Remove lines like "color: blue;" or "margin: 10px;"
+                ) {
+                return false;
+              }
+              return true;
+            })
+            .map(line => {
+              return line.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) => 
+                String.fromCharCode(parseInt(hex, 16))
+              );
+            });
+          
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Extracted content:\n${content.join('\n')}`,
+              },
+            ],
+            isError: false,
+          };
+        } catch (error) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Failed to extract content: ${(error as Error).message}`,
+              },
+            ],
+            isError: true,
+          };
         }
-
-        return {
-          content: [
-            {
-              type: "text",
-              text: `Extracted content:\n${JSON.stringify(content, null, 2)}`,
-            },
-          ],
-          isError: false,
-        };
-      } catch (error) {
-        return {
-          content: [
-            {
-              type: "text",
-              text: `Failed to extract content: ${(error as Error).message}`,
-            },
-          ],
-          isError: true,
-        };
       }
-
     default:
       return {
         content: [
