@@ -2,7 +2,19 @@
 
 ![cover](../assets/browserbase-mcp.png)
 
+[![smithery badge](https://smithery.ai/badge/@browserbasehq/mcp-browserbase)](https://smithery.ai/server/@browserbasehq/mcp-browserbase)
+
 ## Get Started
+
+### Installing via Smithery
+
+To install Browserbase for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@browserbasehq/mcp-browserbase):
+
+```bash
+npx -y @smithery/cli install @browserbasehq/mcp-browserbase --client claude
+```
+
+### Manual Installation
 
 1. Run `npm install` to install the necessary dependencies, then run `npm run build` to get `dist/index.js`.
 
@@ -30,7 +42,6 @@
 <p align="center">
   <img src="../assets/browserbase-demo.png" alt="demo" width="600"/>
 </p>
-
 
 ## Tools
 
