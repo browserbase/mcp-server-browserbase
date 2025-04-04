@@ -31,6 +31,79 @@
   <img src="../assets/browserbase-demo.png" alt="demo" width="600"/>
 </p>
 
+## VS Code Installation
+
+For one-click installation, click one of the install buttons below:
+
+[![Install with NPX in VS Code](https://img.shields.io/badge/VS_Code-NPM-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=browserbase&config=%7B%22command%22%3A%22node%22%2C%22args%22%3A%5B%22path%2Fto%2Fmcp-server-browserbase%2Fbrowserbase%2Fdist%2Findex.js%22%5D%2C%22env%22%3A%7B%22BROWSERBASE_API_KEY%22%3A%22%24%7Binput%3Aapi_key%7D%22%2C%22BROWSERBASE_PROJECT_ID%22%3A%22%24%7Binput%3Aproject_id%7D%22%7D%7D&inputs=%5B%7B%22type%22%3A%22promptString%22%2C%22id%22%3A%22api_key%22%2C%22description%22%3A%22Browserbase+API+Key%22%2C%22password%22%3Atrue%7D%2C%7B%22type%22%3A%22promptString%22%2C%22id%22%3A%22project_id%22%2C%22description%22%3A%22Browserbase+Project+ID%22%2C%22password%22%3Atrue%7D%5D) [![Install with NPX in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-NPM-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=browserbase&config=%7B%22command%22%3A%22node%22%2C%22args%22%3A%5B%22path%2Fto%2Fmcp-server-browserbase%2Fbrowserbase%2Fdist%2Findex.js%22%5D%2C%22env%22%3A%7B%22BROWSERBASE_API_KEY%22%3A%22%24%7Binput%3Aapi_key%7D%22%2C%22BROWSERBASE_PROJECT_ID%22%3A%22%24%7Binput%3Aproject_id%7D%22%7D%7D&inputs=%5B%7B%22type%22%3A%22promptString%22%2C%22id%22%3A%22api_key%22%2C%22description%22%3A%22Browserbase+API+Key%22%2C%22password%22%3Atrue%7D%2C%7B%22type%22%3A%22promptString%22%2C%22id%22%3A%22project_id%22%2C%22description%22%3A%22Browserbase+Project+ID%22%2C%22password%22%3Atrue%7D%5D&quality=insiders)
+
+### Manual Installation
+
+For manual installation, you can use the install buttons at the top of this section, or follow these steps:
+
+Add the following JSON block to your User Settings (JSON) file in VS Code. You can do this by pressing `Ctrl + Shift + P` and typing `Preferences: Open User Settings (JSON)`.
+
+```json
+{
+  "mcp": {
+    "inputs": [
+      {
+        "type": "promptString",
+        "id": "api_key",
+        "description": "Browserbase API Key",
+        "password": true
+      },
+      {
+        "type": "promptString",
+        "id": "project_id",
+        "description": "Browserbase Project ID",
+        "password": true
+      }
+    ],
+    "servers": {
+      "browserbase": {
+        "command": "node",
+        "args": ["path/to/mcp-server-browserbase/browserbase/dist/index.js"],
+        "env": {
+          "BROWSERBASE_API_KEY": "${input:api_key}",
+          "BROWSERBASE_PROJECT_ID": "${input:project_id}"
+        }
+      }
+    }
+  }
+}
+```
+
+Optionally, you can add it to a file called `.vscode/mcp.json` in your workspace:
+
+```json
+{
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "api_key",
+      "description": "Browserbase API Key",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "project_id",
+      "description": "Browserbase Project ID",
+      "password": true
+    }
+  ],
+  "servers": {
+    "browserbase": {
+      "command": "node",
+      "args": ["path/to/mcp-server-browserbase/browserbase/dist/index.js"],
+      "env": {
+        "BROWSERBASE_API_KEY": "${input:api_key}",
+        "BROWSERBASE_PROJECT_ID": "${input:project_id}"
+      }
+    }
+  }
+}
+```
 
 ## Tools
 
