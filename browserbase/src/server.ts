@@ -129,4 +129,21 @@ export function createServer(serverOptions: BrowserbaseServerOptions, config: Co
   
   // Return the configured server instance, DO NOT connect here
   return server;
-} 
+}
+  // export async function runServer() {
+//   try {
+//     console.error("Initializing server transport...");
+//     const transport = new StdioServerTransport();
+//     const server = await createServer();
+//     console.error("Connecting server...");
+//     await server.connect(transport);
+//     console.error("Browserbase MCP server connected via stdio and ready.");
+//     // Optional pre-warming could be added here if needed,
+//     // possibly by calling ensureBrowserSession from sessionManager
+//   } catch (error) {
+//     console.error(
+//       `Failed to start or connect server: ${(error as Error).message}`,
+//     );
+//     process.exit(1); // Exit if server fails to start
+//   }
+  

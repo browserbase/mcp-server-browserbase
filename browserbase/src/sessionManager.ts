@@ -5,7 +5,7 @@ import {
   errors as PlaywrightErrors,
 } from "playwright-core";
 import { Browserbase } from "@browserbasehq/sdk";
-import type { Config } from "./config.js"; // Import Config type
+import type { Config } from "../config.js"; // Import Config type
 
 // Define the type for a session object
 export type BrowserSession = { browser: Browser; page: Page };
@@ -14,22 +14,32 @@ export type BrowserSession = { browser: Browser; page: Page };
 const browsers = new Map<string, BrowserSession>();
 // Keep track of the default session explicitly
 let defaultBrowserSession: BrowserSession | null = null;
-export const defaultSessionId = "default";
+const defaultSessionId = "default"; // Consistent ID for the default session
+let globalConfig: Config = { proxies: false }; // Default config
 
-// Function to create a new Browserbase session and connect Playwright
-export async function createNewBrowserSession(
+// Helper Functions
+
+// Function to set global config
+function setConfig(config: Config) {
+  globalConfig = { ...globalConfig, ...config };
+}
+
+// Function to create a new browser session
+async function createNewBrowserSession(
   newSessionId: string,
-  config: Config // Accept config object
+  config?: Config,
 ): Promise<BrowserSession> {
   const bb = new Browserbase({
     // Use config values instead of process.env
-    apiKey: config.browserbaseApiKey,
+    apiKey: process.env.BROWSERBASE_API_KEY!,
   });
 
+  // Use passed config or fall back to global config
+  const currConfig = config || globalConfig;
+
   const session = await bb.sessions.create({
-    // Use config values instead of process.env
-    projectId: config.browserbaseProjectId,
-    proxies: true, // Consider making this configurable via Config
+    projectId: process.env.BROWSERBASE_PROJECT_ID!,
+    proxies: currConfig.proxies, // Use config value
   });
 
   const browser = await chromium.connectOverCDP(session.connectUrl, { timeout: 60000 });
@@ -186,5 +196,6 @@ export async function closeAllSessions(): Promise<void> {
     }
   }
   browsers.clear();
-  defaultBrowserSession = null; // Ensure default session reference is cleared
-} 
+  defaultBrowserSession = null;
+  console.error("Browser sessions closed.");
+}
