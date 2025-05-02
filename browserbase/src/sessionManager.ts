@@ -15,14 +15,17 @@ const browsers = new Map<string, BrowserSession>();
 // Keep track of the default session explicitly
 let defaultBrowserSession: BrowserSession | null = null;
 const defaultSessionId = "default"; // Consistent ID for the default session
-let globalConfig: Config = { proxies: false }; // Default config
+
+// Default Configuration 
+let currentConfig: Config = { proxies: false };
+
+// Function to set configuration
+function setConfig(config: Config) {
+  currentConfig = { ...currentConfig, ...config };
+  console.error(`Updated configuration: proxies=${currentConfig.proxies}`);
+}
 
 // Helper Functions
-
-// Function to set global config
-function setConfig(config: Config) {
-  globalConfig = { ...globalConfig, ...config };
-}
 
 // Function to create a new browser session
 async function createNewBrowserSession(
@@ -35,11 +38,11 @@ async function createNewBrowserSession(
   });
 
   // Use passed config or fall back to global config
-  const currConfig = config || globalConfig;
+  const sessionConfig = config || currentConfig;
 
   const session = await bb.sessions.create({
     projectId: process.env.BROWSERBASE_PROJECT_ID!,
-    proxies: currConfig.proxies, // Use config value
+    proxies: sessionConfig.proxies, // Use config value
   });
 
   const browser = await chromium.connectOverCDP(session.connectUrl, { timeout: 60000 });
