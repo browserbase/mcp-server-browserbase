@@ -6,7 +6,7 @@ import {
   closeAllSessions,
 } from "./sessionManager.js";
 import type { Tool, ToolContext } from "./tools/tool.js";
-import type { Config } from "./config.js";
+import type { Config } from "../config.js";
 import {
   Resource,
   CallToolResult,

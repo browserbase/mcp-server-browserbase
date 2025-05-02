@@ -6,6 +6,7 @@ export type CLIOptions = {
     host?: string;
   };
   proxies?: boolean;
+  context?: string;
 };
 
 const defaultConfig: Config = {
@@ -24,6 +25,7 @@ export async function configFromCLIOptions(cliOptions: CLIOptions): Promise<Conf
       host: cliOptions.server?.host,
     },
     proxies: cliOptions.proxies,
+    context: cliOptions.context,
   };
 }
 

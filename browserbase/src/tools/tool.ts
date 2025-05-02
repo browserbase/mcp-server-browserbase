@@ -1,7 +1,7 @@
 import { CallToolResult } from '@modelcontextprotocol/sdk/types.js'; // Keep only CallToolResult
 import type { BrowserSession } from '../sessionManager.js'; // Context needs session
 import type { Server } from '@modelcontextprotocol/sdk/server/index.js'; // For notifications
-import type { Config } from '../config.js'; // Import Config type
+import type { Config } from '../../config.js'; // Import Config type
 import type { Context } from '../context.js'; // Forward declaration for context property
 import { z } from 'zod';
 

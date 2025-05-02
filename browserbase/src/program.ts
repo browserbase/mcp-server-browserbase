@@ -13,11 +13,12 @@ program
     .version('Version ' + packageJSON.version)
     .name(packageJSON.name)
     .option('--proxies', 'Use Browserbase proxies.')
+    .option('--context <context>', 'Browserbase Context to use.')
     .option('--port <port>', 'Port to listen on for SSE transport.')
     .option('--host <host>', 'Host to bind server to. Default is localhost. Use 0.0.0.0 to bind to all interfaces.')
     .action(async options => {
       const config = await resolveConfig(options);
-      const serverList = new ServerList(() => createServer(config));
+      const serverList = new ServerList(async() => createServer(config));
       setupExitWatchdog(serverList);
 
       if (options.port)

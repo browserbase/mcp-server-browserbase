@@ -14,26 +14,17 @@ export type BrowserSession = { browser: Browser; page: Page };
 const browsers = new Map<string, BrowserSession>();
 // Keep track of the default session explicitly
 let defaultBrowserSession: BrowserSession | null = null;
-const defaultSessionId = "default"; // Consistent ID for the default session
+export const defaultSessionId = "default"; // Consistent ID for the default session
 
 // Default Configuration 
 let currentConfig: Config = { proxies: false };
 
-// Function to set configuration
-function setConfig(config: Config) {
-  currentConfig = { ...currentConfig, ...config };
-  console.error(`Updated configuration: proxies=${currentConfig.proxies}`);
-}
-
-// Helper Functions
-
 // Function to create a new browser session
-async function createNewBrowserSession(
+export async function createNewBrowserSession(
   newSessionId: string,
   config?: Config,
 ): Promise<BrowserSession> {
   const bb = new Browserbase({
-    // Use config values instead of process.env
     apiKey: process.env.BROWSERBASE_API_KEY!,
   });
 
@@ -43,6 +34,12 @@ async function createNewBrowserSession(
   const session = await bb.sessions.create({
     projectId: process.env.BROWSERBASE_PROJECT_ID!,
     proxies: sessionConfig.proxies, // Use config value
+    browserSettings: {
+      context: sessionConfig.context ? {
+        id: sessionConfig.context,
+        persist: true, // read and write to context
+      } : undefined,
+    },
   });
 
   const browser = await chromium.connectOverCDP(session.connectUrl, { timeout: 60000 });
@@ -79,7 +76,7 @@ async function createNewBrowserSession(
 }
 
 // Internal function to ensure default session, passes config down
-async function ensureDefaultSessionInternal(config: Config): Promise<BrowserSession> {
+export async function ensureDefaultSessionInternal(config: Config): Promise<BrowserSession> {
   const sessionId = defaultSessionId;
   try {
     if (!defaultBrowserSession) {
