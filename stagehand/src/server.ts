@@ -92,6 +92,7 @@ export async function ensureStagehand() {
 
     // Try to perform a simple operation to check if the session is still valid
     try {
+      await stagehand.init();
       await stagehand.page.evaluate(() => document.title);
       return stagehand;
     } catch (error) {
