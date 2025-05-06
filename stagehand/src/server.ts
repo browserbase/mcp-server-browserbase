@@ -62,9 +62,9 @@ export const stagehandConfig: ConstructorParams = {
   enableCaching: true /* Enable caching functionality */,
   browserbaseSessionID:
     undefined /* Session ID for resuming Browserbase sessions */,
-  modelName: "gpt-4o" /* Name of the model to use */,
+  modelName: process.env.LLM_MODEL || "gpt-4o" /* Name of the model to use, defaults to gpt-4o */,
   modelClientOptions: {
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: process.env.LLM_API_KEY || process.env.OPENAI_API_KEY,
   } /* Configuration options for the model client */,
   useAPI: false,
 };

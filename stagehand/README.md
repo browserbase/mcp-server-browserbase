@@ -36,7 +36,8 @@ or, for running locally, first [**open Chrome in debug mode**](https://docs.stag
       "command": "node",
       "args": ["path/to/mcp-server-browserbase/stagehand/dist/index.js"],
       "env": {
-        "OPENAI_API_KEY": "<YOUR_OPENAI_API_KEY>",
+        "LLM_MODEL": "gemini-2.0-flash",
+        "LLM_API_KEY": "<YOUR_LLM_API_KEY>",
         "LOCAL_CDP_URL": "http://localhost:9222"
       }
     }
@@ -169,8 +170,14 @@ Provides utility functions:
 
 - `BROWSERBASE_API_KEY`: API key for BrowserBase authentication
 - `BROWSERBASE_PROJECT_ID`: Project ID for BrowserBase
-- `OPENAI_API_KEY`: API key for OpenAI (used by Stagehand)
+- `OPENAI_API_KEY`: API key for OpenAI (used by Stagehand). This is the deault provider
+- `LLM_MODEL`: Any supported LLM models from [text](https://github.com/browserbase/stagehand/blob/main/lib/llm/LLMProvider.ts#L62)
+- `LLM_API_KEY`: Api key for the `LLM_MODEL`
 - `DEBUG`: Enable debug logging
+
+**Note:** If `LLM_MODEL` & `LLM_API_KEY` are provided, those values will be used to connect to your model provider. By default,
+the stagehand mcp server defaults to `gpt-4o` model, and providing just the `OPENAI_API_KEY` will work as well if that's the model
+you want to use.
 
 ## MCP Capabilities
 
