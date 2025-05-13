@@ -102,7 +102,7 @@ export async function createNewBrowserSession(
         id: config.context?.contextId,
         persist: config.context?.persist ?? true,
       } : undefined,
-      advancedStealth: config.advancedStealth ?? false,
+      advancedStealth: config.advancedStealth ?? undefined,
     }
   };
 
