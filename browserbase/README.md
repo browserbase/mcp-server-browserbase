@@ -103,6 +103,7 @@ The Browserbase MCP server accepts the following command-line flags:
 | `--browserbaseApiKey <key>` | Your Browserbase API key for authentication |
 | `--browserbaseProjectId <id>` | Your Browserbase project ID |
 | `--proxies` | Enable Browserbase proxies for the session |
+| `--advancedStealth` | Enable Browserbase Advanced Stealth (Only for Scale Plan Users) | 
 | `--contextId <contextId>` | Specify a Browserbase Context ID to use |
 | `--persist [boolean]` | Whether to persist the Browserbase context (default: true) |
 | `--port <port>` | Port to listen on for HTTP/SSE transport |
@@ -133,6 +134,26 @@ To use proxies in STDIO, set the --proxies flag in your MCP Config:
       "browserbase": {
          "command" : "npx",
          "args" : ["@browserbasehq/mcp", "--proxies"],
+         "env": {
+            "BROWSERBASE_API_KEY": "",
+            "BROWSERBASE_PROJECT_ID": ""
+         }
+      }
+   }
+}
+```
+### Advanced Stealth 
+
+Here are our docs on [Advanced Stealth](https://docs.browserbase.com/features/stealth-mode#advanced-stealth-mode).
+
+To use proxies in STDIO, set the --advancedStealth flag in your MCP Config:
+
+```json
+{
+   "mcpServers": {
+      "browserbase": {
+         "command" : "npx",
+         "args" : ["@browserbasehq/mcp", "--advancedStealth"],
          "env": {
             "BROWSERBASE_API_KEY": "",
             "BROWSERBASE_PROJECT_ID": ""

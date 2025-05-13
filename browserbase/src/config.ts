@@ -14,6 +14,7 @@ export interface Config {
     host?: string;
   };
   proxies?: boolean;
+  advancedStealth?: boolean;
   context?: {
     contextId?: string;
     persist?: boolean;
@@ -30,6 +31,7 @@ export type CLIOptions = {
   browserbaseApiKey?: string;
   browserbaseProjectId?: string;
   proxies?: boolean;
+  advancedStealth?: boolean;
   contextId?: string;
   persist?: boolean;
   port?: number;
@@ -100,6 +102,7 @@ export async function configFromCLIOptions(cliOptions: CLIOptions): Promise<Conf
       browserWidth: cliOptions.browserWidth,
       browserHeight: cliOptions.browserHeight,
     },
+    advancedStealth: cliOptions.advancedStealth,
     cookies: cliOptions.cookies,
   };
 }

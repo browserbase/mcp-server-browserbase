@@ -33,7 +33,7 @@
     }
   },
   "dependencies": {
-    "@browserbasehq/sdk": "^2.0.0",
+    "@browserbasehq/sdk": "^2.5.0",
     "@modelcontextprotocol/sdk": "^1.10.2",
     "@types/yaml": "^1.9.6",
     "commander": "^13.1.0",

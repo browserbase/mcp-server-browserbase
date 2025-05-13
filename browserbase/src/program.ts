@@ -15,6 +15,7 @@ program
     .option('--browserbaseApiKey <key>', 'The Browserbase API Key to use')
     .option('--browserbaseProjectId <id>', 'The Browserbase Project ID to use')
     .option('--proxies', 'Use Browserbase proxies.')
+    .option('--advancedStealth', 'Use advanced stealth mode. Only available to Browserbase Scale Plan users.')
     .option('--contextId <contextId>', 'Browserbase Context ID to use.')
     .option('--persist [boolean]', 'Whether to persist the Browserbase context', true)
     .option('--port <port>', 'Port to listen on for SSE transport.')

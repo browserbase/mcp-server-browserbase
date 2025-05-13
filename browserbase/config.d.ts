@@ -17,6 +17,12 @@ export type Config = {
      */
     proxies?: boolean;
     /**
+     * Use advanced stealth mode. Only available to Browserbase Scale Plan users.
+     * 
+     * @default false
+     */
+    advancedStealth?: boolean;
+    /**
      * Potential Browserbase Context to use 
      * Would be a context ID 
      */
