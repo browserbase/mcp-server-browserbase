@@ -33,3 +33,7 @@ To learn to get started with Browserbase, check out [Browserbase MCP](./browserb
 ### Alternative Installation Methods
 
 [Smithery](https://smithery.ai/server/@browserbasehq/mcp-browserbase)
+
+### Credits
+
+Huge thanks and shoutout to the Playwright team for their contributions to the framework, and their work on the [Playwright MCP Server](https://github.com/microsoft/playwright-mcp)
