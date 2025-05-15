@@ -1,22 +1,22 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import { Config } from "../config.js";
-import type { Tool } from "./tools/tool.js";
+import { Config } from "../config";
+import type { Tool } from "./tools/tool";
 
-import navigate from "./tools/navigate.js";
-import snapshot from "./tools/snapshot.js";
-import keyboard from "./tools/keyboard.js";
-import getText from "./tools/getText.js";
-import session from "./tools/session.js";
-import common from "./tools/common.js";
-import contextTools from "./tools/context.js";
+import navigate from "./tools/navigate";
+import snapshot from "./tools/snapshot";
+import keyboard from "./tools/keyboard";
+import getText from "./tools/getText";
+import session from "./tools/session";
+import common from "./tools/common";
+import contextTools from "./tools/context";
 
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { CallToolRequestSchema, ListResourcesRequestSchema, ListToolsRequestSchema, ReadResourceRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
-import { Context } from "./context.js";
+import { Context } from "./context";
 
 export async function createServer(config: Config): Promise<Server> {
   // Create the server

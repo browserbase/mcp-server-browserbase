@@ -25,7 +25,11 @@ program
     .option('--browserHeight <height>', 'Browser height to use for the browser.')
     .action(async options => {
       const config = await resolveConfig(options);
-      const serverList = new ServerList(async() => createServer(config));
+      const serverList = new ServerList(async(urlConfig) => {
+        const mergedConfig = urlConfig ? { ...config, ...urlConfig } : config;
+        return createServer(mergedConfig);
+      });
+      
       setupExitWatchdog(serverList);
 
       if (options.port)
