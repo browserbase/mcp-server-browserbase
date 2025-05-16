@@ -1,0 +1,17 @@
+{
+  "name": "mcp-server-browserbase-monorepo",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r build",
+    "build:core": "pnpm --filter @mcp/core build",
+    "build:remote": "pnpm --filter @mcp/remote build",
+    "dev": "pnpm -r --parallel dev",
+    "dev:remote": "pnpm --filter @mcp/remote dev",
+    "lint": "pnpm -r lint"
+  },
+  "devDependencies": {
+    "@types/webpack": "^5.28.5",
+    "pnpm": "^8.0.0",
+    "typescript": "^5.0.0"
+  }
+}

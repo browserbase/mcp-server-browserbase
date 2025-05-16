@@ -1,0 +1,31 @@
+{
+    "name": "@mcp/remote",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@mcp/core": "workspace:*",
+        "@modelcontextprotocol/sdk": "^1.11.2",
+        "commander": "^13.1.0",
+        "dotenv": "^16.5.0",
+        "next": "15.2.4",
+        "playwright": "^1.52.0",
+        "puppeteer-core": "^23.9.0",
+        "redis": "^4.7.0",
+        "zod": "^3.24.3",
+        "zod-to-json-schema": "^3.24.5"
+    },
+    "devDependencies": {
+        "@types/node": "^20.17.47",
+        "@types/react": "^19",
+        "@vercel/mcp-adapter": "^0.3.1",
+        "typescript": "^5.8.3",
+        "eslint": "^8.56.0",
+        "eslint-config-next": "15.2.4"
+    }
+}
