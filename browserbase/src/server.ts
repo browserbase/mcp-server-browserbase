@@ -1,15 +1,18 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import type { Config } from "../config.js";
+
+export let urlExtractedConfig: Partial<Config> | undefined;
 
 export class ServerList {
   private _servers: Server[] = [];
-  private _serverFactory: () => Promise<Server>;
+  private _serverFactory: (config?: Partial<Config>) => Promise<Server>;
 
-  constructor(serverFactory: () => Promise<Server>) {
+  constructor(serverFactory: (config?: Partial<Config>) => Promise<Server>) {
     this._serverFactory = serverFactory;
   }
 
-  async create() {
-    const server = await this._serverFactory();
+  async create(urlConfig?: Partial<Config>) {
+    const server = await this._serverFactory(urlConfig);
     this._servers.push(server);
     return server;
   }
