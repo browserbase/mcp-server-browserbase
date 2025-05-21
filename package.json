@@ -1,0 +1,14 @@
+{
+  "name": "playwright-cdp-test",
+  "version": "1.0.0",
+  "description": "A script to test Playwright CDP connection.",
+  "main": "test_cdp.js",
+  "scripts": {
+    "start": "node test_cdp.js"
+  },
+  "dependencies": {
+    "playwright": "^1.40.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
