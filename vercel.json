@@ -1,0 +1,6 @@
+{
+  "buildCommand": "pnpm --filter @mcp/remote build",
+  "outputDirectory": "packages/remote/.next",
+  "devCommand": "pnpm --filter @mcp/remote dev",
+  "installCommand": "pnpm install"
+} 

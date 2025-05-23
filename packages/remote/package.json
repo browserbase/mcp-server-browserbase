@@ -1,0 +1,34 @@
+{
+    "name": "@mcp/remote",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@mcp/core": "workspace:*",
+        "@modelcontextprotocol/sdk": "^1.11.2",
+        "dotenv": "^16.5.0",
+        "ioredis": "^5.6.1",
+        "next": "15.2.4",
+        "playwright": "^1.52.0",
+        "playwright-core": "^1.52.0",
+        "react": "^19.1.0",
+        "react-dom": "^19.1.0",
+        "redis": "^4.7.0", 
+        "zod": "^3.24.3",
+        "zod-to-json-schema": "^3.24.5"
+    },
+    "devDependencies": {
+        "@types/ioredis": "^5.0.0",
+        "@types/node": "^20.17.47",
+        "@types/react": "^19",
+        "@vercel/mcp-adapter": "^0.4.1",
+        "eslint": "^8.56.0",
+        "eslint-config-next": "15.2.4",
+        "typescript": "^5.8.3"
+    }
+}
