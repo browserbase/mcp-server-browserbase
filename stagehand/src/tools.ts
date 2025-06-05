@@ -2,6 +2,11 @@ import { Stagehand } from "@browserbasehq/stagehand";
 import { CallToolResult, Tool } from "@modelcontextprotocol/sdk/types.js";
 import { getServerInstance, operationLogs } from "./logging.js";
 import { screenshots } from "./resources.js";
+import { fileURLToPath } from "url";
+import path from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Define the Stagehand tools
 export const TOOLS: Tool[] = [
@@ -67,6 +72,21 @@ export const TOOLS: Tool[] = [
         },
       },
       required: ["instruction"],
+    },
+  },
+  {
+    name: "stagehand_get_html",
+    description:
+      "Captures the raw HTML of the current webpage. Use this tool when you need to analyze the page structure or extract specific HTML elements. This tool returns a URL that you need to download to access the HTML content.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        selector: {
+          type: "string",
+          description:
+            "Optional selector to get HTML for a specific element. Both CSS and XPath selectors are supported. If omitted, returns the entire page HTML.",
+        },
+      },
     },
   },
   {
@@ -223,6 +243,146 @@ export async function handleToolCall(
             {
               type: "text",
               text: `Failed to observe: ${errorMsg}`,
+            },
+            {
+              type: "text",
+              text: `Operation logs:\n${operationLogs.join("\n")}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+
+    case "stagehand_get_html":
+      try {
+        const html = await stagehand.page.evaluate((selector) => {
+          if (selector) {
+            try {
+              // Check if the selector is an XPath selector
+              if (
+                selector.startsWith("/") ||
+                selector.startsWith("./") ||
+                selector.startsWith("//")
+              ) {
+                // Handle XPath selector
+                const result = document.evaluate(
+                  selector,
+                  document,
+                  null,
+                  XPathResult.FIRST_ORDERED_NODE_TYPE,
+                  null
+                );
+                const element = result.singleNodeValue;
+                if (!element || !(element instanceof Element)) {
+                  return `<!DOCTYPE html>
+<html>
+<head><title>XPath Element Not Found</title></head>
+<body>
+<h1>XPath Element Not Found</h1>
+<p>The XPath selector did not match any elements on the page.</p>
+<h2>Details:</h2>
+<ul>
+  <li><strong>XPath Selector:</strong> ${selector}</li>
+  <li><strong>Document Title:</strong> ${document.title}</li>
+  <li><strong>Document URL:</strong> ${document.location.href}</li>
+  <li><strong>Page Content Length:</strong> ${document.documentElement.outerHTML.length} characters</li>
+</ul>
+<h2>Suggestions:</h2>
+<ul>
+  <li>Check if the XPath selector is correct</li>
+  <li>Verify that the element exists on the page</li>
+  <li>Try using browser developer tools to test the XPath selector</li>
+  <li>Consider using a CSS selector instead if possible</li>
+</ul>
+</body>
+</html>`;
+                }
+                return element.outerHTML;
+              } else {
+                // Handle CSS selector
+                const element = document.querySelector(selector);
+                if (!element || !(element instanceof Element)) {
+                  return `<!DOCTYPE html>
+<html>
+<head><title>CSS Element Not Found</title></head>
+<body>
+<h1>CSS Element Not Found</h1>
+<p>The CSS selector did not match any elements on the page.</p>
+<h2>Details:</h2>
+<ul>
+  <li><strong>CSS Selector:</strong> ${selector}</li>
+  <li><strong>Document Title:</strong> ${document.title}</li>
+  <li><strong>Document URL:</strong> ${document.location.href}</li>
+  <li><strong>Page Content Length:</strong> ${
+    document.documentElement.outerHTML.length
+  } characters</li>
+  <li><strong>Similar Elements:</strong> ${
+    Array.from(document.querySelectorAll("*"))
+      .filter(
+        (el) =>
+          el.tagName.toLowerCase() ===
+          selector.split(/[.#\[\s>+~]/)[0].toLowerCase()
+      )
+      .slice(0, 5)
+      .map(
+        (el) =>
+          `&lt;${el.tagName.toLowerCase()}${el.id ? ` id="${el.id}"` : ""}${
+            el.className ? ` class="${el.className}"` : ""
+          }&gt;`
+      )
+      .join(", ") || "None found"
+  }</li>
+</ul>
+<h2>Suggestions:</h2>
+<ul>
+  <li>Check if the CSS selector syntax is correct</li>
+  <li>Verify that the element exists on the page</li>
+  <li>Try using browser developer tools to test the CSS selector</li>
+  <li>Consider using a simpler selector (e.g., by ID or a unique class)</li>
+  <li>Check if the element is dynamically added to the page</li>
+</ul>
+</body>
+</html>`;
+                }
+                return element.outerHTML;
+              }
+            } catch (err: unknown) {
+              return `Selector error: ${
+                err instanceof Error ? err.message : String(err)
+              }. For XPath, use '//' or '/' prefix. For CSS, use standard selectors.`;
+            }
+          }
+          return document.documentElement.outerHTML;
+        }, args.selector || null);
+
+        // Save HTML to a file in the tmp directory
+        const fs = await import("fs/promises");
+        const { randomBytes } = await import("crypto");
+        const TMP_DIR = path.resolve(__dirname, "../tmp");
+        await fs.mkdir(TMP_DIR, { recursive: true });
+        const unique = `${Date.now()}-${randomBytes(6).toString("hex")}`;
+        const filename = `stagehand-html-${unique}.html`;
+        const filePath = path.join(TMP_DIR, filename);
+        await fs.writeFile(filePath, html, "utf8");
+        const port = process.env.STAGEHAND_HTTP_PORT || 8080;
+        const url = `http://localhost:${port}/tmp/${filename}`;
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: `HTML saved to: ${url}`,
+            },
+          ],
+          isError: false,
+        };
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : String(error);
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Failed to get HTML: ${errorMsg}`,
             },
             {
               type: "text",
