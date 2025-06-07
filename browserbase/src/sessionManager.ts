@@ -120,6 +120,24 @@ export async function createNewBrowserSession(
       `[SessionManager] Browserbase Live Debugger URL: https://www.browserbase.com/sessions/${bbSession.id}\n`
     );
 
+    // Configure download behavior
+    try {
+      process.stderr.write(`[SessionManager] Configuring download behavior for session ${newSessionId}\n`);
+      const cdpSession = await browser.newBrowserCDPSession();
+      await cdpSession.send("Browser.setDownloadBehavior", {
+        behavior: "allow",
+        downloadPath: "downloads",
+        eventsEnabled: true,
+      });
+      process.stderr.write(`[SessionManager] Download behavior configured successfully for session ${newSessionId}\n`);
+    } catch (downloadConfigError) {
+      process.stderr.write(
+        `[SessionManager] WARN - Failed to configure download behavior for session ${newSessionId}: ${
+          downloadConfigError instanceof Error ? downloadConfigError.message : String(downloadConfigError)
+        }\n`
+      );
+    }
+
     browser.on("disconnected", () => {
       process.stderr.write(`[SessionManager] Disconnected: ${newSessionId}\n`);
       browsers.delete(newSessionId);
