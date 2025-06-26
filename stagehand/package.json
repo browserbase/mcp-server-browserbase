@@ -19,8 +19,8 @@
     "watch": "tsc --watch"
   },
   "dependencies": {
-    "@browserbasehq/sdk": "^2.0.0",
-    "@browserbasehq/stagehand": "^2.0.0",
+    "@browserbasehq/sdk": "^2.4.0",
+    "@browserbasehq/stagehand": "^2.2.0",
     "@modelcontextprotocol/sdk": "^1.0.3",
     "@modelcontextprotocol/server-stagehand": "file:",
     "@playwright/test": "^1.49.0"
