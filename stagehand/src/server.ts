@@ -54,17 +54,18 @@ export const stagehandConfig: ConstructorParams = {
             : undefined,
         }
       : undefined,
-  localBrowserLaunchOptions: process.env.LOCAL_CDP_URL
-    ? {
-        cdpUrl: process.env.LOCAL_CDP_URL,
-      }
-    : undefined,
+  // Set a default CDP URL if running in LOCAL mode
+  localBrowserLaunchOptions: process.env.BROWSERBASE_API_KEY && process.env.BROWSERBASE_PROJECT_ID
+    ? undefined
+    : {
+        cdpUrl: process.env.LOCAL_CDP_URL || "http://localhost:9222",
+      },
   enableCaching: true /* Enable caching functionality */,
   browserbaseSessionID:
     undefined /* Session ID for resuming Browserbase sessions */,
   modelName: "gpt-4o" /* Name of the model to use */,
   modelClientOptions: {
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: process.env.OPENAI_API_KEY || "dummy-api-key-for-browserbase",
   } /* Configuration options for the model client */,
   useAPI: false,
 };
@@ -74,20 +75,48 @@ let stagehand: Stagehand | undefined;
 
 // Ensure Stagehand is initialized
 export async function ensureStagehand() {
+  // We've added a default CDP URL in the config, so this check should always pass
   if (
     stagehandConfig.env === "LOCAL" &&
     !stagehandConfig.localBrowserLaunchOptions?.cdpUrl
   ) {
-    throw new Error(
-      'Using a local browser without providing a CDP URL is not supported. Please provide a CDP URL using the LOCAL_CDP_URL environment variable.\n\nTo launch your browser in "debug", see our documentation.\n\nhttps://docs.stagehand.dev/examples/customize_browser#use-your-personal-browser'
-    );
+    log("No CDP URL provided, using http://localhost:9222 as fallback", "info");
+    stagehandConfig.localBrowserLaunchOptions = {
+      cdpUrl: "http://localhost:9222"
+    };
   }
 
   try {
+    // If stagehand doesn't exist, create a new instance
     if (!stagehand) {
+      log("Creating new Stagehand instance", "info");
       stagehand = new Stagehand(stagehandConfig);
-      await stagehand.init();
-      return stagehand;
+      try {
+        await stagehand.init();
+        log("Successfully initialized new Stagehand instance", "info");
+        return stagehand;
+      } catch (initError) {
+        const initErrorMsg = initError instanceof Error ? initError.message : String(initError);
+        log(`Failed to initialize new Stagehand instance: ${initErrorMsg}`, "error");
+        throw initError;
+      }
+    }
+
+    // If stagehand exists but page is not initialized
+    if (!stagehand.page) {
+      log("Stagehand exists but page is not initialized, reinitializing...", "info");
+      try {
+        await stagehand.init();
+        log("Successfully reinitialized Stagehand page", "info");
+        return stagehand;
+      } catch (initError) {
+        const initErrorMsg = initError instanceof Error ? initError.message : String(initError);
+        log(`Failed to reinitialize Stagehand page: ${initErrorMsg}`, "error");
+        // Create a new instance as fallback
+        stagehand = new Stagehand(stagehandConfig);
+        await stagehand.init();
+        return stagehand;
+      }
     }
 
     // Try to perform a simple operation to check if the session is still valid

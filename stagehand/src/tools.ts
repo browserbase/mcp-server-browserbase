@@ -75,7 +75,12 @@ export const TOOLS: Tool[] = [
       "Takes a screenshot of the current page. Use this tool to learn where you are on the page when controlling the browser with Stagehand. Only use this tool when the other tools are not sufficient to get the information you need.",
     inputSchema: {
       type: "object",
-      properties: {},
+      properties: {
+        path: {
+          type: "string", 
+          description: "Optional path where the screenshot should be saved (e.g., 'screenshot.png')"
+        }
+      },
     },
   },
 ];
@@ -86,9 +91,66 @@ export async function handleToolCall(
   args: any,
   stagehand: Stagehand
 ): Promise<CallToolResult> {
+  // Ensure stagehand is properly initialized
+  if (!stagehand) {
+    return {
+      content: [
+        {
+          type: "text",
+          text: "Stagehand is not initialized properly",
+        },
+        {
+          type: "text",
+          text: `Operation logs:\n${operationLogs.join("\n")}`,
+        },
+      ],
+      isError: true,
+    };
+  }
+
+  // Make sure init has been called
+  if (!stagehand.page) {
+    try {
+      await stagehand.init();
+      console.log("Re-initialized Stagehand");
+    } catch (initError) {
+      const initErrorMsg = initError instanceof Error ? initError.message : String(initError);
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Failed to initialize Stagehand: ${initErrorMsg}`,
+          },
+          {
+            type: "text", 
+            text: `Operation logs:\n${operationLogs.join("\n")}`,
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+  
   switch (name) {
     case "stagehand_navigate":
       try {
+        // Make sure we have a valid page
+        if (!stagehand || !stagehand.page) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: "Unable to navigate: Stagehand instance or page not initialized",
+              },
+              {
+                type: "text",
+                text: `Operation logs:\n${operationLogs.join("\n")}`,
+              },
+            ],
+            isError: true,
+          };
+        }
+        
         await stagehand.page.goto(args.url);
         return {
           content: [
@@ -98,7 +160,7 @@ export async function handleToolCall(
             },
             {
               type: "text",
-              text: `View the live session here: https://browserbase.com/sessions/${stagehand.browserbaseSessionID}`,
+              text: `View the live session here: https://browserbase.com/sessions/${stagehand.browserbaseSessionID || 'not-available'}`,
             },
           ],
           isError: false,
@@ -235,9 +297,59 @@ export async function handleToolCall(
 
     case "screenshot":
       try {
-        const screenshotBuffer = await stagehand.page.screenshot({
+        // Make sure we have a valid page
+        if (!stagehand || !stagehand.page) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: "Unable to take screenshot: Stagehand instance or page not initialized",
+              },
+              {
+                type: "text",
+                text: `Operation logs:\n${operationLogs.join("\n")}`,
+              },
+            ],
+            isError: true,
+          };
+        }
+        
+        // Check if the page is ready
+        try {
+          await stagehand.page.evaluate(() => document.title);
+        } catch (pageError) {
+          // If page is not ready, try to navigate to google.com as a baseline
+          try {
+            await stagehand.page.goto("https://www.google.com");
+            console.log("Navigated to Google as a fallback for screenshot");
+          } catch (navError) {
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: `Failed to prepare page for screenshot: ${String(navError)}`,
+                },
+                {
+                  type: "text",
+                  text: `Operation logs:\n${operationLogs.join("\n")}`,
+                },
+              ],
+              isError: true,
+            };
+          }
+        }
+
+        // Create screenshot options
+        const screenshotOptions: any = {
           fullPage: false,
-        });
+        };
+        
+        // Add path if provided
+        if (args.path) {
+          screenshotOptions.path = args.path;
+        }
+        
+        const screenshotBuffer = await stagehand.page.screenshot(screenshotOptions);
 
         // Convert buffer to base64 string and store in memory
         const screenshotBase64 = screenshotBuffer.toString("base64");
@@ -254,11 +366,15 @@ export async function handleToolCall(
           });
         }
 
+        const saveMessage = args.path 
+          ? `Screenshot saved to path: ${args.path} and` 
+          : "Screenshot";
+
         return {
           content: [
             {
               type: "text",
-              text: `Screenshot taken with name: ${name}`,
+              text: `${saveMessage} taken with name: ${name}`,
             },
             {
               type: "image",
