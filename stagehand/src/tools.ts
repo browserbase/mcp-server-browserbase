@@ -19,19 +19,50 @@ export const TOOLS: Tool[] = [
   },
   {
     name: "stagehand_act",
-    description: `Performs an action on a web page element. Act actions should be as atomic and 
-      specific as possible, i.e. "Click the sign in button" or "Type 'hello' into the search input". 
-      AVOID actions that are more than one step, i.e. "Order me pizza" or "Send an email to Paul 
-      asking him to call me". `,
+    description: `Performs an action on a web page element. Accepts either a string description or a structured object.
+      
+      String format: Act actions should be as atomic and specific as possible, i.e. "Click the sign in button" or "Type 'hello' into the search input". 
+      AVOID actions that are more than one step, i.e. "Order me pizza" or "Send an email to Paul asking him to call me".
+      
+      Object format: JSON-ified version of a Playwright action with properties: description, action, selector, arguments.
+      Example: {"description": "Click the jobs link", "action": "click", "selector": "/html/body/div[1]/div[1]/a", "arguments": []}`,
     inputSchema: {
       type: "object",
       properties: {
         action: {
-          type: "string",
-          description: `The action to perform. Should be as atomic and specific as possible, 
-          i.e. 'Click the sign in button' or 'Type 'hello' into the search input'. AVOID actions that are more than one 
-          step, i.e. 'Order me pizza' or 'Send an email to Paul asking him to call me'. The instruction should be just as specific as possible, 
-          and have a strong correlation to the text on the page. If unsure, use observe before using act."`,
+          oneOf: [
+            {
+              type: "string",
+              description: `The action to perform. Should be as atomic and specific as possible, 
+              i.e. 'Click the sign in button' or 'Type 'hello' into the search input'. AVOID actions that are more than one 
+              step, i.e. 'Order me pizza' or 'Send an email to Paul asking him to call me'. The instruction should be just as specific as possible, 
+              and have a strong correlation to the text on the page. If unsure, use observe before using act."`
+            },
+            {
+              type: "object",
+              properties: {
+                description: {
+                  type: "string",
+                  description: "Description of the action to perform"
+                },
+                action: {
+                  type: "string",
+                  description: "The Playwright action type (e.g., 'click', 'type', 'hover')"
+                },
+                selector: {
+                  type: "string",
+                  description: "The CSS selector or XPath to target the element"
+                },
+                arguments: {
+                  type: "array",
+                  description: "Additional arguments for the action",
+                  items: {}
+                }
+              },
+              required: ["description", "action", "selector", "arguments"],
+              description: "JSON-ified version of a Playwright action"
+            }
+          ]
         },
         variables: {
           type: "object",
@@ -122,15 +153,35 @@ export async function handleToolCall(
 
     case "stagehand_act":
       try {
-        await stagehand.page.act({
-          action: args.action,
-          variables: args.variables,
-        });
+        let actionDescription: string;
+        let parsedAction: any = args.action;
+
+        // Try to parse string as JSON if it looks like JSON
+        if (typeof args.action === "string" && args.action.trim().startsWith("{")) {
+          try {
+            parsedAction = JSON.parse(args.action);
+          } catch (e) {
+            // If parsing fails, treat as regular string
+            parsedAction = args.action;
+          }
+        }
+
+        if (typeof parsedAction === "string") {
+          actionDescription = parsedAction;
+          await stagehand.page.act({
+            action: parsedAction,
+            variables: args.variables,
+          });
+        } else {
+          actionDescription = `${parsedAction.description} (${parsedAction.action} on ${parsedAction.selector})`;
+          await stagehand.page.act(parsedAction);
+        }
+
         return {
           content: [
             {
               type: "text",
-              text: `Action performed: ${args.action}`,
+              text: `Action performed (${typeof parsedAction === "string" ? "string" : "object"}): ${actionDescription}`,
             },
           ],
           isError: false,
