@@ -15,6 +15,7 @@
   ],
   "scripts": {
     "build": "tsc && shx chmod +x dist/*.js",
+    "dev": "npm run build && STAGEHAND_HTTP_PORT=8081 node dist/index.js",
     "prepare": "npm run build",
     "watch": "tsc --watch"
   },
