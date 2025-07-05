@@ -1,0 +1,40 @@
+runtime: "container"
+build:
+  dockerfile: "Dockerfile"
+  dockerBuildPath: "."
+startCommand:
+  type: "http"
+  configSchema:
+    type: "object"
+    required: ["browserbaseApiKey", "browserbaseProjectId"]
+    properties:
+      browserbaseApiKey:
+        type: "string"
+        title: "Browserbase API Key"
+        description: "The Browserbase API Key to use"
+      browserbaseProjectId:
+        type: "string"
+        title: "Browserbase Project ID"
+        description: "The Browserbase Project ID to use"
+      proxies:
+        type: "boolean"
+        default: false
+        description: "Whether or not to use Browserbase proxies"
+      advancedStealth:
+        type: "boolean"
+        default: false
+        description: "Use advanced stealth mode. Only available to Browserbase Scale Plan users"
+      modelApiKey:
+        type: "string"
+        description: "API key for the custom model provider (e.g., GEMINI_API_KEY)"
+      modelName:
+        type: "string"
+        default: "google/gemini-2.0-flash"
+        description: "The model to use for Stagehand"
+  exampleConfig:
+    browserbaseApiKey: "bb_api_key_example"
+    browserbaseProjectId: "bb_project_id_example"
+    proxies: false
+    advancedStealth: false
+    modelApiKey: "your_gemini_api_key"
+    modelName: "google/gemini-2.0-flash"
