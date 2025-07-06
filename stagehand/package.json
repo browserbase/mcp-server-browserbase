@@ -14,16 +14,16 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc && shx chmod +x dist/*.js",
-    "prepare": "npm run build",
-    "watch": "tsc --watch"
+    "build": "npx tsc && shx chmod +x dist/*.js",
+    "watch": "npx tsc --watch"
   },
   "dependencies": {
     "@browserbasehq/sdk": "^2.0.0",
     "@browserbasehq/stagehand": "^2.0.0",
     "@modelcontextprotocol/sdk": "^1.0.3",
     "@modelcontextprotocol/server-stagehand": "file:",
-    "@playwright/test": "^1.49.0"
+    "@playwright/test": "^1.49.0",
+    "openai": "^4.0.0"
   },
   "devDependencies": {
     "shx": "^0.3.4",
