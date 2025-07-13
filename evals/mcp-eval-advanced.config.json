@@ -1,0 +1,235 @@
+{
+  "server": {
+    "transport": "stdio",
+    "command": "node",
+    "args": ["./cli.js"],
+    "env": {
+      "BROWSERBASE_API_KEY": "${BROWSERBASE_API_KEY}",
+      "BROWSERBASE_PROJECT_ID": "${BROWSERBASE_PROJECT_ID}"
+    }
+  },
+  "timeout": 90000,
+  "llmJudge": true,
+  "openaiKey": "${OPENAI_API_KEY}",
+  "judgeModel": "gpt-4o",
+  "passThreshold": 0.8,
+  "workflows": [
+    {
+      "name": "e-commerce-workflow",
+      "description": "Test a realistic e-commerce browsing workflow",
+      "steps": [
+        {
+          "user": "Go to example.com and take a screenshot",
+          "expectedState": "Example Domain"
+        },
+        {
+          "user": "Navigate to a different page and observe the page elements",
+          "expectedState": "observed"
+        },
+        {
+          "user": "Take another screenshot to compare",
+          "expectedState": "Screenshot taken"
+        },
+        {
+          "user": "Close the browser",
+          "expectedState": "session closed"
+        }
+      ],
+      "expectTools": [
+        "browserbase_session_create",
+        "browserbase_stagehand_navigate",
+        "browserbase_screenshot",
+        "browserbase_stagehand_navigate",
+        "browserbase_stagehand_observe",
+        "browserbase_screenshot",
+        "browserbase_session_close"
+      ]
+    },
+    {
+      "name": "form-interaction-workflow",
+      "description": "Test form interaction and validation",
+      "steps": [
+        {
+          "user": "Navigate to httpbin.org/forms/post",
+          "expectedState": "httpbin"
+        },
+        {
+          "user": "Observe the form fields available",
+          "expectedState": "form"
+        },
+        {
+          "user": "Fill in the customer name field with 'Test User'",
+          "expectedState": "Test User"
+        },
+        {
+          "user": "Extract the form data to verify it was filled correctly",
+          "expectedState": "Test User"
+        },
+        {
+          "user": "Close the session",
+          "expectedState": "session closed"
+        }
+      ],
+      "expectTools": [
+        "browserbase_session_create",
+        "browserbase_stagehand_navigate",
+        "browserbase_stagehand_observe",
+        "browserbase_stagehand_act",
+        "browserbase_stagehand_extract",
+        "browserbase_session_close"
+      ]
+    },
+    {
+      "name": "dynamic-content-handling",
+      "description": "Test handling of dynamic content",
+      "steps": [
+        {
+          "user": "Navigate to example.com",
+          "expectedState": "Example Domain"
+        },
+        {
+          "user": "Extract the page title and content",
+          "expectedState": "Example Domain"
+        },
+        {
+          "user": "Take a screenshot of the page",
+          "expectedState": "Screenshot taken"
+        },
+        {
+          "user": "Close the browser",
+          "expectedState": "session closed"
+        }
+      ],
+      "expectTools": [
+        "browserbase_session_create",
+        "browserbase_stagehand_navigate",
+        "browserbase_stagehand_extract",
+        "browserbase_session_create",
+        "browserbase_stagehand_navigate",
+        "browserbase_stagehand_extract",
+        "browserbase_session_close",
+        "browserbase_screenshot",
+        "browserbase_session_close"
+      ]
+    },
+    {
+      "name": "multi-session-workflow",
+      "description": "Test handling multiple sessions",
+      "steps": [
+        {
+          "user": "Create two separate browser sessions named 'session-a' and 'session-b'",
+          "expectedState": "Created session"
+        },
+        {
+          "user": "List all active sessions to verify they were created",
+          "expectedState": "session-a"
+        },
+        {
+          "user": "In session-a, navigate to example.com",
+          "expectedState": "example.com"
+        },
+        {
+          "user": "In session-b, navigate to httpbin.org",
+          "expectedState": "httpbin"
+        },
+        {
+          "user": "Extract content from both sessions",
+          "expectedState": "extracted"
+        },
+        {
+          "user": "Close both sessions",
+          "expectedState": "closed session"
+        }
+      ],
+      "expectTools": [
+        "multi_browserbase_stagehand_session_create",
+        "multi_browserbase_stagehand_session_create",
+        "multi_browserbase_stagehand_session_list",
+        "multi_browserbase_stagehand_session_list",
+        "multi_browserbase_stagehand_navigate_session",
+        "multi_browserbase_stagehand_extract_session",
+        "multi_browserbase_stagehand_extract_session"
+      ]
+    },
+    {
+      "name": "error-recovery-workflow",
+      "description": "Test graceful error handling and recovery",
+      "steps": [
+        {
+          "user": "Create a browser session",
+          "expectedState": "session created"
+        },
+        {
+          "user": "Navigate to a valid page first",
+          "expectedState": "example.com"
+        },
+        {
+          "user": "Try to interact with a non-existent element",
+          "expectedState": "error"
+        },
+        {
+          "user": "Verify the session is still working by extracting the page title",
+          "expectedState": "Example Domain"
+        },
+        {
+          "user": "Close the session",
+          "expectedState": "session closed"
+        }
+      ],
+      "expectTools": [
+        "browserbase_session_create",
+        "browserbase_stagehand_navigate",
+        "browserbase_stagehand_act",
+        "browserbase_stagehand_observe",
+        "browserbase_stagehand_extract",
+        "browserbase_session_close"
+      ]
+    },
+    {
+      "name": "comprehensive-feature-test",
+      "description": "Test all major features together",
+      "steps": [
+        {
+          "user": "Create a multi-session setup with 3 sessions",
+          "expectedState": "Created session"
+        },
+        {
+          "user": "Navigate each session to different pages",
+          "expectedState": "navigated"
+        },
+        {
+          "user": "Take screenshots from each session",
+          "expectedState": "Screenshot taken"
+        },
+        {
+          "user": "Extract content from all sessions",
+          "expectedState": "extracted"
+        },
+        {
+          "user": "Close all sessions",
+          "expectedState": "closed session"
+        }
+      ],
+      "expectTools": [
+        "multi_browserbase_stagehand_session_create",
+        "multi_browserbase_stagehand_session_create",
+        "multi_browserbase_stagehand_session_create",
+        "multi_browserbase_stagehand_session_list",
+        "multi_browserbase_stagehand_navigate_session",
+        "multi_browserbase_stagehand_session_create",
+        "multi_browserbase_stagehand_session_create",
+        "multi_browserbase_stagehand_session_create",
+        "multi_browserbase_stagehand_navigate_session",
+        "multi_browserbase_stagehand_session_list",
+        "multi_browserbase_stagehand_extract_session",
+        "multi_browserbase_stagehand_extract_session",
+        "multi_browserbase_stagehand_extract_session",
+        "multi_browserbase_stagehand_session_list",
+        "multi_browserbase_stagehand_session_close",
+        "multi_browserbase_stagehand_session_close",
+        "multi_browserbase_stagehand_session_close",
+        "multi_browserbase_stagehand_session_close"
+      ]
+    }
+  ]
+}

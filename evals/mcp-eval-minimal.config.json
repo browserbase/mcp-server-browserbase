@@ -1,0 +1,77 @@
+{
+  "server": {
+    "transport": "stdio",
+    "command": "node",
+    "args": ["./cli.js"],
+    "env": {
+      "BROWSERBASE_API_KEY": "${BROWSERBASE_API_KEY}",
+      "BROWSERBASE_PROJECT_ID": "${BROWSERBASE_PROJECT_ID}"
+    }
+  },
+  "timeout": 30000,
+  "llmJudge": false,
+  "workflows": [
+    {
+      "name": "smoke-test-navigation",
+      "description": "Quick test to verify basic navigation works",
+      "steps": [
+        {
+          "user": "Open a browser and go to example.com",
+          "expectedState": "session created"
+        },
+        {
+          "user": "Close the browser",
+          "expectedState": "session closed"
+        }
+      ],
+      "expectTools": [
+        "browserbase_session_create",
+        "browserbase_stagehand_navigate",
+        "browserbase_session_close"
+      ]
+    },
+    {
+      "name": "smoke-test-extraction",
+      "description": "Quick test to verify data extraction works",
+      "steps": [
+        {
+          "user": "Navigate to example.com and extract the page title",
+          "expectedState": "Example Domain"
+        },
+        {
+          "user": "Close the session",
+          "expectedState": "session closed"
+        }
+      ],
+      "expectTools": [
+        "browserbase_session_create",
+        "browserbase_stagehand_navigate",
+        "browserbase_stagehand_extract",
+        "browserbase_session_close"
+      ]
+    },
+    {
+      "name": "smoke-test-multi-session",
+      "description": "Quick test to verify multi-session functionality",
+      "steps": [
+        {
+          "user": "Create a browser session named 'test-session'",
+          "expectedState": "Created session"
+        },
+        {
+          "user": "List active sessions",
+          "expectedState": "test-session"
+        },
+        {
+          "user": "Close the test session",
+          "expectedState": "closed session"
+        }
+      ],
+      "expectTools": [
+        "multi_browserbase_stagehand_session_create",
+        "multi_browserbase_stagehand_session_list",
+        "multi_browserbase_stagehand_session_close"
+      ]
+    }
+  ]
+}
