@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/browserbase-mcp-server-browserbase-badge.png)](https://mseep.ai/app/browserbase-mcp-server-browserbase)
+
 # Browserbase MCP Server
 
 ![cover](assets/cover-mcp.png)
