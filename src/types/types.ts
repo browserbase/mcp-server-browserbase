@@ -22,12 +22,7 @@ export type CreateSessionParams = {
   meta?: Record<string, any>;
 };
 
-export type BrowserSession = {
-  browser: Browser;
-  page: Page;
-  sessionId: string;
-  stagehand: Stagehand;
-};
+// BrowserSession type removed - use StagehandSession instead
 
 export type ToolActionResult =
   | { content?: (ImageContent | TextContent)[] }

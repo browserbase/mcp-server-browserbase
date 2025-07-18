@@ -6,7 +6,7 @@ import {
   type ToolResult,
   type InputType,
 } from "./tool.js";
-import * as stagehandStore from "../stagehandStore.js";
+import { store } from "./helpers/session.js";
 import { CreateSessionParams } from "../types/types.js";
 import type { Context } from "../context.js";
 import navigateTool from "./navigate.js";
@@ -58,8 +58,9 @@ function createMultiSessionAwareTool<TInput extends InputType>(
     ): Promise<ToolResult> => {
       const { sessionId, ...originalParams } = params;
 
-      // Get the session
-      const session = stagehandStore.get(sessionId);
+      // Get the session using new session management
+      const sessionStore = store(context.config);
+      const session = sessionStore.get(sessionId);
       if (!session) {
         throw new Error(`Session ${sessionId} not found`);
       }
@@ -110,7 +111,8 @@ export const createSessionTool = defineTool({
         meta: name ? { name } : undefined,
       };
 
-      const session = await stagehandStore.create(context.config, params);
+      const sessionStore = store(context.config);
+      const session = await sessionStore.create(params);
 
       const bbSessionId = session.metadata?.bbSessionId;
       if (!bbSessionId) {
@@ -154,8 +156,9 @@ export const listSessionsTool = defineTool({
       "ONLY WORKS WITH MULTI-SESSION TOOLS! Track all parallel sessions: Critical tool for multi-session management! Shows all active browser sessions with their IDs, names, ages, and Browserbase session IDs. Use this frequently to monitor your parallel automation workflows, verify sessions are running, and get session IDs for session-specific tools. Essential for debugging and resource management in complex multi-browser scenarios.",
     inputSchema: z.object({}),
   },
-  handle: async (): Promise<ToolResult> => {
-    const sessions = stagehandStore.list();
+  handle: async (context: Context): Promise<ToolResult> => {
+    const sessionStore = store(context.config);
+    const sessions = sessionStore.list();
 
     if (sessions.length === 0) {
       return {
@@ -213,13 +216,14 @@ export const closeSessionTool = defineTool({
         ),
     }),
   },
-  handle: async (_context: Context, { sessionId }): Promise<ToolResult> => {
-    const session = stagehandStore.get(sessionId);
+  handle: async (context: Context, { sessionId }): Promise<ToolResult> => {
+    const sessionStore = store(context.config);
+    const session = sessionStore.get(sessionId);
     if (!session) {
       throw new Error(`Session ${sessionId} not found`);
     }
 
-    await stagehandStore.remove(sessionId);
+    await sessionStore.remove(sessionId);
 
     return {
       action: async () => ({

@@ -3,13 +3,13 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import type { Config } from "../config.d.ts";
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { listResources, readResource } from "./mcp/resources.js";
-import { getSession, defaultSessionId } from "./sessionManager.js";
-import type { MCPTool, BrowserSession } from "./types/types.js";
+import { store } from "./tools/helpers/session.js";
+import type { MCPTool, StagehandSession } from "./types/types.js";
 
 export class Context {
   public readonly config: Config;
   private server: Server;
-  public currentSessionId: string = defaultSessionId;
+  private _currentSession: StagehandSession | null = null;
 
   constructor(server: Server, config: Config) {
     this.server = server;
@@ -21,40 +21,35 @@ export class Context {
   }
 
   /**
-   * Gets the Stagehand instance for the current session from SessionManager
+   * Gets the Stagehand instance for the current session
    */
-  public async getStagehand(
-    sessionId: string = this.currentSessionId,
-  ): Promise<Stagehand> {
-    const session = await getSession(sessionId, this.config);
-    if (!session) {
-      throw new Error(`No session found for ID: ${sessionId}`);
-    }
+  public async getStagehand(): Promise<Stagehand> {
+    const session = await this.getCurrentSession();
     return session.stagehand;
   }
 
-  public async getActivePage(): Promise<BrowserSession["page"] | null> {
-    // Get page from session manager
-    const session = await getSession(this.currentSessionId, this.config);
-    if (session && session.page && !session.page.isClosed()) {
-      return session.page;
+  public async getActivePage(): Promise<StagehandSession["page"] | null> {
+    try {
+      const session = await this.getCurrentSession();
+      if (session.page && !session.page.isClosed()) {
+        return session.page;
+      }
+    } catch {
+      // Session not available
     }
-
     return null;
   }
 
-  public async getActiveBrowser(
-    createIfMissing: boolean = true,
-  ): Promise<BrowserSession["browser"] | null> {
-    const session = await getSession(
-      this.currentSessionId,
-      this.config,
-      createIfMissing,
-    );
-    if (!session || !session.browser || !session.browser.isConnected()) {
-      return null;
+  public async getActiveBrowser(): Promise<StagehandSession["browser"] | null> {
+    try {
+      const session = await this.getCurrentSession();
+      if (session.browser && session.browser.isConnected()) {
+        return session.browser;
+      }
+    } catch {
+      // Session not available
     }
-    return session.browser;
+    return null;
   }
 
   async run(tool: MCPTool, args: unknown): Promise<CallToolResult> {
@@ -121,5 +116,16 @@ export class Context {
    */
   readResource(uri: string) {
     return readResource(uri);
+  }
+
+  /**
+   * Gets or creates the current session
+   */
+  private async getCurrentSession(): Promise<StagehandSession> {
+    if (!this._currentSession) {
+      const sessionStore = store(this.config);
+      this._currentSession = await sessionStore.create();
+    }
+    return this._currentSession;
   }
 }
