@@ -31,11 +31,11 @@
     "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "clean": "rm -rf dist",
-    "prepublishOnly": "pnpm clean && pnpm build",
-    "test": "pnpm run build && tsx evals/run-evals.ts run --config evals/mcp-eval-basic.config.json && tsx evals/run-evals.ts run --config evals/mcp-eval-minimal.config.json",
-    "test:basic": "pnpm run build && tsx evals/run-evals.ts run --config evals/mcp-eval-basic.config.json",
-    "test:minimal": "pnpm run build && tsx evals/run-evals.ts run --config evals/mcp-eval-minimal.config.json",
-    "pre-commit": "pnpm lint-staged"
+    "prepublishOnly": "npm run clean && npm run build",
+    "test": "npm run build && tsx evals/run-evals.ts run --config evals/mcp-eval-basic.config.json && tsx evals/run-evals.ts run --config evals/mcp-eval-minimal.config.json",
+    "test:basic": "npm run build && tsx evals/run-evals.ts run --config evals/mcp-eval-basic.config.json",
+    "test:minimal": "npm run build && tsx evals/run-evals.ts run --config evals/mcp-eval-minimal.config.json",
+    "pre-commit": "lint-staged"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,scss,md}": [
