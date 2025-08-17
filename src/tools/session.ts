@@ -224,7 +224,7 @@ async function handleCloseSession(context: Context): Promise<ToolResult> {
     }
 
     if (stagehandClosedSuccessfully) {
-      let successMessage = `Browserbase session (${previousSessionId || "default"}) closed successfully via Stagehand. Context reset to default.`;
+      let successMessage = `Browserbase session (${previousSessionId || "default"}) closed successfully via Stagehand. Context reset to default. session closed`;
       if (browserbaseSessionId && previousSessionId !== defaultSessionId) {
         successMessage += ` View replay at https://www.browserbase.com/sessions/${browserbaseSessionId}`;
       }
