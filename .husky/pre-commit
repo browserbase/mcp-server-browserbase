@@ -1,4 +1,5 @@
 #!/bin/sh
 pnpm install
-pnpm build
-pnpm pre-commit
+npm install
+npm run build
+npm run pre-commit
