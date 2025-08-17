@@ -73,6 +73,7 @@ program
         "BROWSERBASE_API_KEY",
         "BROWSERBASE_PROJECT_ID",
         "ANTHROPIC_API_KEY",
+        "GEMINI_API_KEY",
       ];
       const missingVars = requiredEnvVars.filter((v) => !process.env[v]);
 
@@ -108,6 +109,11 @@ program
                 chalk.yellow(
                   "  export ANTHROPIC_API_KEY='sk-ant-your_key_here'",
                 ),
+              );
+              break;
+            case "GEMINI_API_KEY":
+              console.error(
+                chalk.yellow("  export GEMINI_API_KEY='your_gemini_key_here'"),
               );
               break;
           }

@@ -108,7 +108,7 @@ async function handleCreateSession(
         content: [
           {
             type: "text",
-            text: `Browserbase Live Session View URL: https://www.browserbase.com/sessions/${browserbaseSessionId}`,
+            text: `Browserbase Live Session View URL: https://www.browserbase.com/sessions/${session.sessionId}\nBrowserbase Live Debugger URL: ${debugUrl} \n session created`,
           },
           {
             type: "text",
