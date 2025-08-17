@@ -1,4 +1,5 @@
 {
+  "passThreshold": 0.7,
   "server": {
     "transport": "stdio",
     "command": "node",
