@@ -105,7 +105,7 @@ git clone https://github.com/browserbase/mcp-server-browserbase.git
 cd mcp-server-browserbase
 
 # Install the dependencies and build the project
-pnpm install && pnpm build
+npm install && npm run build
 ```
 
 Then in your MCP Config JSON run the server. To run locally we can use STDIO or self-host SHTTP.
