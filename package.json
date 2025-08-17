@@ -32,6 +32,9 @@
     "prettier:fix": "prettier --write .",
     "clean": "rm -rf dist",
     "prepublishOnly": "pnpm clean && pnpm build",
+    "test": "pnpm run build && tsx evals/run-evals.ts run --config evals/mcp-eval-basic.config.json && tsx evals/run-evals.ts run --config evals/mcp-eval-minimal.config.json",
+    "test:basic": "pnpm run build && tsx evals/run-evals.ts run --config evals/mcp-eval-basic.config.json",
+    "test:minimal": "pnpm run build && tsx evals/run-evals.ts run --config evals/mcp-eval-minimal.config.json",
     "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
@@ -47,6 +50,7 @@
     "@smithery/cli": "^1.2.15",
     "commander": "^14.0.0",
     "dotenv": "^16.4.6",
+    "mcpvals": "^0.0.3",
     "playwright-core": "^1.53.2",
     "zod": "^3.25.67"
   },

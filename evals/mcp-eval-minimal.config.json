@@ -1,0 +1,94 @@
+{
+  "server": {
+    "transport": "stdio",
+    "command": "node",
+    "args": ["./cli.js"],
+    "env": {
+      "BROWSERBASE_API_KEY": "${BROWSERBASE_API_KEY}",
+      "BROWSERBASE_PROJECT_ID": "${BROWSERBASE_PROJECT_ID}",
+      "GEMINI_API_KEY": "${GEMINI_API_KEY}"
+    }
+  },
+  "timeout": 60000,
+  "llmJudge": false,
+  "workflows": [
+    {
+      "name": "smoke-test-navigation",
+      "description": "Quick test to verify basic navigation works",
+      "steps": [
+        {
+          "user": "Open a browser and go to example.org",
+          "expectedState": "session created"
+        },
+        {
+          "user": "Close the browser",
+          "expectedState": "session closed"
+        }
+      ],
+      "expectTools": [
+        "browserbase_session_create",
+        "browserbase_stagehand_navigate",
+        "browserbase_session_close"
+      ]
+    },
+    {
+      "name": "smoke-test-extraction",
+      "description": "Quick test to verify data extraction works",
+      "steps": [
+        {
+          "user": "Navigate to example.org and extract the page title",
+          "expectedState": "Example Domain"
+        },
+        {
+          "user": "Close the session",
+          "expectedState": "session closed"
+        }
+      ],
+      "expectTools": [
+        "browserbase_session_create",
+        "browserbase_stagehand_navigate",
+        "browserbase_stagehand_extract",
+        "browserbase_session_close"
+      ]
+    },
+    {
+      "name": "smoke-test-multi-session",
+      "description": "Quick test to verify multi-session functionality",
+      "steps": [
+        {
+          "user": "Create a browser session named 'test-session'",
+          "expectedState": "Created session"
+        },
+        {
+          "user": "List active sessions",
+          "expectedState": "test-session"
+        },
+        {
+          "user": "Close the test session",
+          "expectedState": "closed session"
+        }
+      ],
+      "expectTools": [
+        "multi_browserbase_stagehand_session_create",
+        "multi_browserbase_stagehand_session_list",
+        "multi_browserbase_stagehand_session_close"
+      ]
+    },
+    {
+      "name": "smoke-test-url-tools",
+      "description": "Quick test to verify URL retrieval tools work",
+      "steps": [
+        {
+          "user": "Create a browser session, navigate to example.org, get the current URL, and close the session",
+          "expectedState": "example.org"
+        }
+      ],
+      "expectTools": [
+        "browserbase_session_create",
+        "browserbase_stagehand_navigate",
+        "browserbase_stagehand_get_url",
+        "browserbase_session_close"
+      ]
+    }
+  ]
+}
