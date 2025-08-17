@@ -57,7 +57,7 @@
       "steps": [
         {
           "user": "Create a browser session named 'test-session'",
-          "expectedState": "Created session"
+          "expectedState": "session created"
         },
         {
           "user": "List active sessions",
