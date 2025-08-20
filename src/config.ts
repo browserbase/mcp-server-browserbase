@@ -17,6 +17,8 @@ export type CLIOptions = {
   browserHeight?: number;
   modelName?: typeof AvailableModel;
   modelApiKey?: string;
+  keepAlive?: boolean;
+  experimental?: boolean;
 };
 
 // Default Configuration Values
@@ -97,6 +99,8 @@ export async function configFromCLIOptions(
     cookies: cliOptions.cookies,
     modelName: cliOptions.modelName,
     modelApiKey: cliOptions.modelApiKey,
+    keepAlive: cliOptions.keepAlive,
+    experimental: cliOptions.experimental,
   };
 }
 

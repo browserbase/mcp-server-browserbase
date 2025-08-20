@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@browserbasehq/sdk": "^2.6.0",
-    "@browserbasehq/stagehand": "^2.4.0",
+    "@browserbasehq/stagehand": "^2.4.3",
     "@modelcontextprotocol/sdk": "^1.13.1",
     "@smithery/cli": "^1.2.15",
     "commander": "^14.0.0",

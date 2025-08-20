@@ -104,4 +104,10 @@ export type Config = {
    * Required when using a model other than the default google/gemini-2.0-flash
    */
   modelApiKey?: string;
+  /**
+   * Enable experimental features
+   *
+   * @default false
+   */
+  experimental?: boolean;
 };

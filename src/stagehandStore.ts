@@ -33,6 +33,7 @@ export const createStagehandInstance = async (
     ...(params.browserbaseSessionID && {
       browserbaseSessionID: params.browserbaseSessionID,
     }),
+    experimental: config.experimental ?? false,
     browserbaseSessionCreateParams: {
       projectId,
       proxies: config.proxies,
