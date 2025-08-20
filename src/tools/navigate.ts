@@ -19,7 +19,7 @@ const navigateSchema: ToolSchema<typeof NavigateInputSchema> = {
 
 async function handleNavigate(
   context: Context,
-  params: NavigateInput,
+  params: NavigateInput
 ): Promise<ToolResult> {
   const action = async (): Promise<ToolActionResult> => {
     try {
@@ -48,14 +48,6 @@ async function handleNavigate(
           {
             type: "text",
             text: `Navigated to: ${params.url}`,
-          },
-          {
-            type: "text",
-            text: `View the live session here: https://www.browserbase.com/sessions/${sessionId}`,
-          },
-          {
-            type: "text",
-            text: `Browserbase Live Debugger URL: ${debugUrl}`,
           },
         ],
       };

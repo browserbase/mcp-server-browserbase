@@ -3,6 +3,7 @@ import type { Tool, ToolSchema, ToolResult } from "./tool.js";
 import type { Context } from "../context.js";
 import type { ToolActionResult } from "../types/types.js";
 import { Browserbase } from "@browserbasehq/sdk";
+import { createUIResource } from "@mcp-ui/server";
 
 // Import SessionManager functions
 import {
@@ -13,6 +14,7 @@ import {
   getSession,
 } from "../sessionManager.js";
 import type { BrowserSession } from "../types/types.js";
+import { TextContent } from "@modelcontextprotocol/sdk/types.js";
 
 // --- Tool: Create Session ---
 const CreateSessionInputSchema = z.object({
@@ -21,7 +23,7 @@ const CreateSessionInputSchema = z.object({
     .string()
     .optional()
     .describe(
-      "Optional session ID to use/reuse. If not provided or invalid, a new session is created.",
+      "Optional session ID to use/reuse. If not provided or invalid, a new session is created."
     ),
 });
 type CreateSessionInput = z.infer<typeof CreateSessionInputSchema>;
@@ -36,7 +38,7 @@ const createSessionSchema: ToolSchema<typeof CreateSessionInputSchema> = {
 // Handle function for CreateSession using SessionManager
 async function handleCreateSession(
   context: Context,
-  params: CreateSessionInput,
+  params: CreateSessionInput
 ): Promise<ToolResult> {
   const action = async (): Promise<ToolActionResult> => {
     try {
@@ -47,7 +49,7 @@ async function handleCreateSession(
         const projectId = config.browserbaseProjectId || "";
         targetSessionId = `${params.sessionId}_${projectId}`;
         process.stderr.write(
-          `[tool.createSession] Attempting to create/assign session with specified ID: ${targetSessionId}`,
+          `[tool.createSession] Attempting to create/assign session with specified ID: ${targetSessionId}`
         );
       } else {
         targetSessionId = defaultSessionId;
@@ -61,7 +63,7 @@ async function handleCreateSession(
         session = await createNewBrowserSession(
           targetSessionId,
           config,
-          params.sessionId,
+          params.sessionId
         );
       }
 
@@ -73,7 +75,7 @@ async function handleCreateSession(
         !session.stagehand
       ) {
         throw new Error(
-          `SessionManager failed to return a valid session object with actualSessionId for ID: ${targetSessionId}`,
+          `SessionManager failed to return a valid session object with actualSessionId for ID: ${targetSessionId}`
         );
       }
 
@@ -84,30 +86,39 @@ async function handleCreateSession(
       const debugUrl = (await bb.sessions.debug(session.sessionId))
         .debuggerFullscreenUrl;
       process.stderr.write(
-        `[tool.connected] Successfully connected to Browserbase session. Internal ID: ${targetSessionId}, Actual ID: ${session.sessionId}`,
+        `[tool.connected] Successfully connected to Browserbase session. Internal ID: ${targetSessionId}, Actual ID: ${session.sessionId}`
       );
 
       process.stderr.write(
-        `[SessionManager] Browserbase Live Session View URL: https://www.browserbase.com/sessions/${session.sessionId}`,
+        `[SessionManager] Browserbase Live Session View URL: https://www.browserbase.com/sessions/${session.sessionId}`
       );
 
       process.stderr.write(
-        `[SessionManager] Browserbase Live Debugger URL: ${debugUrl}`,
+        `[SessionManager] Browserbase Live Debugger URL: ${debugUrl}`
       );
 
       return {
         content: [
           {
             type: "text",
-            text: `Browserbase Live Session View URL: https://www.browserbase.com/sessions/${session.sessionId}\nBrowserbase Live Debugger URL: ${debugUrl}`,
+            text: `Browserbase Live Session View URL: https://www.browserbase.com/sessions/${session.sessionId}`,
           },
+          {
+            type: "text",
+            text: `Browserbase Live Debugger URL: ${debugUrl}`,
+          },
+          createUIResource({
+            uri: "ui://analytics-dashboard/main",
+            content: { type: "externalUrl", iframeUrl: debugUrl },
+            encoding: "text",
+          }) as unknown as TextContent,
         ],
       };
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
       process.stderr.write(
-        `[tool.createSession] Action failed: ${errorMessage}`,
+        `[tool.createSession] Action failed: ${errorMessage}`
       );
       // Re-throw to be caught by Context.run's error handling for actions
       throw new Error(`Failed to create Browserbase session: ${errorMessage}`);
@@ -151,7 +162,7 @@ async function handleCloseSession(context: Context): Promise<ToolResult> {
       const session = await getSession(
         previousSessionId,
         context.config,
-        false,
+        false
       );
 
       if (session && session.stagehand) {
@@ -159,7 +170,7 @@ async function handleCloseSession(context: Context): Promise<ToolResult> {
         browserbaseSessionId = session.sessionId;
 
         process.stderr.write(
-          `[tool.closeSession] Attempting to close Stagehand for session: ${previousSessionId || "default"} (Browserbase ID: ${browserbaseSessionId})`,
+          `[tool.closeSession] Attempting to close Stagehand for session: ${previousSessionId || "default"} (Browserbase ID: ${browserbaseSessionId})`
         );
 
         // Use Stagehand's close method which handles browser cleanup properly
@@ -167,7 +178,7 @@ async function handleCloseSession(context: Context): Promise<ToolResult> {
         stagehandClosedSuccessfully = true;
 
         process.stderr.write(
-          `[tool.closeSession] Stagehand and browser connection for session (${previousSessionId}) closed successfully.`,
+          `[tool.closeSession] Stagehand and browser connection for session (${previousSessionId}) closed successfully.`
         );
 
         // Clean up the session from tracking
@@ -175,19 +186,19 @@ async function handleCloseSession(context: Context): Promise<ToolResult> {
 
         if (browserbaseSessionId) {
           process.stderr.write(
-            `[tool.closeSession] View session replay at https://www.browserbase.com/sessions/${browserbaseSessionId}`,
+            `[tool.closeSession] View session replay at https://www.browserbase.com/sessions/${browserbaseSessionId}`
           );
         }
       } else {
         process.stderr.write(
-          `[tool.closeSession] No Stagehand instance found for session: ${previousSessionId || "default/unknown"}`,
+          `[tool.closeSession] No Stagehand instance found for session: ${previousSessionId || "default/unknown"}`
         );
       }
     } catch (error: unknown) {
       stagehandCloseErrorMessage =
         error instanceof Error ? error.message : String(error);
       process.stderr.write(
-        `[tool.closeSession] Error retrieving or closing Stagehand (session ID was ${previousSessionId || "default/unknown"}): ${stagehandCloseErrorMessage}`,
+        `[tool.closeSession] Error retrieving or closing Stagehand (session ID was ${previousSessionId || "default/unknown"}): ${stagehandCloseErrorMessage}`
       );
     }
 
@@ -195,13 +206,13 @@ async function handleCloseSession(context: Context): Promise<ToolResult> {
     const oldContextSessionId = context.currentSessionId;
     context.currentSessionId = defaultSessionId;
     process.stderr.write(
-      `[tool.closeSession] Session context reset to default. Previous context session ID was ${oldContextSessionId || "default/unknown"}.`,
+      `[tool.closeSession] Session context reset to default. Previous context session ID was ${oldContextSessionId || "default/unknown"}.`
     );
 
     // Step 3: Determine the result message
     if (stagehandCloseErrorMessage && !stagehandClosedSuccessfully) {
       throw new Error(
-        `Failed to close the Stagehand session (session ID in context was ${previousSessionId || "default/unknown"}). Error: ${stagehandCloseErrorMessage}. Session context has been reset to default.`,
+        `Failed to close the Stagehand session (session ID in context was ${previousSessionId || "default/unknown"}). Error: ${stagehandCloseErrorMessage}. Session context has been reset to default.`
       );
     }
 
