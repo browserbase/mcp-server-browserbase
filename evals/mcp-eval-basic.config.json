@@ -1,0 +1,142 @@
+{
+  "passThreshold": 0.7,
+  "server": {
+    "transport": "stdio",
+    "command": "node",
+    "args": ["./cli.js"],
+    "env": {
+      "BROWSERBASE_API_KEY": "${BROWSERBASE_API_KEY}",
+      "BROWSERBASE_PROJECT_ID": "${BROWSERBASE_PROJECT_ID}",
+      "GEMINI_API_KEY": "${GEMINI_API_KEY}"
+    }
+  },
+  "timeout": 180000,
+  "llmJudge": false,
+  "workflows": [
+    {
+      "name": "basic-navigation-test",
+      "description": "Test basic browser navigation functionality",
+      "steps": [
+        {
+          "user": "Create a browser session, navigate to https://example.com, and close the session",
+          "expectedState": "closed"
+        }
+      ],
+      "expectTools": [
+        "browserbase_session_create",
+        "browserbase_stagehand_navigate",
+        "browserbase_session_close"
+      ]
+    },
+    {
+      "name": "search-and-extract-test",
+      "description": "Test navigation, search interaction, and data extraction",
+      "steps": [
+        {
+          "user": "Create a browser session, navigate to https://example.com, extract the page title, and close the session",
+          "expectedState": "Example Domain"
+        }
+      ],
+      "expectTools": [
+        "browserbase_session_create",
+        "browserbase_stagehand_navigate",
+        "browserbase_stagehand_extract",
+        "browserbase_session_close"
+      ]
+    },
+    {
+      "name": "observe-and-interact-test",
+      "description": "Test element observation and interaction capabilities",
+      "steps": [
+        {
+          "user": "Create a browser session, navigate to https://example.com, observe the page elements, and close the session",
+          "expectedState": "closed"
+        }
+      ],
+      "expectTools": [
+        "browserbase_session_create",
+        "browserbase_stagehand_navigate",
+        "browserbase_stagehand_observe",
+        "browserbase_session_close"
+      ]
+    },
+    {
+      "name": "screenshot-test",
+      "description": "Test screenshot functionality",
+      "steps": [
+        {
+          "user": "Create a browser session, navigate to https://example.com, take a screenshot, and close the session",
+          "expectedState": "closed"
+        }
+      ],
+      "expectTools": [
+        "browserbase_session_create",
+        "browserbase_stagehand_navigate",
+        "browserbase_screenshot",
+        "browserbase_session_close"
+      ]
+    },
+    {
+      "name": "multi-session-test",
+      "description": "Test multi-session browser management",
+      "steps": [
+        {
+          "user": "Create a multi-session browser named 'test-session', list all sessions, navigate to https://example.com in that session, and close the session",
+          "expectedState": "closed"
+        }
+      ],
+      "expectTools": [
+        "multi_browserbase_stagehand_session_create",
+        "multi_browserbase_stagehand_session_list",
+        "multi_browserbase_stagehand_navigate_session",
+        "multi_browserbase_stagehand_session_close"
+      ]
+    },
+    {
+      "name": "form-interaction-test",
+      "description": "Test form filling and submission capabilities",
+      "steps": [
+        {
+          "user": "Create a browser session, navigate to https://httpbin.org/forms/post, fill in the customer name field with 'TestUser', and close the session",
+          "expectedState": "closed"
+        }
+      ],
+      "expectTools": [
+        "browserbase_session_create",
+        "browserbase_stagehand_navigate",
+        "browserbase_stagehand_act",
+        "browserbase_session_close"
+      ]
+    },
+    {
+      "name": "error-handling-test",
+      "description": "Test error handling for invalid operations",
+      "steps": [
+        {
+          "user": "Create a browser session and try to navigate to an invalid URL like 'invalid-url-test'",
+          "expectedState": "error"
+        }
+      ],
+      "expectTools": [
+        "browserbase_session_create",
+        "browserbase_stagehand_navigate"
+      ]
+    },
+    {
+      "name": "url-retrieval-test",
+      "description": "Test URL retrieval functionality",
+      "steps": [
+        {
+          "user": "Create a browser session, navigate to https://example.com, get the current URL to verify navigation, and close the session",
+          "expectedState": "https://example.com"
+        }
+      ],
+      "expectTools": [
+        "browserbase_session_create",
+        "browserbase_stagehand_navigate",
+        "browserbase_stagehand_get_url",
+        "browserbase_session_close"
+      ]
+    }
+  ]
+}

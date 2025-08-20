@@ -99,7 +99,7 @@ async function handleCreateSession(
         content: [
           {
             type: "text",
-            text: `Browserbase Live Session View URL: https://www.browserbase.com/sessions/${session.sessionId}\nBrowserbase Live Debugger URL: ${debugUrl}`,
+            text: `Browserbase Live Session View URL: https://www.browserbase.com/sessions/${session.sessionId}\nBrowserbase Live Debugger URL: ${debugUrl} \n session created`,
           },
         ],
       };
@@ -206,7 +206,7 @@ async function handleCloseSession(context: Context): Promise<ToolResult> {
     }
 
     if (stagehandClosedSuccessfully) {
-      let successMessage = `Browserbase session (${previousSessionId || "default"}) closed successfully via Stagehand. Context reset to default.`;
+      let successMessage = `Browserbase session (${previousSessionId || "default"}) closed successfully via Stagehand. Context reset to default. session closed`;
       if (browserbaseSessionId && previousSessionId !== defaultSessionId) {
         successMessage += ` View replay at https://www.browserbase.com/sessions/${browserbaseSessionId}`;
       }

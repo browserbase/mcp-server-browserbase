@@ -28,15 +28,17 @@
     "smithery": "npx @smithery/cli dev src/index.ts",
     "inspector": "npx @modelcontextprotocol/inspector build/index.js",
     "lint": "eslint . --ext .ts",
-    "prettier:check": "prettier --check .",
-    "prettier:fix": "prettier --write .",
+    "format": "prettier --write .",
     "clean": "rm -rf dist",
-    "prepublishOnly": "pnpm clean && pnpm build",
-    "pre-commit": "pnpm lint-staged"
+    "prepublishOnly": "npm run clean && npm run build",
+    "test": "npm run build && tsx evals/run-evals.ts run --config evals/mcp-eval-basic.config.json && tsx evals/run-evals.ts run --config evals/mcp-eval-minimal.config.json",
+    "test:basic": "npm run build && tsx evals/run-evals.ts run --config evals/mcp-eval-basic.config.json",
+    "test:minimal": "npm run build && tsx evals/run-evals.ts run --config evals/mcp-eval-minimal.config.json",
+    "pre-commit": "lint-staged"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,scss,md}": [
-      "prettier --write",
+      "prettier --write .",
       "eslint --fix"
     ]
   },
@@ -47,6 +49,7 @@
     "@smithery/cli": "^1.2.15",
     "commander": "^14.0.0",
     "dotenv": "^16.4.6",
+    "mcpvals": "^0.0.3",
     "playwright-core": "^1.53.2",
     "zod": "^3.25.67"
   },
@@ -62,6 +65,5 @@
     "tsx": "^4.20.3",
     "typescript": "^5.6.2",
     "typescript-eslint": "^8.35.0"
-  },
-  "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184"
+  }
 }
