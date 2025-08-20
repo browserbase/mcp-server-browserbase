@@ -36,13 +36,6 @@ async function handleNavigate(
         throw new Error("No Browserbase session ID available");
       }
 
-      // Get the debug URL using Browserbase SDK
-      const bb = new Browserbase({
-        apiKey: context.config.browserbaseApiKey,
-      });
-      const debugUrl = (await bb.sessions.debug(sessionId))
-        .debuggerFullscreenUrl;
-
       return {
         content: [
           {
