@@ -19,7 +19,7 @@ const navigateSchema: ToolSchema<typeof NavigateInputSchema> = {
 
 async function handleNavigate(
   context: Context,
-  params: NavigateInput
+  params: NavigateInput,
 ): Promise<ToolResult> {
   const action = async (): Promise<ToolActionResult> => {
     try {
