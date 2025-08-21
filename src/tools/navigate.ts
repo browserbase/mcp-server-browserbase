@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { Browserbase } from "@browserbasehq/sdk";
 import type { Tool, ToolSchema, ToolResult } from "./tool.js";
 import type { Context } from "../context.js";
 import type { ToolActionResult } from "../types/types.js";
