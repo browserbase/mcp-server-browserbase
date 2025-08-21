@@ -103,6 +103,10 @@ export const configSchema = z
       .describe(
         "API key for the custom model provider. Required when using a model other than the default google/gemini-2.0-flash",
       ),
+    experimental: z
+      .boolean()
+      .optional()
+      .describe("Enable experimental Stagehand features"),
   })
   .refine(
     (data) => {

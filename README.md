@@ -150,6 +150,7 @@ The Browserbase MCP server accepts the following command-line flags:
 | `--browserHeight <height>` | Browser viewport height (default: 768)                                      |
 | `--modelName <model>`      | The model to use for Stagehand (default: google/gemini-2.0-flash)           |
 | `--modelApiKey <key>`      | API key for the custom model provider (required when using custom models)   |
+| `--experimental`           | Enable experimental features (default: false)                               |
 
 These flags can be passed directly to the CLI or configured in your MCP configuration file.
 

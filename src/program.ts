@@ -65,6 +65,8 @@ program
     "--modelApiKey <key>",
     "API key for the custom model provider (required when using custom models)",
   )
+  .option("--keepAlive", "Enable Browserbase Keep Alive Session")
+  .option("--experimental", "Enable experimental features")
   .action(async (options) => {
     const config = await resolveConfig(options);
     const serverList = new ServerList(async () =>
