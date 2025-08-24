@@ -3,6 +3,7 @@ import type { Tool, ToolSchema, ToolResult } from "./tool.js";
 import type { Context } from "../context.js";
 import type { ToolActionResult } from "../types/types.js";
 import { Browserbase } from "@browserbasehq/sdk";
+import { createUIResource } from "@mcp-ui/server";
 
 // Import SessionManager functions
 import {
@@ -13,6 +14,7 @@ import {
   getSession,
 } from "../sessionManager.js";
 import type { BrowserSession } from "../types/types.js";
+import { TextContent } from "@modelcontextprotocol/sdk/types.js";
 
 // --- Tool: Create Session ---
 const CreateSessionInputSchema = z.object({
@@ -99,8 +101,17 @@ async function handleCreateSession(
         content: [
           {
             type: "text",
-            text: `Browserbase Live Session View URL: https://www.browserbase.com/sessions/${session.sessionId}\nBrowserbase Live Debugger URL: ${debugUrl}`,
+            text: `Browserbase Live Session View URL: https://www.browserbase.com/sessions/${session.sessionId}`,
           },
+          {
+            type: "text",
+            text: `Browserbase Live Debugger URL: ${debugUrl}`,
+          },
+          createUIResource({
+            uri: "ui://analytics-dashboard/main",
+            content: { type: "externalUrl", iframeUrl: debugUrl },
+            encoding: "text",
+          }) as unknown as TextContent,
         ],
       };
     } catch (error: unknown) {

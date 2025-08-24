@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@browserbasehq/sdk": "^2.6.0",
+    "@mcp-ui/server": "^5.2.0",
     "@browserbasehq/stagehand": "^2.4.3",
     "@modelcontextprotocol/sdk": "^1.13.1",
     "@smithery/cli": "^1.2.15",
