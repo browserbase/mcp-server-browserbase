@@ -1,6 +1,6 @@
 {
   "name": "@browserbasehq/mcp-server-browserbase",
-  "version": "2.1.0",
+  "version": "2.0.1",
   "description": "MCP server for AI web browser automation using Browserbase and Stagehand",
   "license": "Apache-2.0",
   "author": "Browserbase, Inc. (https://www.browserbase.com/)",
@@ -32,10 +32,7 @@
     "prettier:fix": "prettier --write .",
     "clean": "rm -rf dist",
     "prepublishOnly": "pnpm clean && pnpm build",
-    "pre-commit": "pnpm lint-staged",
-    "changeset": "changeset",
-    "version:packages": "changeset version",
-    "release": "changeset publish"
+    "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,scss,md}": [
@@ -45,8 +42,8 @@
   },
   "dependencies": {
     "@browserbasehq/sdk": "^2.6.0",
-    "@browserbasehq/stagehand": "^2.4.3",
     "@mcp-ui/server": "^5.2.0",
+    "@browserbasehq/stagehand": "^2.4.3",
     "@modelcontextprotocol/sdk": "^1.13.1",
     "@smithery/cli": "^1.2.15",
     "commander": "^14.0.0",
@@ -55,7 +52,6 @@
     "zod": "^3.25.67"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.29.6",
     "@eslint/js": "^9.29.0",
     "eslint": "^9.29.0",
     "eslint-plugin-react": "^7.37.5",
@@ -67,9 +63,6 @@
     "tsx": "^4.20.3",
     "typescript": "^5.6.2",
     "typescript-eslint": "^8.35.0"
-  },
-  "publishConfig": {
-    "access": "public"
   },
   "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184"
 }
