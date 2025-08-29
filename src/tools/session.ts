@@ -83,14 +83,21 @@ async function handleCreateSession(
       const bb = new Browserbase({
         apiKey: config.browserbaseApiKey,
       });
-      const debugUrl = (await bb.sessions.debug(session.sessionId))
+
+      const browserbaseSessionId = session.stagehand.browserbaseSessionID;
+      if (!browserbaseSessionId) {
+        throw new Error(
+          "Browserbase session ID not found in Stagehand instance",
+        );
+      }
+      const debugUrl = (await bb.sessions.debug(browserbaseSessionId))
         .debuggerFullscreenUrl;
       process.stderr.write(
-        `[tool.connected] Successfully connected to Browserbase session. Internal ID: ${targetSessionId}, Actual ID: ${session.sessionId}`,
+        `[tool.connected] Successfully connected to Browserbase session. Internal ID: ${targetSessionId}, Actual ID: ${browserbaseSessionId}`,
       );
 
       process.stderr.write(
-        `[SessionManager] Browserbase Live Session View URL: https://www.browserbase.com/sessions/${session.sessionId}`,
+        `[SessionManager] Browserbase Live Session View URL: https://www.browserbase.com/sessions/${browserbaseSessionId}`,
       );
 
       process.stderr.write(
@@ -101,7 +108,7 @@ async function handleCreateSession(
         content: [
           {
             type: "text",
-            text: `Browserbase Live Session View URL: https://www.browserbase.com/sessions/${session.sessionId}`,
+            text: `Browserbase Live Session View URL: https://www.browserbase.com/sessions/${browserbaseSessionId}`,
           },
           {
             type: "text",
