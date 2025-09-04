@@ -23,7 +23,7 @@
         },
         {
           "user": "Close the browser",
-          "expectedState": "session closed"
+          "expectedState": "closed successfully via Stagehand"
         }
       ],
       "expectTools": [
@@ -42,7 +42,7 @@
         },
         {
           "user": "Close the session",
-          "expectedState": "session closed"
+          "expectedState": "closed successfully via Stagehand"
         }
       ],
       "expectTools": [

@@ -227,7 +227,7 @@ export const closeSessionTool = defineTool({
         content: [
           {
             type: "text",
-            text: `closed session ${sessionId}`,
+            text: `Closed session ${sessionId}`,
           },
         ],
       }),
