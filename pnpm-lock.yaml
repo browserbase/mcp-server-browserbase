@@ -12,10 +12,10 @@ importers:
         specifier: ^2.6.0
         version: 2.6.0
       '@browserbasehq/stagehand':
-        specifier: ^2.4.3
-        version: 2.4.4(bufferutil@4.0.9)(deepmerge@4.3.1)(dotenv@16.6.1)(react@19.1.0)(zod@3.25.76)
+        specifier: ^2.5.0
+        version: 2.5.0(bufferutil@4.0.9)(deepmerge@4.3.1)(dotenv@16.6.1)(react@19.1.0)(zod@3.25.76)
       '@mcp-ui/server':
-        specifier: ^5.2.0
+        specifier: ^5.10.0
         version: 5.10.0
       '@modelcontextprotocol/sdk':
         specifier: ^1.13.1
@@ -189,8 +189,8 @@ packages:
   '@browserbasehq/sdk@2.6.0':
     resolution: {integrity: sha512-83iXP5D7xMm8Wyn66TUaUrgoByCmAJuoMoZQI3sGg3JAiMlTfnCIMqyVBoNSaItaPIkaCnrsj6LiusmXV2X9YA==}
 
-  '@browserbasehq/stagehand@2.4.4':
-    resolution: {integrity: sha512-PSctDxqMrLLCwv+fg3piYfzUvhe9vWZjSkBWiDVfTL2/611+PrTMGPjnikz1rhyDrTo7IU9KGui/ZMntZHEnzQ==}
+  '@browserbasehq/stagehand@2.5.0':
+    resolution: {integrity: sha512-Cannwg1WfpiJGDMdPGyx4i59SPBEV9ctTVZctGn+XVbP/ymwcQVFsyYYwSV0cK8rOk90TZK80TkMiuQGpfCF6g==}
     peerDependencies:
       deepmerge: ^4.3.1
       dotenv: ^16.4.5
@@ -489,6 +489,10 @@ packages:
 
   '@modelcontextprotocol/sdk@1.15.1':
     resolution: {integrity: sha512-W/XlN9c528yYn+9MQkVjxiTPgPxoxt+oczfjHBDsJx0+59+O7B75Zhsp0B16Xbwbz8ANISDajh6+V7nIcPMc5w==}
+    engines: {node: '>=18'}
+
+  '@modelcontextprotocol/sdk@1.17.5':
+    resolution: {integrity: sha512-QakrKIGniGuRVfWBdMsDea/dx1PNE739QJ7gCM41s9q+qaCYTHCdsIBXQVVXry3mfWAiaM9kT22Hyz53Uw8mfg==}
     engines: {node: '>=18'}
 
   '@ngrok/ngrok-android-arm64@1.5.1':
@@ -2864,11 +2868,12 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@browserbasehq/stagehand@2.4.4(bufferutil@4.0.9)(deepmerge@4.3.1)(dotenv@16.6.1)(react@19.1.0)(zod@3.25.76)':
+  '@browserbasehq/stagehand@2.5.0(bufferutil@4.0.9)(deepmerge@4.3.1)(dotenv@16.6.1)(react@19.1.0)(zod@3.25.76)':
     dependencies:
       '@anthropic-ai/sdk': 0.39.0
       '@browserbasehq/sdk': 2.6.0
       '@google/genai': 0.8.0(bufferutil@4.0.9)
+      '@modelcontextprotocol/sdk': 1.17.5
       ai: 4.3.19(react@19.1.0)(zod@3.25.76)
       deepmerge: 4.3.1
       devtools-protocol: 0.0.1464554
@@ -3220,6 +3225,23 @@ snapshots:
       - supports-color
 
   '@modelcontextprotocol/sdk@1.15.1':
+    dependencies:
+      ajv: 6.12.6
+      content-type: 1.0.5
+      cors: 2.8.5
+      cross-spawn: 7.0.6
+      eventsource: 3.0.7
+      eventsource-parser: 3.0.3
+      express: 5.1.0
+      express-rate-limit: 7.5.1(express@5.1.0)
+      pkce-challenge: 5.0.0
+      raw-body: 3.0.0
+      zod: 3.25.76
+      zod-to-json-schema: 3.24.6(zod@3.25.76)
+    transitivePeerDependencies:
+      - supports-color
+
+  '@modelcontextprotocol/sdk@1.17.5':
     dependencies:
       ajv: 6.12.6
       content-type: 1.0.5

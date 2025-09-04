@@ -27,6 +27,7 @@
     "watch": "tsc --watch",
     "smithery": "npx @smithery/cli dev src/index.ts",
     "inspector": "npx @modelcontextprotocol/inspector build/index.js",
+    "evals": "tsx evals/run-evals.ts run --config evals/mcp-eval-basic.config.json && tsx evals/run-evals.ts run --config evals/mcp-eval-minimal.config.json && tsx evals/run-evals.ts run --config evals/mcp-eval.config.json",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write .",
     "clean": "rm -rf dist",
@@ -44,8 +45,8 @@
   },
   "dependencies": {
     "@browserbasehq/sdk": "^2.6.0",
-    "@browserbasehq/stagehand": "^2.4.3",
-    "@mcp-ui/server": "^5.2.0",
+    "@browserbasehq/stagehand": "^2.5.0",
+    "@mcp-ui/server": "^5.10.0",
     "@modelcontextprotocol/sdk": "^1.13.1",
     "@smithery/cli": "^1.2.15",
     "commander": "^14.0.0",
