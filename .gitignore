@@ -294,3 +294,7 @@ cython_debug/
 
 # Smithery
 /.smithery
+
+# MCP Registry https://github.com/modelcontextprotocol/registry
+.mcpregistry_github_token
+.mcpregistry_registry_token
