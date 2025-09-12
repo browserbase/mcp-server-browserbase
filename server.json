@@ -1,0 +1,45 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
+  "name": "io.github.browserbase/mcp-server-browserbase",
+  "description": "MCP server for AI web browser automation using Browserbase and Stagehand",
+  "status": "active",
+  "repository": {
+    "url": "https://github.com/browserbase/mcp-server-browserbase",
+    "source": "github"
+  },
+  "version": "2.1.1",
+  "packages": [
+    {
+      "registry_type": "npm",
+      "registry_base_url": "https://registry.npmjs.org",
+      "identifier": "@browserbasehq/mcp-server-browserbase",
+      "version": "2.1.1",
+      "transport": {
+        "type": "stdio"
+      },
+      "environment_variables": [
+        {
+          "description": "Your Browserbase API key",
+          "is_required": true,
+          "format": "string",
+          "is_secret": true,
+          "name": "BROWSERBASE_API_KEY"
+        },
+        {
+          "description": "Your Browserbase Project ID",
+          "is_required": true,
+          "format": "string",
+          "is_secret": false,
+          "name": "BROWSERBASE_PROJECT_ID"
+        },
+        {
+          "description": "Your Gemini API key (default model)",
+          "is_required": true,
+          "format": "string",
+          "is_secret": true,
+          "name": "GEMINI_API_KEY"
+        }
+      ]
+    }
+  ]
+}
