@@ -7,13 +7,13 @@
     "url": "https://github.com/browserbase/mcp-server-browserbase",
     "source": "github"
   },
-  "version": "2.1.0",
+  "version": "2.1.1",
   "packages": [
     {
       "registry_type": "npm",
       "registry_base_url": "https://registry.npmjs.org",
       "identifier": "@browserbasehq/mcp-server-browserbase",
-      "version": "2.1.0",
+      "version": "2.1.1",
       "transport": {
         "type": "stdio"
       },
