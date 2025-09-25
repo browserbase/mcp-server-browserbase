@@ -47,36 +47,6 @@ export function clearAllScreenshots() {
 }
 
 /**
- * Retry wrapper for clearing screenshots for a session. Uses exponential backoff.
- * This protects against transient failures in any consumer of the map.
- */
-export async function retryClearScreenshotsForSession(
-  sessionId: string,
-  options: { retries?: number; initialDelayMs?: number } = {},
-): Promise<void> {
-  const retries = options.retries ?? 3;
-  const initialDelayMs = options.initialDelayMs ?? 50;
-
-  let attempt = 0;
-  let delay = initialDelayMs;
-  // Attempt at least once
-  while (true) {
-    try {
-      clearScreenshotsForSession(sessionId);
-      return;
-    } catch (err) {
-      if (attempt >= retries) {
-        // Give up
-        throw err instanceof Error ? err : new Error(String(err));
-      }
-      await new Promise((r) => setTimeout(r, delay));
-      attempt += 1;
-      delay = Math.min(delay * 2, 1000);
-    }
-  }
-}
-
-/**
  * Handle listing resources request
  * @returns A list of available resources including screenshots
  */
