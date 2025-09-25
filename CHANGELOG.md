@@ -1,5 +1,11 @@
 # @browserbasehq/mcp-server-browserbase
 
+## 2.1.2
+
+### Patch Changes
+
+- fixing screenshot map behavior
+
 ## 2.1.1
 
 ### Patch Changes
