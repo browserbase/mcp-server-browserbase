@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import { Stagehand, Page } from "@browserbasehq/stagehand";
 import { StagehandSession, CreateSessionParams } from "./types/types.js";
 import type { Config } from "../config.d.ts";
+import { retryClearScreenshotsForSession } from "./mcp/resources.js";
 
 // Store for all active sessions
 const store = new Map<string, StagehandSession>();
@@ -110,6 +111,12 @@ export const create = async (
   const disconnectHandler = () => {
     process.stderr.write(`[StagehandStore] Session disconnected: ${id}\n`);
     store.delete(id);
+    // Purge by internal store ID and Browserbase session ID
+    retryClearScreenshotsForSession(id).catch(() => {});
+    const bbId = session.metadata?.bbSessionId;
+    if (bbId) {
+      retryClearScreenshotsForSession(bbId).catch(() => {});
+    }
   };
 
   browser.on("disconnected", disconnectHandler);
@@ -158,6 +165,12 @@ export const remove = async (id: string): Promise<void> => {
 
     await session.stagehand.close();
     process.stderr.write(`[StagehandStore] Session closed: ${id}\n`);
+    // Purge by internal store ID and Browserbase session ID
+    await retryClearScreenshotsForSession(id).catch(() => {});
+    const bbId = session.metadata?.bbSessionId;
+    if (bbId) {
+      await retryClearScreenshotsForSession(bbId).catch(() => {});
+    }
   } catch (error) {
     process.stderr.write(
       `[StagehandStore] Error closing session ${id}: ${

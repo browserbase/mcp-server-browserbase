@@ -2,6 +2,7 @@ import { Page, BrowserContext } from "@browserbasehq/stagehand";
 import type { Config } from "../config.d.ts";
 import type { Cookie } from "playwright-core";
 import { createStagehandInstance } from "./stagehandStore.js";
+import { retryClearScreenshotsForSession } from "./mcp/resources.js";
 import type { BrowserSession } from "./types/types.js";
 
 // Global state for managing browser sessions
@@ -131,6 +132,13 @@ export async function createNewBrowserSession(
         );
         setActiveSessionId(defaultSessionId);
       }
+
+      // Purge any screenshots associated with both internal and Browserbase IDs
+      retryClearScreenshotsForSession(newSessionId).catch(() => {});
+      const bbId = browserbaseSessionId;
+      if (bbId) {
+        retryClearScreenshotsForSession(bbId).catch(() => {});
+      }
     });
 
     // Add cookies to the context if they are provided in the config
@@ -192,6 +200,12 @@ async function closeBrowserGracefully(
       process.stderr.write(
         `[SessionManager] Successfully closed Stagehand and browser for session: ${sessionIdToLog}\n`,
       );
+      // After close, purge any screenshots associated with both internal and Browserbase IDs
+      retryClearScreenshotsForSession(sessionIdToLog).catch(() => {});
+      const bbId = session?.stagehand?.browserbaseSessionID;
+      if (bbId) {
+        retryClearScreenshotsForSession(bbId).catch(() => {});
+      }
     } catch (closeError) {
       process.stderr.write(
         `[SessionManager] WARN - Error closing Stagehand for session ${sessionIdToLog}: ${
@@ -334,6 +348,9 @@ export async function cleanupSession(sessionId: string): Promise<void> {
 
   // Remove from browsers map
   browsers.delete(sessionId);
+
+  // Always purge screenshots for this (internal) session id
+  await retryClearScreenshotsForSession(sessionId).catch(() => {});
 
   // Clear default session reference if this was the default
   if (sessionId === defaultSessionId && defaultBrowserSession) {
