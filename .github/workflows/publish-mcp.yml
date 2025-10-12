@@ -2,13 +2,13 @@ name: Publish to MCP Registry
 
 on:
   push:
-    tags: ["v*"]  
+    tags: ["v*"]
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write  # Required for OIDC authentication
+      id-token: write # Required for OIDC authentication
       contents: read
 
     steps:
