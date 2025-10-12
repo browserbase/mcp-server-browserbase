@@ -98,7 +98,7 @@ export type Config = {
    *
    * @default "gemini-2.0-flash"
    */
-  modelName?: AvailableModelSchema;
+  modelName?: z.infer<typeof AvailableModelSchema>;
   /**
    * API key for the custom model provider
    * Required when using a model other than the default gemini-2.0-flash
