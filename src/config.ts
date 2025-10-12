@@ -1,6 +1,6 @@
 import type { Cookie } from "playwright-core";
 import type { Config } from "../config.d.ts";
-import type { AvailableModel } from "./types/models.js";
+import type { AvailableModelSchema } from "@browserbasehq/stagehand";
 
 export type ToolCapability = "core" | string;
 
@@ -15,7 +15,7 @@ export type CLIOptions = {
   cookies?: Cookie[];
   browserWidth?: number;
   browserHeight?: number;
-  modelName?: typeof AvailableModel;
+  modelName?: typeof AvailableModelSchema;
   modelApiKey?: string;
   keepAlive?: boolean;
   experimental?: boolean;
@@ -46,7 +46,8 @@ export async function resolveConfig(cliOptions: CLIOptions): Promise<Config> {
 
   // --- Add Browserbase Env Vars ---
   if (!mergedConfig.modelApiKey) {
-    mergedConfig.modelApiKey = process.env.GEMINI_API_KEY;
+    mergedConfig.modelApiKey =
+      process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
   }
 
   // --------------------------------

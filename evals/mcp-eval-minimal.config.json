@@ -53,29 +53,6 @@
       ]
     },
     {
-      "name": "smoke-test-multi-session",
-      "description": "Quick test to verify multi-session functionality",
-      "steps": [
-        {
-          "user": "Create a browser session named 'test-session'",
-          "expectedState": "session created"
-        },
-        {
-          "user": "List active sessions",
-          "expectedState": "test-session"
-        },
-        {
-          "user": "Close the test session",
-          "expectedState": "closed session"
-        }
-      ],
-      "expectTools": [
-        "multi_browserbase_stagehand_session_create",
-        "multi_browserbase_stagehand_session_list",
-        "multi_browserbase_stagehand_session_close"
-      ]
-    },
-    {
       "name": "smoke-test-url-tools",
       "description": "Quick test to verify URL retrieval tools work",
       "steps": [

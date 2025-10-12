@@ -2,7 +2,7 @@
 
 [![smithery badge](https://smithery.ai/badge/@browserbasehq/mcp-browserbase)](https://smithery.ai/server/@browserbasehq/mcp-browserbase)
 
-![cover](assets/cover-mcp.png)
+![cover](assets/cover.png)
 
 [The Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) is an open protocol that enables seamless integration between LLM applications and external data sources and tools. Whether you're building an AI-powered IDE, enhancing a chat interface, or creating custom AI workflows, MCP provides a standardized way to connect LLMs with the context they need.
 
@@ -19,7 +19,6 @@ This server provides cloud browser automation capabilities using [Browserbase](h
 | Model Flexibility  | Supports multiple models (OpenAI, Claude, Gemini, and more) |
 | Vision Support     | Use annotated screenshots for complex DOMs                  |
 | Session Management | Create, manage, and close browser sessions                  |
-| Multi-Session      | Run multiple browser sessions in parallel                   |
 
 ## How to Setup
 
@@ -386,13 +385,11 @@ The server provides access to screenshot resources:
 
 - **AI-Powered Automation**: Natural language commands for web interactions
 - **Multi-Model Support**: Works with OpenAI, Claude, Gemini, and more
-- **Advanced Session Management**: Single and multi-session support for parallel browser automation
 - **Screenshot Capture**: Full-page and element-specific screenshots
 - **Data Extraction**: Intelligent content extraction from web pages
 - **Proxy Support**: Enterprise-grade proxy capabilities
 - **Stealth Mode**: Advanced anti-detection features
 - **Context Persistence**: Maintain authentication and state across sessions
-- **Parallel Workflows**: Run multiple browser sessions simultaneously for complex automation tasks
 
 For more information about the Model Context Protocol, visit:
 

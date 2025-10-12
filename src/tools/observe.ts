@@ -3,25 +3,31 @@ import type { Tool, ToolSchema, ToolResult } from "./tool.js";
 import type { Context } from "../context.js";
 import type { ToolActionResult } from "../types/types.js";
 
+/**
+ * Stagehand Observe
+ * Docs: https://docs.stagehand.dev/basics/observe
+ *
+ * This tool is used to observe and identify specific interactive elements on a web page.
+ * You can optionally choose to have the observe tool return an action to perform on the element.
+ */
+
 const ObserveInputSchema = z.object({
-  instruction: z
-    .string()
-    .describe(
-      "Detailed instruction for what specific elements or components to observe on the web page. " +
-        "This instruction must be extremely specific and descriptive. For example: 'Find the red login button " +
-        "in the top right corner', 'Locate the search input field with placeholder text', or 'Identify all " +
-        "clickable product cards on the page'. The more specific and detailed your instruction, the better " +
-        "the observation results will be. Avoid generic instructions like 'find buttons' or 'see elements'. " +
-        "Instead, describe the visual characteristics, location, text content, or functionality of the elements " +
-        "you want to observe. This tool is designed to help you identify interactive elements that you can " +
-        "later use with the act tool for performing actions like clicking, typing, or form submission.",
-    ),
+  instruction: z.string().describe(
+    `Detailed instruction for what specific elements or components to observe on the web page.
+        This instruction must be extremely specific and descriptive. For example: 'Find the red login button
+        in the top right corner', 'Locate the search input field with placeholder text', or 'Identify all
+        clickable product cards on the page'. The more specific and detailed your instruction, the better
+        the observation results will be. Avoid generic instructions like 'find buttons' or 'see elements'.
+        Instead, describe the visual characteristics, location, text content, or functionality of the elements
+        you want to observe. This tool is designed to help you identify interactive elements that you can
+        later use with the act tool for performing actions like clicking, typing, or form submission.`,
+  ),
   returnAction: z
     .boolean()
     .optional()
     .describe(
-      "Whether to return the action to perform on the element. If true, the action will be returned as a string. " +
-        "If false, the action will not be returned.",
+      `Whether to return the action to perform on the element. If true, the action will be returned as a string.
+       If false, the action will not be returned.`,
     ),
 });
 
@@ -29,15 +35,7 @@ type ObserveInput = z.infer<typeof ObserveInputSchema>;
 
 const observeSchema: ToolSchema<typeof ObserveInputSchema> = {
   name: "browserbase_stagehand_observe",
-  description:
-    "Observes and identifies specific interactive elements on the current web page that can be used for subsequent actions. " +
-    "This tool is specifically designed for finding actionable (interactable) elements such as buttons, links, form fields, " +
-    "dropdowns, checkboxes, and other UI components that you can interact with. Use this tool when you need to locate " +
-    "elements before performing actions with the act tool. DO NOT use this tool for extracting text content or data - " +
-    "use the extract tool instead for that purpose. The observe tool returns detailed information about the identified " +
-    "elements including their properties, location, and interaction capabilities. This information can then be used " +
-    "to craft precise actions. The more specific your observation instruction, the more accurate the element identification " +
-    "will be. Think of this as your 'eyes' on the page to find exactly what you need to interact with.",
+  description: `Find interactive elements on the page from an instruction; optionally return an action.`,
   inputSchema: ObserveInputSchema,
 };
 

@@ -11,8 +11,8 @@ type NavigateInput = z.infer<typeof NavigateInputSchema>;
 
 const navigateSchema: ToolSchema<typeof NavigateInputSchema> = {
   name: "browserbase_stagehand_navigate",
-  description:
-    "Navigate to a URL in the browser. Only use this tool with URLs you're confident will work and stay up to date. Otherwise, use https://google.com as the starting point",
+  description: `Navigate to a URL in the browser. Only use this tool with URLs you're confident will work and be up to date. 
+    Otherwise, use https://google.com as the starting point`,
   inputSchema: NavigateInputSchema,
 };
 

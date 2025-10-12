@@ -18,7 +18,7 @@ import { TextContent } from "@modelcontextprotocol/sdk/types.js";
 
 // --- Tool: Create Session ---
 const CreateSessionInputSchema = z.object({
-  // Keep sessionId optional, but clarify its role
+  // Keep sessionId optional
   sessionId: z
     .string()
     .optional()
@@ -31,7 +31,7 @@ type CreateSessionInput = z.infer<typeof CreateSessionInputSchema>;
 const createSessionSchema: ToolSchema<typeof CreateSessionInputSchema> = {
   name: "browserbase_session_create",
   description:
-    "Create or reuse a single cloud browser session using Browserbase with fully initialized Stagehand. WARNING: This tool is for SINGLE browser workflows only. If you need multiple browser sessions running simultaneously (parallel scraping, A/B testing, multiple accounts), use 'multi_browserbase_stagehand_session_create' instead. This creates one browser session with all configuration flags (proxies, stealth, viewport, cookies, etc.) and initializes Stagehand to work with that session. Updates the active session.",
+    "Create or reuse a Browserbase browser session and set it as active.",
   inputSchema: CreateSessionInputSchema,
 };
 
@@ -92,17 +92,6 @@ async function handleCreateSession(
       }
       const debugUrl = (await bb.sessions.debug(browserbaseSessionId))
         .debuggerFullscreenUrl;
-      process.stderr.write(
-        `[tool.connected] Successfully connected to Browserbase session. Internal ID: ${targetSessionId}, Actual ID: ${browserbaseSessionId}`,
-      );
-
-      process.stderr.write(
-        `[SessionManager] Browserbase Live Session View URL: https://www.browserbase.com/sessions/${browserbaseSessionId}`,
-      );
-
-      process.stderr.write(
-        `[SessionManager] Browserbase Live Debugger URL: ${debugUrl}`,
-      );
 
       return {
         content: [
@@ -152,7 +141,7 @@ const CloseSessionInputSchema = z.object({});
 const closeSessionSchema: ToolSchema<typeof CloseSessionInputSchema> = {
   name: "browserbase_session_close",
   description:
-    "Closes the current Browserbase session by properly shutting down the Stagehand instance, which handles browser cleanup and terminates the session recording.",
+    "Close the current Browserbase session and reset the active context.",
   inputSchema: CloseSessionInputSchema,
 };
 
@@ -176,26 +165,12 @@ async function handleCloseSession(context: Context): Promise<ToolResult> {
         // Store the actual Browserbase session ID for the replay URL
         browserbaseSessionId = session.sessionId;
 
-        process.stderr.write(
-          `[tool.closeSession] Attempting to close Stagehand for session: ${previousSessionId || "default"} (Browserbase ID: ${browserbaseSessionId})`,
-        );
-
         // Use Stagehand's close method which handles browser cleanup properly
         await session.stagehand.close();
         stagehandClosedSuccessfully = true;
 
-        process.stderr.write(
-          `[tool.closeSession] Stagehand and browser connection for session (${previousSessionId}) closed successfully.`,
-        );
-
         // Clean up the session from tracking
         await cleanupSession(previousSessionId);
-
-        if (browserbaseSessionId) {
-          process.stderr.write(
-            `[tool.closeSession] View session replay at https://www.browserbase.com/sessions/${browserbaseSessionId}`,
-          );
-        }
       } else {
         process.stderr.write(
           `[tool.closeSession] No Stagehand instance found for session: ${previousSessionId || "default/unknown"}`,

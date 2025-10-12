@@ -1,10 +1,10 @@
 import { randomUUID } from "crypto";
-import { Stagehand, Page } from "@browserbasehq/stagehand";
+import { Stagehand } from "@browserbasehq/stagehand";
 import { StagehandSession, CreateSessionParams } from "./types/types.js";
 import type { Config } from "../config.d.ts";
 import { clearScreenshotsForSession } from "./mcp/resources.js";
 
-// Store for all active sessions
+// Store for all active sessions in-memory
 const store = new Map<string, StagehandSession>();
 
 /**
@@ -29,7 +29,10 @@ export const createStagehandInstance = async (
     modelName:
       params.modelName || config.modelName || "google/gemini-2.0-flash",
     modelClientOptions: {
-      apiKey: config.modelApiKey || process.env.GEMINI_API_KEY,
+      apiKey:
+        config.modelApiKey ||
+        process.env.GEMINI_API_KEY ||
+        process.env.GOOGLE_API_KEY,
     },
     ...(params.browserbaseSessionID && {
       browserbaseSessionID: params.browserbaseSessionID,
@@ -79,7 +82,7 @@ export const create = async (
 
   const stagehand = await createStagehandInstance(config, params, id);
 
-  const page = stagehand.page as unknown as Page;
+  const page = stagehand.page;
   const browser = page.context().browser();
 
   if (!browser) {

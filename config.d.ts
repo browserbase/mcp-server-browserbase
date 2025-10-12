@@ -1,5 +1,5 @@
 import type { Cookie } from "playwright-core";
-import type { AvailableModelSchema } from "./src/types/models.js";
+import type { AvailableModelSchema } from "@browserbasehq/stagehand";
 
 export type Config = {
   /**

@@ -11,8 +11,8 @@ importers:
         specifier: ^2.6.0
         version: 2.6.0
       "@browserbasehq/stagehand":
-        specifier: ^2.5.0
-        version: 2.5.0(bufferutil@4.0.9)(deepmerge@4.3.1)(dotenv@16.6.1)(react@19.1.0)(zod@3.25.76)
+        specifier: ^2.5.2
+        version: 2.5.2(bufferutil@4.0.9)(deepmerge@4.3.1)(dotenv@16.6.1)(react@19.1.0)(zod@3.25.76)
       "@mcp-ui/server":
         specifier: ^5.10.0
         version: 5.10.0
@@ -250,15 +250,16 @@ packages:
         integrity: sha512-83iXP5D7xMm8Wyn66TUaUrgoByCmAJuoMoZQI3sGg3JAiMlTfnCIMqyVBoNSaItaPIkaCnrsj6LiusmXV2X9YA==,
       }
 
-  "@browserbasehq/stagehand@2.5.0":
+  "@browserbasehq/stagehand@2.5.2":
     resolution:
       {
-        integrity: sha512-Cannwg1WfpiJGDMdPGyx4i59SPBEV9ctTVZctGn+XVbP/ymwcQVFsyYYwSV0cK8rOk90TZK80TkMiuQGpfCF6g==,
+        integrity: sha512-Awo4IRYtlY+jrGpzyAY5+nqPurp87Ou2qGortNYf8hlR+KB+cI7sgIS7SfCbldkMyGO++uXUHTXkyfNutNuo7w==,
       }
+    hasBin: true
     peerDependencies:
       deepmerge: ^4.3.1
       dotenv: ^16.4.5
-      zod: ">=3.25.0 <4.1.0"
+      zod: ">=3.25.0 <3.25.68"
 
   "@changesets/apply-release-plan@7.0.12":
     resolution:
@@ -668,12 +669,17 @@ packages:
       }
     engines: { node: ^18.18.0 || ^20.9.0 || >=21.1.0 }
 
-  "@google/genai@0.8.0":
+  "@google/genai@1.24.0":
     resolution:
       {
-        integrity: sha512-Zs+OGyZKyMbFofGJTR9/jTQSv8kITh735N3tEuIZj4VlMQXTC0soCFahysJ9NaeenRlD7xGb6fyqmX+FwrpU6Q==,
+        integrity: sha512-e3jZF9Dx3dDaDCzygdMuYByHI2xJZ0PaD3r2fRgHZe2IOwBnmJ/Tu5Lt/nefTCxqr1ZnbcbQK9T13d8U/9UMWg==,
       }
-    engines: { node: ">=18.0.0" }
+    engines: { node: ">=20.0.0" }
+    peerDependencies:
+      "@modelcontextprotocol/sdk": ^1.11.4
+    peerDependenciesMeta:
+      "@modelcontextprotocol/sdk":
+        optional: true
 
   "@humanfs/core@0.19.1":
     resolution:
@@ -4794,11 +4800,11 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  "@browserbasehq/stagehand@2.5.0(bufferutil@4.0.9)(deepmerge@4.3.1)(dotenv@16.6.1)(react@19.1.0)(zod@3.25.76)":
+  "@browserbasehq/stagehand@2.5.2(bufferutil@4.0.9)(deepmerge@4.3.1)(dotenv@16.6.1)(react@19.1.0)(zod@3.25.76)":
     dependencies:
       "@anthropic-ai/sdk": 0.39.0
       "@browserbasehq/sdk": 2.6.0
-      "@google/genai": 0.8.0(bufferutil@4.0.9)
+      "@google/genai": 1.24.0(@modelcontextprotocol/sdk@1.17.5)(bufferutil@4.0.9)
       "@modelcontextprotocol/sdk": 1.17.5
       ai: 4.3.19(react@19.1.0)(zod@3.25.76)
       deepmerge: 4.3.1
@@ -5098,10 +5104,12 @@ snapshots:
       "@eslint/core": 0.15.1
       levn: 0.4.1
 
-  "@google/genai@0.8.0(bufferutil@4.0.9)":
+  "@google/genai@1.24.0(@modelcontextprotocol/sdk@1.17.5)(bufferutil@4.0.9)":
     dependencies:
       google-auth-library: 9.15.1
       ws: 8.18.3(bufferutil@4.0.9)
+    optionalDependencies:
+      "@modelcontextprotocol/sdk": 1.17.5
     transitivePeerDependencies:
       - bufferutil
       - encoding

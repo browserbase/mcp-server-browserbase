@@ -6,6 +6,13 @@ import { listResources, readResource } from "./mcp/resources.js";
 import { getSession, defaultSessionId } from "./sessionManager.js";
 import type { MCPTool, BrowserSession } from "./types/types.js";
 
+/**
+ * MCP Server Context
+ *
+ * Central controller that connects the MCP server infrastructure with browser automation capabilities,
+ * managing server instances, browser sessions, tool execution, and resource access.
+ */
+
 export class Context {
   public readonly config: Config;
   private server: Server;

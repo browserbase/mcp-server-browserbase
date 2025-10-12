@@ -4,6 +4,13 @@ import type { Context } from "../context.js";
 import type { ToolActionResult } from "../types/types.js";
 import { registerScreenshot } from "../mcp/resources.js";
 
+/**
+ * Screenshot
+ * Docs: https://playwright.dev/docs/screenshots
+ *
+ * This tool is used to take a screenshot of the current page.
+ */
+
 const ScreenshotInputSchema = z.object({
   name: z.string().optional().describe("The name of the screenshot"),
 });
@@ -12,8 +19,7 @@ type ScreenshotInput = z.infer<typeof ScreenshotInputSchema>;
 
 const screenshotSchema: ToolSchema<typeof ScreenshotInputSchema> = {
   name: "browserbase_screenshot",
-  description:
-    "Takes a screenshot of the current page. Use this tool to learn where you are on the page when controlling the browser with Stagehand. Only use this tool when the other tools are not sufficient to get the information you need.",
+  description: `Capture a full-page screenshot and return it (and save as a resource).`,
   inputSchema: ScreenshotInputSchema,
 };
 
@@ -28,8 +34,9 @@ async function handleScreenshot(
         throw new Error("No active page available");
       }
 
+      // We're taking a full page screenshot to give context of the entire page, similar to a snapshot
       const screenshotBuffer = await page.screenshot({
-        fullPage: false,
+        fullPage: true,
       });
 
       // Convert buffer to base64 string and store in memory
@@ -40,7 +47,8 @@ async function handleScreenshot(
             .replace(/:/g, "-")}`
         : `screenshot-${new Date().toISOString().replace(/:/g, "-")}` +
           context.config.browserbaseProjectId;
-      // Associate with current session id and store in memory
+
+      // Associate with current mcp session id and store in memory /src/mcp/resources.ts
       const sessionId = context.currentSessionId;
       registerScreenshot(sessionId, name, screenshotBase64);
 

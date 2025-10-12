@@ -14,10 +14,15 @@ export async function startStdioTransport(
   // Check if we're using the default model without an API key
   if (config) {
     const modelName = config.modelName || "google/gemini-2.0-flash";
-    const hasModelApiKey = config.modelApiKey || process.env.GEMINI_API_KEY;
+    const hasModelApiKey =
+      config.modelApiKey ||
+      process.env.GEMINI_API_KEY ||
+      process.env.GOOGLE_API_KEY;
 
     if (modelName.includes("gemini") && !hasModelApiKey) {
-      console.error(`Need to set GEMINI_API_KEY in your environment variables`);
+      console.error(
+        `Need to set GEMINI_API_KEY or GOOGLE_API_KEY in your environment variables`,
+      );
     }
   }
 

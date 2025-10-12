@@ -77,22 +77,6 @@
       ]
     },
     {
-      "name": "multi-session-test",
-      "description": "Test multi-session browser management",
-      "steps": [
-        {
-          "user": "Create a multi-session browser named 'test-session', list all sessions, navigate to https://example.com in that session, and close the session",
-          "expectedState": "closed"
-        }
-      ],
-      "expectTools": [
-        "multi_browserbase_stagehand_session_create",
-        "multi_browserbase_stagehand_session_list",
-        "multi_browserbase_stagehand_navigate_session",
-        "multi_browserbase_stagehand_session_close"
-      ]
-    },
-    {
       "name": "form-interaction-test",
       "description": "Test form filling and submission capabilities",
       "steps": [

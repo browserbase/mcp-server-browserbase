@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@browserbasehq/sdk": "^2.6.0",
-    "@browserbasehq/stagehand": "^2.5.0",
+    "@browserbasehq/stagehand": "^2.5.2",
     "@mcp-ui/server": "^5.10.0",
     "@modelcontextprotocol/sdk": "^1.13.1",
     "commander": "^14.0.0",

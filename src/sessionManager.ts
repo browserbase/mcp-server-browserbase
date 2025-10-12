@@ -1,4 +1,4 @@
-import { Page, BrowserContext } from "@browserbasehq/stagehand";
+import { BrowserContext } from "@browserbasehq/stagehand";
 import type { Config } from "../config.d.ts";
 import type { Cookie } from "playwright-core";
 import { createStagehandInstance } from "./stagehandStore.js";
@@ -97,7 +97,7 @@ export async function createNewBrowserSession(
     );
 
     // Get the page and browser from Stagehand
-    const page = stagehand.page as unknown as Page;
+    const page = stagehand.page;
     const browser = page.context().browser();
 
     if (!browser) {
