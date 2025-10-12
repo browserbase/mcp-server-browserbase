@@ -6,7 +6,6 @@ import { fileURLToPath } from "url";
 import createServerFunction from "./index.js";
 import { ServerList } from "./server.js";
 import { startHttpTransport, startStdioTransport } from "./transport.js";
-import * as stagehandStore from "./stagehandStore.js";
 
 import { resolveConfig } from "./config.js";
 
@@ -85,7 +84,8 @@ function setupExitWatchdog(serverList: ServerList) {
   const handleExit = async () => {
     setTimeout(() => process.exit(0), 15000);
     try {
-      await Promise.all([stagehandStore.removeAll(), serverList.closeAll()]);
+      // SessionManager within each server handles session cleanup
+      await serverList.closeAll();
     } catch (error) {
       console.error("Error during cleanup:", error);
     }

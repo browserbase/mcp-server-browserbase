@@ -3,7 +3,7 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import type { Config } from "../config.d.ts";
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { listResources, readResource } from "./mcp/resources.js";
-import { getSession, defaultSessionId } from "./sessionManager.js";
+import { SessionManager } from "./sessionManager.js";
 import type { MCPTool, BrowserSession } from "./types/types.js";
 
 /**
@@ -16,15 +16,26 @@ import type { MCPTool, BrowserSession } from "./types/types.js";
 export class Context {
   public readonly config: Config;
   private server: Server;
-  public currentSessionId: string = defaultSessionId;
+  private sessionManager: SessionManager;
 
-  constructor(server: Server, config: Config) {
+  // currentSessionId is a getter that delegates to SessionManager to ensure synchronization
+  // This prevents desync between Context and SessionManager session tracking
+  public get currentSessionId(): string {
+    return this.sessionManager.getActiveSessionId();
+  }
+
+  constructor(server: Server, config: Config, contextId?: string) {
     this.server = server;
     this.config = config;
+    this.sessionManager = new SessionManager(contextId);
   }
 
   public getServer(): Server {
     return this.server;
+  }
+
+  public getSessionManager(): SessionManager {
+    return this.sessionManager;
   }
 
   /**
@@ -33,7 +44,10 @@ export class Context {
   public async getStagehand(
     sessionId: string = this.currentSessionId,
   ): Promise<Stagehand> {
-    const session = await getSession(sessionId, this.config);
+    const session = await this.sessionManager.getSession(
+      sessionId,
+      this.config,
+    );
     if (!session) {
       throw new Error(`No session found for ID: ${sessionId}`);
     }
@@ -42,7 +56,10 @@ export class Context {
 
   public async getActivePage(): Promise<BrowserSession["page"] | null> {
     // Get page from session manager
-    const session = await getSession(this.currentSessionId, this.config);
+    const session = await this.sessionManager.getSession(
+      this.currentSessionId,
+      this.config,
+    );
     if (session && session.page && !session.page.isClosed()) {
       return session.page;
     }
@@ -53,7 +70,7 @@ export class Context {
   public async getActiveBrowser(
     createIfMissing: boolean = true,
   ): Promise<BrowserSession["browser"] | null> {
-    const session = await getSession(
+    const session = await this.sessionManager.getSession(
       this.currentSessionId,
       this.config,
       createIfMissing,

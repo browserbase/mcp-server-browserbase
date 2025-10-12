@@ -1,6 +1,8 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 
+import { randomUUID } from "crypto";
+
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { MCPToolsArray } from "./types/types.js";
@@ -151,7 +153,8 @@ export default function ({ config }: { config: z.infer<typeof configSchema> }) {
   const internalConfig: Config = config as Config;
 
   // Create the context, passing server instance and config
-  const context = new Context(server.server, internalConfig);
+  const contextId = randomUUID();
+  const context = new Context(server.server, internalConfig, contextId);
 
   server.server.registerCapabilities({
     resources: {
