@@ -1,5 +1,11 @@
 # @browserbasehq/mcp-server-browserbase
 
+## 2.2.0
+
+### Minor Changes
+
+- Remove multisession tools, remove prompts sampling, simplify tool descriptions for better context, add support if google apikey set, latest version of stagehand, remove custom availmodelschema to use stagehand model type instead.
+
 ## 2.1.3
 
 ### Patch Changes
