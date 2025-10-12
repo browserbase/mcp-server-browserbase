@@ -59,7 +59,7 @@ program
   .option("--browserHeight <height>", "Browser height to use for the browser.")
   .option(
     "--modelName <model>",
-    "The model to use for Stagehand (default: google/gemini-2.0-flash)",
+    "The model to use for Stagehand (default: gemini-2.0-flash)",
   )
   .option(
     "--modelApiKey <key>",

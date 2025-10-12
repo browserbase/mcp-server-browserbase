@@ -193,7 +193,7 @@ The Browserbase MCP server accepts the following command-line flags:
 | `--cookies [json]`         | JSON array of cookies to inject into the browser                            |
 | `--browserWidth <width>`   | Browser viewport width (default: 1024)                                      |
 | `--browserHeight <height>` | Browser viewport height (default: 768)                                      |
-| `--modelName <model>`      | The model to use for Stagehand (default: google/gemini-2.0-flash)           |
+| `--modelName <model>`      | The model to use for Stagehand (default: gemini-2.0-flash)                  |
 | `--modelApiKey <key>`      | API key for the custom model provider (required when using custom models)   |
 | `--experimental`           | Enable experimental features (default: false)                               |
 

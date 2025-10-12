@@ -95,13 +95,13 @@ export const configSchema = z
       })
       .optional(),
     modelName: AvailableModelSchema.optional().describe(
-      "The model to use for Stagehand (default: google/gemini-2.0-flash)",
+      "The model to use for Stagehand (default: gemini-2.0-flash)",
     ), // Already an existing Zod Enum
     modelApiKey: z
       .string()
       .optional()
       .describe(
-        "API key for the custom model provider. Required when using a model other than the default google/gemini-2.0-flash",
+        "API key for the custom model provider. Required when using a model other than the default gemini-2.0-flash",
       ),
     experimental: z
       .boolean()
