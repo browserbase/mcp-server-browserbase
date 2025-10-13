@@ -1,5 +1,11 @@
 # @browserbasehq/mcp-server-browserbase
 
+## 2.1.3
+
+### Patch Changes
+
+- Adding docker deployment support
+
 ## 2.1.2
 
 ### Patch Changes

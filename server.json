@@ -7,7 +7,7 @@
     "url": "https://github.com/browserbase/mcp-server-browserbase",
     "source": "github"
   },
-  "version": "2.1.1",
+  "version": "2.1.3",
   "packages": [
     {
       "registry_type": "npm",
@@ -44,7 +44,7 @@
     {
       "registry_type": "oci",
       "identifier": "browserbasehq/mcp-server-browserbase",
-      "version": "2.1.2",
+      "version": "2.1.3",
       "runtime_hint": "docker",
       "environment_variables": [
         {
