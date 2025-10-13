@@ -44,7 +44,7 @@
     {
       "registry_type": "oci",
       "identifier": "browserbasehq/mcp-server-browserbase",
-      "version": "2.1.1",
+      "version": "2.1.2",
       "runtime_hint": "docker",
       "environment_variables": [
         {
