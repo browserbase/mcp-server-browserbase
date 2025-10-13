@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Tests
+tests/
+evals/
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+!README.md
+assets/
+
+# CI/CD
+.github/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+
+# Misc
+.DS_Store
+*.swp
+*.swo
+*~
+

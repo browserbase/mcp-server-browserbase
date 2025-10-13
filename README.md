@@ -99,6 +99,8 @@ That's it! Reload your MCP client and Claude will be able to use Browserbase.
 
 ### To run 100% local:
 
+#### Option 1: Direct installation
+
 ```bash
 # Clone the Repo
 git clone https://github.com/browserbase/mcp-server-browserbase.git
@@ -108,9 +110,22 @@ cd mcp-server-browserbase
 npm install && npm run build
 ```
 
+#### Option 2: Docker
+
+```bash
+# Clone the Repo
+git clone https://github.com/browserbase/mcp-server-browserbase.git
+cd mcp-server-browserbase
+
+# Build the Docker image
+docker build -t mcp-browserbase .
+```
+
 Then in your MCP Config JSON run the server. To run locally we can use STDIO or self-host SHTTP.
 
 ### STDIO:
+
+#### Using Direct Installation
 
 To your MCP Config JSON file add the following:
 
@@ -120,6 +135,37 @@ To your MCP Config JSON file add the following:
     "browserbase": {
       "command": "node",
       "args": ["/path/to/mcp-server-browserbase/cli.js"],
+      "env": {
+        "BROWSERBASE_API_KEY": "",
+        "BROWSERBASE_PROJECT_ID": "",
+        "GEMINI_API_KEY": ""
+      }
+    }
+  }
+}
+```
+
+#### Using Docker
+
+To your MCP Config JSON file add the following:
+
+```json
+{
+  "mcpServers": {
+    "browserbase": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "-e",
+        "BROWSERBASE_API_KEY",
+        "-e",
+        "BROWSERBASE_PROJECT_ID",
+        "-e",
+        "GEMINI_API_KEY",
+        "mcp-browserbase"
+      ],
       "env": {
         "BROWSERBASE_API_KEY": "",
         "BROWSERBASE_PROJECT_ID": "",
@@ -156,7 +202,49 @@ These flags can be passed directly to the CLI or configured in your MCP configur
 
 ### NOTE:
 
-Currently, these flags can only be used with the local server (npx @browserbasehq/mcp-server-browserbase).
+Currently, these flags can only be used with the local server (npx @browserbasehq/mcp-server-browserbase or Docker).
+
+### Using Configuration Flags with Docker
+
+When using Docker, you can pass configuration flags as additional arguments after the image name. Here's an example with the `--proxies` flag:
+
+```json
+{
+  "mcpServers": {
+    "browserbase": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "-e",
+        "BROWSERBASE_API_KEY",
+        "-e",
+        "BROWSERBASE_PROJECT_ID",
+        "-e",
+        "GEMINI_API_KEY",
+        "mcp-browserbase",
+        "--proxies"
+      ],
+      "env": {
+        "BROWSERBASE_API_KEY": "",
+        "BROWSERBASE_PROJECT_ID": "",
+        "GEMINI_API_KEY": ""
+      }
+    }
+  }
+}
+```
+
+You can also run the Docker container directly from the command line:
+
+```bash
+docker run --rm -i \
+  -e BROWSERBASE_API_KEY=your_api_key \
+  -e BROWSERBASE_PROJECT_ID=your_project_id \
+  -e GEMINI_API_KEY=your_gemini_key \
+  mcp-browserbase --proxies
+```
 
 ## Configuration Examples
 

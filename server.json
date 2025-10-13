@@ -40,6 +40,38 @@
           "name": "GEMINI_API_KEY"
         }
       ]
+    },
+    {
+      "registry_type": "oci",
+      "identifier": "browserbasehq/mcp-server-browserbase",
+      "version": "2.1.1",
+      "runtime_hint": "docker",
+      "environment_variables": [
+        {
+          "description": "Your Browserbase API key",
+          "is_required": true,
+          "format": "string",
+          "is_secret": true,
+          "name": "BROWSERBASE_API_KEY"
+        },
+        {
+          "description": "Your Browserbase Project ID",
+          "is_required": true,
+          "format": "string",
+          "is_secret": false,
+          "name": "BROWSERBASE_PROJECT_ID"
+        },
+        {
+          "description": "Your Gemini API key (default model)",
+          "is_required": true,
+          "format": "string",
+          "is_secret": true,
+          "name": "GEMINI_API_KEY"
+        }
+      ],
+      "transport": {
+        "type": "stdio"
+      }
     }
   ]
 }
