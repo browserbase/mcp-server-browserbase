@@ -11,15 +11,12 @@ import { Context } from "./context.js";
 import type { Config } from "../config.d.ts";
 import { TOOLS } from "./tools/index.js";
 import { AvailableModelSchema } from "@browserbasehq/stagehand";
-// import { PROMPTS, getPrompt } from "./mcp/prompts.js";
 import { RESOURCE_TEMPLATES } from "./mcp/resources.js";
 
 import {
   ListResourcesRequestSchema,
   ReadResourceRequestSchema,
   ListResourceTemplatesRequestSchema,
-  // ListPromptsRequestSchema,
-  // GetPromptRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 
 const cookieSchema = z.object({
@@ -135,7 +132,7 @@ export default function ({ config }: { config: z.infer<typeof configSchema> }) {
 
   const server = new McpServer({
     name: "Browserbase MCP Server",
-    version: "2.0.0",
+    version: "2.2.0",
     description:
       "Cloud browser automation server powered by Browserbase and Stagehand. Enables LLMs to navigate websites, interact with elements, extract data, and capture screenshots using natural language commands.",
     capabilities: {
@@ -143,10 +140,6 @@ export default function ({ config }: { config: z.infer<typeof configSchema> }) {
         subscribe: true,
         listChanged: true,
       },
-      prompts: {
-        listChanged: true,
-      },
-      sampling: {},
     },
   });
 
@@ -161,10 +154,6 @@ export default function ({ config }: { config: z.infer<typeof configSchema> }) {
       subscribe: true,
       listChanged: true,
     },
-    prompts: {
-      listChanged: true,
-    },
-    sampling: {},
   });
 
   // Add resource handlers
@@ -185,16 +174,6 @@ export default function ({ config }: { config: z.infer<typeof configSchema> }) {
       return { resourceTemplates: RESOURCE_TEMPLATES };
     },
   );
-
-  // Add prompt handlers
-  // server.server.setRequestHandler(ListPromptsRequestSchema, async () => {
-  //   return { prompts: PROMPTS };
-  // });
-
-  // server.server.setRequestHandler(GetPromptRequestSchema, async (request) => {
-  //   const prompt = getPrompt(request.params.name);
-  //   return prompt;
-  // });
 
   const tools: MCPToolsArray = [...TOOLS];
 
