@@ -1,4 +1,3 @@
-import type { Cookie } from "playwright-core";
 import type { Config } from "../config.d.ts";
 
 export type ToolCapability = "core" | string;
@@ -11,7 +10,6 @@ export type CLIOptions = {
   persist?: boolean;
   port?: number;
   host?: string;
-  cookies?: Cookie[];
   browserWidth?: number;
   browserHeight?: number;
   modelName?: string;
@@ -33,7 +31,6 @@ const defaultConfig: Config = {
     browserWidth: 1024,
     browserHeight: 768,
   },
-  cookies: undefined,
   modelName: "gemini-2.0-flash", // Default Model
 };
 
@@ -96,7 +93,6 @@ export async function configFromCLIOptions(
       browserHeight: cliOptions.browserHeight,
     },
     advancedStealth: cliOptions.advancedStealth,
-    cookies: cliOptions.cookies,
     modelName: cliOptions.modelName,
     modelApiKey: cliOptions.modelApiKey,
     keepAlive: cliOptions.keepAlive,

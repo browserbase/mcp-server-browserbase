@@ -6,7 +6,6 @@ import { registerScreenshot } from "../mcp/resources.js";
 
 /**
  * Screenshot
- * Docs: https://playwright.dev/docs/screenshots
  *
  * This tool is used to take a screenshot of the current page.
  */
