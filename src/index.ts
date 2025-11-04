@@ -18,17 +18,6 @@ import {
   ListResourceTemplatesRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 
-const cookieSchema = z.object({
-  name: z.string(),
-  value: z.string(),
-  domain: z.string(),
-  path: z.string().optional(),
-  expires: z.number().optional(),
-  httpOnly: z.boolean().optional(),
-  secure: z.boolean().optional(),
-  sameSite: z.enum(["Strict", "Lax", "None"]).optional(),
-});
-
 // Configuration schema for Smithery - matches existing Config interface
 export const configSchema = z
   .object({
@@ -74,10 +63,6 @@ export const configSchema = z
           .describe("The height of the browser"),
       })
       .optional(),
-    cookies: z
-      .array(cookieSchema)
-      .optional()
-      .describe("Cookies to inject into the Browserbase context"),
     server: z
       .object({
         port: z
