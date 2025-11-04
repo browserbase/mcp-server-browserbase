@@ -1,7 +1,5 @@
 import type { Cookie } from "playwright-core";
 import type { Config } from "../config.d.ts";
-import { z } from "zod";
-import { AvailableModelSchema } from "@browserbasehq/stagehand";
 
 export type ToolCapability = "core" | string;
 
@@ -16,7 +14,7 @@ export type CLIOptions = {
   cookies?: Cookie[];
   browserWidth?: number;
   browserHeight?: number;
-  modelName?: z.infer<typeof AvailableModelSchema>;
+  modelName?: string;
   modelApiKey?: string;
   keepAlive?: boolean;
   experimental?: boolean;

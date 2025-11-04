@@ -41,8 +41,7 @@ async function handleAct(
     try {
       const stagehand = await context.getStagehand();
 
-      await stagehand.page.act({
-        action: params.action,
+      await stagehand.act(params.action, {
         variables: params.variables,
       });
 

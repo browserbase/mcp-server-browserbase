@@ -22,13 +22,6 @@ const ObserveInputSchema = z.object({
         you want to observe. This tool is designed to help you identify interactive elements that you can
         later use with the act tool for performing actions like clicking, typing, or form submission.`,
   ),
-  returnAction: z
-    .boolean()
-    .optional()
-    .describe(
-      `Whether to return the action to perform on the element. If true, the action will be returned as a string.
-       If false, the action will not be returned.`,
-    ),
 });
 
 type ObserveInput = z.infer<typeof ObserveInputSchema>;
@@ -47,10 +40,7 @@ async function handleObserve(
     try {
       const stagehand = await context.getStagehand();
 
-      const observations = await stagehand.page.observe({
-        instruction: params.instruction,
-        returnAction: params.returnAction,
-      });
+      const observations = await stagehand.observe(params.instruction);
 
       return {
         content: [

@@ -46,12 +46,12 @@
   },
   "dependencies": {
     "@browserbasehq/sdk": "^2.6.0",
-    "@browserbasehq/stagehand": "^2.5.2",
+    "@browserbasehq/stagehand": "^3.0.1",
     "@mcp-ui/server": "^5.10.0",
     "@modelcontextprotocol/sdk": "^1.13.1",
     "commander": "^14.0.0",
     "dotenv": "^16.4.6",
-    "mcpvals": "^0.0.3",
+    "mcpvals": "^0.2.0",
     "zod": "^3.25.67"
   },
   "devDependencies": {

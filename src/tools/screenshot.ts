@@ -29,7 +29,9 @@ async function handleScreenshot(
 ): Promise<ToolResult> {
   const action = async (): Promise<ToolActionResult> => {
     try {
-      const page = await context.getActivePage();
+      const stagehand = await context.getStagehand();
+      const page = stagehand.context.pages()[0];
+
       if (!page) {
         throw new Error("No active page available");
       }

@@ -10,7 +10,6 @@ import type { MCPToolsArray } from "./types/types.js";
 import { Context } from "./context.js";
 import type { Config } from "../config.d.ts";
 import { TOOLS } from "./tools/index.js";
-import { AvailableModelSchema } from "@browserbasehq/stagehand";
 import { RESOURCE_TEMPLATES } from "./mcp/resources.js";
 
 import {
@@ -93,9 +92,10 @@ export const configSchema = z
           ),
       })
       .optional(),
-    modelName: AvailableModelSchema.optional().describe(
-      "The model to use for Stagehand (default: gemini-2.0-flash)",
-    ), // Already an existing Zod Enum
+    modelName: z
+      .string()
+      .optional()
+      .describe("The model to use for Stagehand (default: gemini-2.0-flash)"),
     modelApiKey: z
       .string()
       .optional()
@@ -111,7 +111,11 @@ export const configSchema = z
     (data) => {
       // If a non-default model is explicitly specified, API key is required
       if (data.modelName && data.modelName !== "gemini-2.0-flash") {
-        return data.modelApiKey !== undefined && data.modelApiKey.length > 0;
+        return (
+          data.modelApiKey !== undefined &&
+          typeof data.modelApiKey === "string" &&
+          data.modelApiKey.length > 0
+        );
       }
       return true;
     },
@@ -132,7 +136,7 @@ export default function ({ config }: { config: z.infer<typeof configSchema> }) {
 
   const server = new McpServer({
     name: "Browserbase MCP Server",
-    version: "2.2.0",
+    version: "2.3.0",
     description:
       "Cloud browser automation server powered by Browserbase and Stagehand. Enables LLMs to navigate websites, interact with elements, extract data, and capture screenshots using natural language commands.",
     capabilities: {
@@ -140,6 +144,7 @@ export default function ({ config }: { config: z.infer<typeof configSchema> }) {
         subscribe: true,
         listChanged: true,
       },
+      tools: {},
     },
   });
 

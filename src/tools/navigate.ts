@@ -23,14 +23,16 @@ async function handleNavigate(
   const action = async (): Promise<ToolActionResult> => {
     try {
       const stagehand = await context.getStagehand();
-      const page = await context.getActivePage();
+
+      const pages = stagehand.context.pages();
+      const page = pages[0];
 
       if (!page) {
         throw new Error("No active page available");
       }
       await page.goto(params.url, { waitUntil: "domcontentloaded" });
 
-      const sessionId = stagehand.browserbaseSessionID;
+      const sessionId = stagehand.browserbaseSessionId;
       if (!sessionId) {
         throw new Error("No Browserbase session ID available");
       }
