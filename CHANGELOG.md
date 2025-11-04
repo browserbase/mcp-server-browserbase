@@ -1,5 +1,11 @@
 # @browserbasehq/mcp-server-browserbase
 
+## 2.3.0
+
+### Minor Changes
+
+- upgrade to stagehand v3
+
 ## 2.2.0
 
 ### Minor Changes
