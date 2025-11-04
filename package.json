@@ -51,7 +51,6 @@
     "@modelcontextprotocol/sdk": "^1.13.1",
     "commander": "^14.0.0",
     "dotenv": "^16.4.6",
-    "mcpvals": "^0.4.0",
     "zod": "^3.25.67"
   },
   "devDependencies": {
@@ -64,6 +63,7 @@
     "globals": "^16.2.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
+    "mcpvals": "^0.4.0",
     "prettier": "^3.6.1",
     "shx": "^0.3.4",
     "tsx": "^4.20.3",

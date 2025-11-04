@@ -26,9 +26,6 @@ importers:
       dotenv:
         specifier: ^16.4.6
         version: 16.6.1
-      mcpvals:
-        specifier: ^0.4.0
-        version: 0.4.0(react@19.1.0)
       zod:
         specifier: ^3.25.67
         version: 3.25.76
@@ -60,6 +57,9 @@ importers:
       lint-staged:
         specifier: ^16.1.2
         version: 16.1.2
+      mcpvals:
+        specifier: ^0.4.0
+        version: 0.4.0(react@19.1.0)
       prettier:
         specifier: ^3.6.1
         version: 3.6.2
