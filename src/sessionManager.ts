@@ -1,6 +1,5 @@
-import { BrowserContext, Stagehand } from "@browserbasehq/stagehand";
+import { Stagehand } from "@browserbasehq/stagehand";
 import type { Config } from "../config.d.ts";
-import type { Cookie } from "playwright-core";
 import { clearScreenshotsForSession } from "./mcp/resources.js";
 import type { BrowserSession, CreateSessionParams } from "./types/types.js";
 import { randomUUID } from "crypto";
@@ -22,17 +21,22 @@ export const createStagehandInstance = async (
     throw new Error("Browserbase API Key and Project ID are required");
   }
 
+  const modelName = params.modelName || config.modelName || "gemini-2.0-flash";
+  const modelApiKey =
+    config.modelApiKey ||
+    process.env.GEMINI_API_KEY ||
+    process.env.GOOGLE_API_KEY;
+
   const stagehand = new Stagehand({
     env: "BROWSERBASE",
     apiKey,
     projectId,
-    modelName: params.modelName || config.modelName || "gemini-2.0-flash",
-    modelClientOptions: {
-      apiKey:
-        config.modelApiKey ||
-        process.env.GEMINI_API_KEY ||
-        process.env.GOOGLE_API_KEY,
-    },
+    model: modelApiKey
+      ? {
+          apiKey: modelApiKey,
+          modelName: modelName,
+        }
+      : modelName,
     ...(params.browserbaseSessionID && {
       browserbaseSessionID: params.browserbaseSessionID,
     }),
@@ -128,38 +132,6 @@ export class SessionManager {
   }
 
   /**
-   * Adds cookies to a browser context
-   * @param context Playwright browser context
-   * @param cookies Array of cookies to add
-   */
-  async addCookiesToContext(
-    context: BrowserContext,
-    cookies: Cookie[],
-  ): Promise<void> {
-    if (!cookies || cookies.length === 0) {
-      return;
-    }
-
-    try {
-      process.stderr.write(
-        `[SessionManager] Adding ${cookies.length} cookies to browser context\n`,
-      );
-
-      // Injecting cookies into the Browser Context
-      await context.addCookies(cookies);
-      process.stderr.write(
-        `[SessionManager] Successfully added cookies to browser context\n`,
-      );
-    } catch (error) {
-      process.stderr.write(
-        `[SessionManager] Error adding cookies to browser context: ${
-          error instanceof Error ? error.message : String(error)
-        }\n`,
-      );
-    }
-  }
-
-  /**
    * Creates a new Browserbase session using Stagehand.
    * @param newSessionId - Internal session ID for tracking in SessionManager
    * @param config - Configuration object
@@ -193,15 +165,12 @@ export class SessionManager {
         newSessionId,
       );
 
-      // Get the page and browser from Stagehand
-      const page = stagehand.page;
-      const browser = page.context().browser();
-
-      if (!browser) {
-        throw new Error("Failed to get browser from Stagehand page context");
+      const page = stagehand.context.pages()[0];
+      if (!page) {
+        throw new Error("No pages available in Stagehand context");
       }
 
-      const browserbaseSessionId = stagehand.browserbaseSessionID;
+      const browserbaseSessionId = stagehand.browserbaseSessionId;
 
       if (!browserbaseSessionId) {
         throw new Error(
@@ -216,63 +185,7 @@ export class SessionManager {
         `[SessionManager] Browserbase Live Debugger URL: https://www.browserbase.com/sessions/${browserbaseSessionId}\n`,
       );
 
-      // Set up disconnect handler
-      browser.on("disconnected", () => {
-        process.stderr.write(
-          `[SessionManager] Disconnected: ${newSessionId}\n`,
-        );
-        this.browsers.delete(newSessionId);
-        if (
-          this.defaultBrowserSession &&
-          this.defaultBrowserSession.browser === browser
-        ) {
-          process.stderr.write(
-            `[SessionManager] Disconnected (default): ${newSessionId}\n`,
-          );
-          this.defaultBrowserSession = null;
-          // Reset active session to default ID since default session needs recreation
-          this.setActiveSessionId(this.defaultSessionId);
-        }
-        if (
-          this.activeSessionId === newSessionId &&
-          newSessionId !== this.defaultSessionId
-        ) {
-          process.stderr.write(
-            `[SessionManager] WARN - Active session disconnected, resetting to default: ${newSessionId}\n`,
-          );
-          this.setActiveSessionId(this.defaultSessionId);
-        }
-
-        // Purge any screenshots associated with both internal and Browserbase IDs
-        try {
-          clearScreenshotsForSession(newSessionId);
-          const bbId = browserbaseSessionId;
-          if (bbId) {
-            clearScreenshotsForSession(bbId);
-          }
-        } catch (err) {
-          process.stderr.write(
-            `[SessionManager] WARN - Failed to clear screenshots on disconnect for ${newSessionId}: ${
-              err instanceof Error ? err.message : String(err)
-            }\n`,
-          );
-        }
-      });
-
-      // Add cookies to the context if they are provided in the config
-      if (
-        config.cookies &&
-        Array.isArray(config.cookies) &&
-        config.cookies.length > 0
-      ) {
-        await this.addCookiesToContext(
-          page.context() as BrowserContext,
-          config.cookies,
-        );
-      }
-
       const sessionObj: BrowserSession = {
-        browser,
         page,
         sessionId: browserbaseSessionId,
         stagehand,
@@ -330,13 +243,9 @@ export class SessionManager {
           process.stderr.write(
             `[SessionManager] Successfully closed Stagehand and browser for session: ${sessionIdToLog}\n`,
           );
-          // After close, purge any screenshots associated with both internal and Browserbase IDs
+          // After close, purge any screenshots associated with this session
           try {
             clearScreenshotsForSession(sessionIdToLog);
-            const bbId = session?.stagehand?.browserbaseSessionID;
-            if (bbId) {
-              clearScreenshotsForSession(bbId);
-            }
           } catch (err) {
             process.stderr.write(
               `[SessionManager] WARN - Failed to clear screenshots after close for ${sessionIdToLog}: ${
@@ -379,17 +288,25 @@ export class SessionManager {
       process.stderr.write(
         `[SessionManager] Default session ${sessionId} not found, creating.\n`,
       );
-    } else if (
-      !this.defaultBrowserSession.browser.isConnected() ||
-      this.defaultBrowserSession.page.isClosed()
-    ) {
-      needsReCreation = true;
-      process.stderr.write(
-        `[SessionManager] Default session ${sessionId} is stale, recreating.\n`,
-      );
-      await this.closeBrowserGracefully(this.defaultBrowserSession, sessionId);
-      this.defaultBrowserSession = null;
-      this.browsers.delete(sessionId);
+    } else {
+      try {
+        // Try a simple operation to validate the session is alive
+        const pages = this.defaultBrowserSession.stagehand.context.pages();
+        if (!pages || pages.length === 0) {
+          throw new Error("No pages available");
+        }
+      } catch {
+        needsReCreation = true;
+        process.stderr.write(
+          `[SessionManager] Default session ${sessionId} is stale, recreating.\n`,
+        );
+        await this.closeBrowserGracefully(
+          this.defaultBrowserSession,
+          sessionId,
+        );
+        this.defaultBrowserSession = null;
+        this.browsers.delete(sessionId);
+      }
     }
 
     if (needsReCreation) {
@@ -474,8 +391,12 @@ export class SessionManager {
       return null;
     }
 
-    // Validate the found session
-    if (!sessionObj.browser.isConnected() || sessionObj.page.isClosed()) {
+    try {
+      const pages = sessionObj.stagehand.context.pages();
+      if (!pages || pages.length === 0) {
+        throw new Error("No pages available");
+      }
+    } catch {
       process.stderr.write(
         `[SessionManager] WARN - Found session ${sessionId} is stale, removing.\n`,
       );
@@ -517,17 +438,6 @@ export class SessionManager {
 
     // Remove from browsers map
     this.browsers.delete(sessionId);
-
-    // Always purge screenshots for this (internal) session id
-    try {
-      clearScreenshotsForSession(sessionId);
-    } catch (err) {
-      process.stderr.write(
-        `[SessionManager] WARN - Failed to clear screenshots during cleanup for ${sessionId}: ${
-          err instanceof Error ? err.message : String(err)
-        }\n`,
-      );
-    }
 
     // Clear default session reference if this was the default
     if (sessionId === this.defaultSessionId && this.defaultBrowserSession) {

@@ -50,10 +50,6 @@ program
     "--host <host>",
     "Host to bind server to. Default is localhost. Use 0.0.0.0 to bind to all interfaces.",
   )
-  .option(
-    "--cookies [json]",
-    'JSON array of cookies to inject into the browser. Format: [{"name":"cookie1","value":"val1","domain":"example.com"}, ...]',
-  )
   .option("--browserWidth <width>", "Browser width to use for the browser.")
   .option("--browserHeight <height>", "Browser height to use for the browser.")
   .option(

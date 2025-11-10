@@ -8,6 +8,20 @@
 
 This server provides cloud browser automation capabilities using [Browserbase](https://www.browserbase.com/) and [Stagehand](https://github.com/browserbase/stagehand). It enables LLMs to interact with web pages, take screenshots, extract information, and perform automated actions with atomic precision.
 
+## What's New in Stagehand v3
+
+Powered by [Stagehand v3.0](https://github.com/browserbase/stagehand), this MCP server now includes:
+
+- **20-40% Faster Performance**: Speed improvements across all core operations (`act`, `extract`, `observe`) through automatic caching
+- **Enhanced Extraction**: Targeted extraction and observation across iframes and shadow roots
+- **Improved Schemas**: Streamlined extract schemas for more intuitive data extraction
+- **Advanced Selector Support**: CSS selector support with improved element targeting
+- **Multi-Browser Support**: Compatible with Playwright, Puppeteer, and Patchright
+- **New Primitives**: Built-in `page`, `locator`, `frameLocator`, and `deepLocator` for simplified automation
+- **Experimental Features**: Enable cutting-edge capabilities with the `--experimental` flag
+
+For more details, visit the [Stagehand v3 documentation](https://docs.stagehand.dev/).
+
 ## Features
 
 | Feature            | Description                                                 |
@@ -19,6 +33,8 @@ This server provides cloud browser automation capabilities using [Browserbase](h
 | Model Flexibility  | Supports multiple models (OpenAI, Claude, Gemini, and more) |
 | Vision Support     | Use annotated screenshots for complex DOMs                  |
 | Session Management | Create, manage, and close browser sessions                  |
+| High Performance   | 20-40% faster operations with automatic caching (v3)        |
+| Advanced Selectors | Enhanced CSS selector support for precise element targeting |
 
 ## How to Setup
 
@@ -190,7 +206,6 @@ The Browserbase MCP server accepts the following command-line flags:
 | `--persist`                | Whether to persist the Browserbase context (default: true)                  |
 | `--port <port>`            | Port to listen on for HTTP/SHTTP transport                                  |
 | `--host <host>`            | Host to bind server to (default: localhost, use 0.0.0.0 for all interfaces) |
-| `--cookies [json]`         | JSON array of cookies to inject into the browser                            |
 | `--browserWidth <width>`   | Browser viewport width (default: 1024)                                      |
 | `--browserHeight <height>` | Browser viewport height (default: 768)                                      |
 | `--modelName <model>`      | The model to use for Stagehand (default: gemini-2.0-flash)                  |
@@ -343,6 +358,30 @@ Here's how to use it for custom browser sizing. We recommend to stick with 16:9 
 }
 ```
 
+### Experimental Features
+
+Stagehand v3 includes experimental features that can be enabled with the `--experimental` flag. These features provide cutting-edge capabilities that are actively being developed and refined.
+
+To enable experimental features:
+
+```json
+{
+  "mcpServers": {
+    "browserbase": {
+      "command": "npx",
+      "args": ["@browserbasehq/mcp-server-browserbase", "--experimental"],
+      "env": {
+        "BROWSERBASE_API_KEY": "",
+        "BROWSERBASE_PROJECT_ID": "",
+        "GEMINI_API_KEY": ""
+      }
+    }
+  }
+}
+```
+
+_Note: Experimental features may change or be removed in future releases. Use them at your own discretion._
+
 ### Model Configuration
 
 Stagehand defaults to using Google's Gemini 2.0 Flash model, but you can configure it to use other models like GPT-4o, Claude, or other providers.
@@ -359,7 +398,7 @@ Here's how to configure different models:
       "args": [
         "@browserbasehq/mcp-server-browserbase",
         "--modelName",
-        "anthropic/claude-3-5-sonnet-latest",
+        "anthropic/claude-sonnet-4.5",
         "--modelApiKey",
         "your-anthropic-api-key"
       ],

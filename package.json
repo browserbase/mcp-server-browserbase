@@ -1,6 +1,6 @@
 {
   "name": "@browserbasehq/mcp-server-browserbase",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "MCP server for AI web browser automation using Browserbase and Stagehand",
   "mcpName": "io.github.browserbase/mcp-server-browserbase",
   "license": "Apache-2.0",
@@ -46,12 +46,11 @@
   },
   "dependencies": {
     "@browserbasehq/sdk": "^2.6.0",
-    "@browserbasehq/stagehand": "^2.5.2",
+    "@browserbasehq/stagehand": "^3.0.1",
     "@mcp-ui/server": "^5.10.0",
     "@modelcontextprotocol/sdk": "^1.13.1",
     "commander": "^14.0.0",
     "dotenv": "^16.4.6",
-    "mcpvals": "^0.0.3",
     "zod": "^3.25.67"
   },
   "devDependencies": {
@@ -64,7 +63,7 @@
     "globals": "^16.2.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
-    "playwright-core": "^1.53.2",
+    "mcpvals": "^0.4.0",
     "prettier": "^3.6.1",
     "shx": "^0.3.4",
     "tsx": "^4.20.3",

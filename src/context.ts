@@ -4,7 +4,7 @@ import type { Config } from "../config.d.ts";
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { listResources, readResource } from "./mcp/resources.js";
 import { SessionManager } from "./sessionManager.js";
-import type { MCPTool, BrowserSession } from "./types/types.js";
+import type { MCPTool } from "./types/types.js";
 
 /**
  * MCP Server Context
@@ -52,33 +52,6 @@ export class Context {
       throw new Error(`No session found for ID: ${sessionId}`);
     }
     return session.stagehand;
-  }
-
-  public async getActivePage(): Promise<BrowserSession["page"] | null> {
-    // Get page from session manager
-    const session = await this.sessionManager.getSession(
-      this.currentSessionId,
-      this.config,
-    );
-    if (session && session.page && !session.page.isClosed()) {
-      return session.page;
-    }
-
-    return null;
-  }
-
-  public async getActiveBrowser(
-    createIfMissing: boolean = true,
-  ): Promise<BrowserSession["browser"] | null> {
-    const session = await this.sessionManager.getSession(
-      this.currentSessionId,
-      this.config,
-      createIfMissing,
-    );
-    if (!session || !session.browser || !session.browser.isConnected()) {
-      return null;
-    }
-    return session.browser;
   }
 
   async run(tool: MCPTool, args: unknown): Promise<CallToolResult> {

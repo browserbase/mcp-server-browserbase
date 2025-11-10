@@ -1,4 +1,4 @@
-import type { Stagehand, Browser, Page } from "@browserbasehq/stagehand";
+import type { Stagehand } from "@browserbasehq/stagehand";
 import { ImageContent, TextContent } from "@modelcontextprotocol/sdk/types.js";
 import { Tool } from "../tools/tool.js";
 import { InputType } from "../tools/tool.js";
@@ -6,8 +6,7 @@ import { InputType } from "../tools/tool.js";
 export type StagehandSession = {
   id: string; // MCP-side ID
   stagehand: Stagehand; // owns the Browserbase session
-  page: Page;
-  browser: Browser;
+  page: any; // TODO: replace with Stagehand v3 Page
   created: number;
   metadata?: Record<string, any>; // optional extras (proxy, contextId, bbSessionId)
 };
@@ -23,8 +22,7 @@ export type CreateSessionParams = {
 };
 
 export type BrowserSession = {
-  browser: Browser;
-  page: Page;
+  page: any; // TODO: replace with Stagehand v3 Page
   sessionId: string;
   stagehand: Stagehand;
 };

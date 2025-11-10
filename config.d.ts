@@ -1,4 +1,3 @@
-import type { Cookie } from "playwright-core";
 import type { AvailableModelSchema } from "@browserbasehq/stagehand";
 
 export type Config = {
@@ -59,11 +58,6 @@ export type Config = {
      */
     browserHeight?: number;
   };
-  /**
-   * Cookies to inject into the Browserbase context
-   * Format: Array of cookie objects with name, value, domain, and optional path, expires, httpOnly, secure, sameSite
-   */
-  cookies?: Cookie[];
   /**
    * Server configuration for MCP transport layer
    *

@@ -36,7 +36,8 @@ async function handleExtract(
   const action = async (): Promise<ToolActionResult> => {
     try {
       const stagehand = await context.getStagehand();
-      const extraction = await stagehand.page.extract(params.instruction);
+
+      const extraction = await stagehand.extract(params.instruction);
 
       return {
         content: [
