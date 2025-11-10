@@ -13,7 +13,7 @@ import type { ToolActionResult } from "../types/types.js";
 
 const AgentInputSchema = z.object({
   prompt: z.string().describe(
-    `The task prompt describing what you want the agent to accomplish.
+    `The task prompt describing what you want the sub-agent to accomplish.
     Be clear and specific about the goal. For example:
     'Go to Hacker News and find the most controversial post from today, then summarize the top 3 comments'.
     The agent will autonomously navigate and interact with web pages to complete this task.`,
@@ -42,9 +42,9 @@ async function handleAgent(
         model: {
           modelName: "google/gemini-2.5-computer-use-preview-10-2025",
           apiKey:
-            process.env.GOOGLE_GENERATIVE_AI_API_KEY ||
+            process.env.GEMINI_API_KEY ||
             process.env.GOOGLE_API_KEY ||
-            process.env.GEMINI_API_KEY,
+            process.env.GOOGLE_GENERATIVE_AI_API_KEY,
         },
       });
 
@@ -58,7 +58,7 @@ async function handleAgent(
         content: [
           {
             type: "text",
-            text: `Agent execution completed:\n${JSON.stringify(result, null, 2)}`,
+            text: `${result.message}`,
           },
         ],
       };
