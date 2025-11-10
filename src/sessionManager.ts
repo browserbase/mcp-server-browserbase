@@ -47,8 +47,8 @@ export const createStagehandInstance = async (
       keepAlive: config.keepAlive ?? false,
       browserSettings: {
         viewport: {
-          width: config.viewPort?.browserWidth ?? 1024,
-          height: config.viewPort?.browserHeight ?? 768,
+          width: config.viewPort?.browserWidth ?? 1288,
+          height: config.viewPort?.browserHeight ?? 711,
         },
         context: config.context?.contextId
           ? {

@@ -54,19 +54,11 @@ async function handleAgent(
         maxSteps: 20,
       });
 
-      // Format response with both steps and result
-      // The result structure may vary, so we handle it flexibly
-      const resultData = result as unknown as Record<string, unknown>;
-      const response = {
-        result: resultData.result || result,
-        steps: resultData.steps || resultData.trace || [],
-      };
-
       return {
         content: [
           {
             type: "text",
-            text: `Agent execution completed:\n${JSON.stringify(response, null, 2)}`,
+            text: `Agent execution completed:\n${JSON.stringify(result, null, 2)}`,
           },
         ],
       };
