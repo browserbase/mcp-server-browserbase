@@ -1,4 +1,5 @@
 # Browserbase MCP Server
+[![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/browserbase/mcp-server-browserbase)](https://archestra.ai/mcp-catalog/browserbase__mcp-server-browserbase)
 
 [![smithery badge](https://smithery.ai/badge/@browserbasehq/mcp-browserbase)](https://smithery.ai/server/@browserbasehq/mcp-browserbase)
 
