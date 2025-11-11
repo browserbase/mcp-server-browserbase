@@ -1,5 +1,11 @@
 # @browserbasehq/mcp-server-browserbase
 
+## 2.4.0
+
+### Minor Changes
+
+- feat: adding stagehand agent tool
+
 ## 2.3.0
 
 ### Minor Changes
