@@ -6,6 +6,7 @@ import screenshotTool from "./screenshot.js";
 import sessionTools from "./session.js";
 import getUrlTool from "./url.js";
 import agentTool from "./agent.js";
+import usageTool from "./usage.js";
 
 // Export individual tools
 export { default as navigateTool } from "./navigate.js";
@@ -16,6 +17,7 @@ export { default as screenshotTool } from "./screenshot.js";
 export { default as sessionTools } from "./session.js";
 export { default as getUrlTool } from "./url.js";
 export { default as agentTool } from "./agent.js";
+export { default as usageTool } from "./usage.js";
 
 // Export all tools as array
 export const TOOLS = [
@@ -27,6 +29,7 @@ export const TOOLS = [
   screenshotTool,
   getUrlTool,
   agentTool,
+  usageTool,
 ];
 
 export const sessionManagementTools = sessionTools;
