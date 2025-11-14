@@ -3,6 +3,7 @@ import type { Tool, ToolSchema, ToolResult } from "./tool.js";
 import type { Context } from "../context.js";
 import type { ToolActionResult } from "../types/types.js";
 import { registerScreenshot } from "../mcp/resources.js";
+import { recordStagehandCall } from "../mcp/usage.js";
 
 /**
  * Screenshot
@@ -61,6 +62,12 @@ async function handleScreenshot(
           method: "notifications/resources/list_changed",
         });
       }
+
+      recordStagehandCall({
+        sessionId: context.currentSessionId,
+        toolName: screenshotSchema.name,
+        operation: "screenshot",
+      });
 
       return {
         content: [

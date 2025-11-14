@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { Tool, ToolSchema, ToolResult } from "./tool.js";
 import type { Context } from "../context.js";
 import type { ToolActionResult } from "../types/types.js";
+import { recordStagehandCall } from "../mcp/usage.js";
 
 /**
  * Stagehand Observe
@@ -41,6 +42,12 @@ async function handleObserve(
       const stagehand = await context.getStagehand();
 
       const observations = await stagehand.observe(params.instruction);
+
+      recordStagehandCall({
+        sessionId: context.currentSessionId,
+        toolName: observeSchema.name,
+        operation: "observe",
+      });
 
       return {
         content: [

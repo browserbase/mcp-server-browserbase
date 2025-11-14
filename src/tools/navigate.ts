@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { Tool, ToolSchema, ToolResult } from "./tool.js";
 import type { Context } from "../context.js";
 import type { ToolActionResult } from "../types/types.js";
+import { recordStagehandCall } from "../mcp/usage.js";
 
 const NavigateInputSchema = z.object({
   url: z.string().describe("The URL to navigate to"),
@@ -36,6 +37,12 @@ async function handleNavigate(
       if (!sessionId) {
         throw new Error("No Browserbase session ID available");
       }
+
+      recordStagehandCall({
+        sessionId: context.currentSessionId,
+        toolName: navigateSchema.name,
+        operation: "navigate.goto",
+      });
 
       return {
         content: [

@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { Tool, ToolSchema, ToolResult } from "./tool.js";
 import type { Context } from "../context.js";
 import type { ToolActionResult } from "../types/types.js";
+import { recordStagehandCall } from "../mcp/usage.js";
 
 /**
  * Stagehand Get URL
@@ -36,6 +37,12 @@ async function handleGetUrl(
       }
 
       const currentUrl = page.url();
+
+      recordStagehandCall({
+        sessionId: context.currentSessionId,
+        toolName: getUrlSchema.name,
+        operation: "get_url",
+      });
 
       return {
         content: [

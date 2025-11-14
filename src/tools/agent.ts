@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { Tool, ToolSchema, ToolResult } from "./tool.js";
 import type { Context } from "../context.js";
 import type { ToolActionResult } from "../types/types.js";
+import { recordStagehandCall } from "../mcp/usage.js";
 
 /**
  * Stagehand Agent
@@ -52,6 +53,12 @@ async function handleAgent(
       const result = await agent.execute({
         instruction: params.prompt,
         maxSteps: 20,
+      });
+
+      recordStagehandCall({
+        sessionId: context.currentSessionId,
+        toolName: agentSchema.name,
+        operation: "agent.execute",
       });
 
       return {

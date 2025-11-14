@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { Tool, ToolSchema, ToolResult } from "./tool.js";
 import type { Context } from "../context.js";
 import type { ToolActionResult } from "../types/types.js";
+import { recordStagehandCall } from "../mcp/usage.js";
 
 /**
  * Stagehand Act
@@ -43,6 +44,12 @@ async function handleAct(
 
       await stagehand.act(params.action, {
         variables: params.variables,
+      });
+
+      recordStagehandCall({
+        sessionId: context.currentSessionId,
+        toolName: actSchema.name,
+        operation: "act",
       });
 
       return {

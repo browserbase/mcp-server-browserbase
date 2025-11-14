@@ -420,6 +420,58 @@ The server provides access to screenshot resources:
 1. **Screenshots** (`screenshot://<screenshot-name>`)
    - PNG images of captured screenshots
 
+### Stagehand usage metrics (experimental)
+
+This server exposes an internal **Stagehand usage** tool that you can call via MCP to understand how often Stagehand-backed operations run inside the Browserbase MCP process.
+
+- **Tool name**: `browserbase_usage_stats`
+- **Capability**: `core`
+- **Input schema**:
+  - `sessionId?: string` – optional internal MCP session ID to filter per-session stats
+  - `scope?: "global" | "perSession" | "all"` – which part of the snapshot to return (defaults to `"all"`)
+  - `reset?: boolean` – when `true`, clears the in-memory counters after returning the snapshot
+
+Example `call_tool` request (conceptual):
+
+```json
+{
+  "name": "browserbase_usage_stats",
+  "arguments": {
+    "scope": "all",
+    "reset": false
+  }
+}
+```
+
+Example response `content` (truncated):
+
+```json
+{
+  "global": {
+    "agent.execute": {
+      "callCount": 3,
+      "toolCallCounts": {
+        "browserbase_stagehand_agent": 3
+      }
+    }
+  },
+  "perSession": {
+    "browserbase_session_default_...": {
+      "operations": {
+        "agent.execute": {
+          "callCount": 2,
+          "toolCallCounts": {
+            "browserbase_stagehand_agent": 2
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+You can have a Claude Agent SDK-based agent invoke this tool at the end of a run to fetch Stagehand usage for that run, then optionally call it again with `"reset": true` to clear counters for the next run.
+
 ## Key Features
 
 - **AI-Powered Automation**: Natural language commands for web interactions
