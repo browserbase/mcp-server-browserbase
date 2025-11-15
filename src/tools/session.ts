@@ -7,6 +7,44 @@ import { createUIResource } from "@mcp-ui/server";
 import type { BrowserSession } from "../types/types.js";
 import { TextContent } from "@modelcontextprotocol/sdk/types.js";
 
+// Types for Stagehand replay response payload
+interface StagehandReplayTokenUsage {
+  inputTokens: number;
+  outputTokens: number;
+  timeMs?: number;
+}
+
+interface StagehandReplayAction {
+  method: string;
+  parameters?: unknown;
+  result?: unknown;
+  timestamp: number;
+  endTime?: number;
+  tokenUsage?: StagehandReplayTokenUsage;
+}
+
+interface StagehandReplayPage {
+  url: string;
+  timestamp: number;
+  duration: number;
+  actions: StagehandReplayAction[];
+}
+
+interface StagehandReplayData {
+  pages: StagehandReplayPage[];
+}
+
+interface StagehandReplayResponse {
+  success: boolean;
+  data: StagehandReplayData;
+}
+
+interface StagehandReplayTokenUsageTotals {
+  totalInputTokens: number;
+  totalOutputTokens: number;
+  totalTimeMs: number;
+}
+
 // --- Tool: Create Session ---
 const CreateSessionInputSchema = z.object({
   // Keep sessionId optional
@@ -141,6 +179,79 @@ const closeSessionSchema: ToolSchema<typeof CloseSessionInputSchema> = {
   inputSchema: CloseSessionInputSchema,
 };
 
+/**
+ * Fetch token usage metrics from the Stagehand replay endpoint for a given
+ * Browserbase session and return aggregated totals.
+ */
+async function fetchStagehandTokenUsageSummary(
+  config: Context["config"],
+  browserbaseSessionId: string,
+): Promise<StagehandReplayTokenUsageTotals | null> {
+  const apiKey = config.browserbaseApiKey;
+  const projectId = config.browserbaseProjectId;
+  const modelApiKey =
+    config.modelApiKey ||
+    process.env.GEMINI_API_KEY ||
+    process.env.GOOGLE_API_KEY;
+
+  if (!apiKey || !projectId || !modelApiKey) {
+    process.stderr.write(
+      "[tool.closeSession] Skipping Stagehand replay call due to missing API keys or session ID.\n",
+    );
+    return null;
+  }
+
+  const replayResponse = await fetch(
+    `https://api.stagehand.browserbase.com/v1/sessions/${browserbaseSessionId}/replay`,
+    {
+      method: "GET",
+      headers: {
+        "x-bb-api-key": apiKey,
+        "x-bb-project-id": projectId,
+        "x-bb-session-id": browserbaseSessionId,
+        "x-stream-response": "true",
+        "x-model-api-key": modelApiKey,
+        "x-sent-at": new Date().toISOString(),
+        "x-language": "typescript",
+        "x-sdk-version": "3.0.1",
+      },
+    },
+  );
+
+  try {
+    // This JSON should contain tokenUsage with inputTokens/outputTokens per action
+    const replayJson = (await replayResponse.json()) as StagehandReplayResponse;
+
+    // Aggregate token usage across all pages/actions into a single totals object
+    const totals: StagehandReplayTokenUsageTotals = {
+      totalInputTokens: 0,
+      totalOutputTokens: 0,
+      totalTimeMs: 0,
+    };
+
+    for (const page of replayJson.data.pages) {
+      for (const action of page.actions) {
+        if (action.tokenUsage) {
+          totals.totalInputTokens += action.tokenUsage.inputTokens;
+          totals.totalOutputTokens += action.tokenUsage.outputTokens;
+          if (typeof action.tokenUsage.timeMs === "number") {
+            totals.totalTimeMs += action.tokenUsage.timeMs;
+          }
+        }
+      }
+    }
+
+    return totals;
+  } catch (parseError) {
+    const message =
+      parseError instanceof Error ? parseError.message : String(parseError);
+    process.stderr.write(
+      `[tool.closeSession] Failed to parse Stagehand replay response: ${message}\n`,
+    );
+    return null;
+  }
+}
+
 async function handleCloseSession(context: Context): Promise<ToolResult> {
   const action = async (): Promise<ToolActionResult> => {
     // Store the current session ID before cleanup
@@ -166,6 +277,20 @@ async function handleCloseSession(context: Context): Promise<ToolResult> {
         // cleanupSession handles both closing Stagehand and cleanup (idempotent)
         await sessionManager.cleanupSession(previousSessionId);
         cleanupSuccessful = true;
+
+        // Fetch Stagehand token usage metrics via shared util and log aggregate totals
+        if (browserbaseSessionId) {
+          const tokenUsageTotals = await fetchStagehandTokenUsageSummary(
+            context.config,
+            browserbaseSessionId,
+          );
+
+          if (tokenUsageTotals) {
+            process.stdout.write(
+              `Total token usage: ${tokenUsageTotals.totalInputTokens} input tokens, ${tokenUsageTotals.totalOutputTokens} output tokens\n`,
+            );
+          }
+        }
       } else {
         process.stderr.write(
           `[tool.closeSession] No session found for ID: ${previousSessionId || "default/unknown"}\n`,
@@ -208,6 +333,7 @@ async function handleCloseSession(context: Context): Promise<ToolResult> {
     if (previousSessionId && previousSessionId !== defaultSessionId) {
       infoMessage = `No active session found for session ID '${previousSessionId}'. The context has been reset to default.`;
     }
+
     return { content: [{ type: "text", text: infoMessage }] };
   };
 
