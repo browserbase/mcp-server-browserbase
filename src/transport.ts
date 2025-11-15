@@ -103,6 +103,7 @@ export function startHttpTransport(
         {
           mcpServers: {
             browserbase: {
+              type: "http",
               url: `${url}/mcp`,
             },
           },
