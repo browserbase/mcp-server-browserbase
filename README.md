@@ -65,6 +65,7 @@ If your client supports SHTTP:
 {
   "mcpServers": {
     "browserbase": {
+      "type": "http",
       "url": "your-smithery-url.com"
     }
   }
