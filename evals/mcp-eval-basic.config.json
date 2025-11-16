@@ -121,6 +121,21 @@
         "browserbase_stagehand_get_url",
         "browserbase_session_close"
       ]
+    },
+    {
+      "name": "agent-basic-test",
+      "description": "Test autonomous agent functionality with simple task",
+      "steps": [
+        {
+          "user": "Create a browser session and use the agent to go to https://example.com and extract the page title, then close the session",
+          "expectedState": "Example Domain"
+        }
+      ],
+      "expectTools": [
+        "browserbase_session_create",
+        "browserbase_stagehand_agent",
+        "browserbase_session_close"
+      ]
     }
   ]
 }
