@@ -67,6 +67,21 @@
         "browserbase_stagehand_get_url",
         "browserbase_session_close"
       ]
+    },
+    {
+      "name": "smoke-test-agent",
+      "description": "Quick test to verify autonomous agent works",
+      "steps": [
+        {
+          "user": "Create a browser session and use the agent to visit example.org and tell me the page title, then close the session",
+          "expectedState": "Example Domain"
+        }
+      ],
+      "expectTools": [
+        "browserbase_session_create",
+        "browserbase_stagehand_agent",
+        "browserbase_session_close"
+      ]
     }
   ]
 }

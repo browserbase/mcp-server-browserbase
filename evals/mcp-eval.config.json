@@ -105,6 +105,21 @@
         "browserbase_session_create",
         "browserbase_stagehand_navigate"
       ]
+    },
+    {
+      "name": "agent-complex-task-test",
+      "description": "Test agent with multi-step task",
+      "steps": [
+        {
+          "user": "Create a browser session and use the agent to go to https://news.ycombinator.com, find the top post, and extract its title and score, then close the session",
+          "expectedState": "points"
+        }
+      ],
+      "expectTools": [
+        "browserbase_session_create",
+        "browserbase_stagehand_agent",
+        "browserbase_session_close"
+      ]
     }
   ]
 }

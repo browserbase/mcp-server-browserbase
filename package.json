@@ -57,6 +57,7 @@
     "@changesets/cli": "^2.29.6",
     "@eslint/js": "^9.29.0",
     "@smithery/cli": "^1.2.15",
+    "@types/node": "^24.10.1",
     "chalk": "^5.3.0",
     "eslint": "^9.29.0",
     "eslint-plugin-react": "^7.37.5",
