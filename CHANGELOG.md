@@ -1,5 +1,11 @@
 # @browserbasehq/mcp-server-browserbase
 
+## 2.4.1
+
+### Patch Changes
+
+- update stagehand version to 3.0.3, change screenshot tool to use CDP and scaling image to work with claude code
+
 ## 2.4.0
 
 ### Minor Changes
