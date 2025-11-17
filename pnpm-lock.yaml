@@ -11,8 +11,8 @@ importers:
         specifier: ^2.6.0
         version: 2.6.0
       "@browserbasehq/stagehand":
-        specifier: ^3.0.1
-        version: 3.0.1(@opentelemetry/api@1.9.0)(bufferutil@4.0.9)(deepmerge@4.3.1)(dotenv@16.6.1)(zod@3.25.76)
+        specifier: ^3.0.2
+        version: 3.0.2(@opentelemetry/api@1.9.0)(bufferutil@4.0.9)(deepmerge@4.3.1)(dotenv@16.6.1)(zod@3.25.76)
       "@mcp-ui/server":
         specifier: ^5.10.0
         version: 5.10.0
@@ -31,13 +31,16 @@ importers:
     devDependencies:
       "@changesets/cli":
         specifier: ^2.29.6
-        version: 2.29.6(@types/node@18.19.119)
+        version: 2.29.6(@types/node@24.10.1)
       "@eslint/js":
         specifier: ^9.29.0
         version: 9.31.0
       "@smithery/cli":
         specifier: ^1.2.15
         version: 1.2.15(react@19.1.0)(ws@8.18.3(bufferutil@4.0.9))(zod@3.25.76)
+      "@types/node":
+        specifier: ^24.10.1
+        version: 24.10.1
       chalk:
         specifier: ^5.3.0
         version: 5.4.1
@@ -290,10 +293,10 @@ packages:
         integrity: sha512-83iXP5D7xMm8Wyn66TUaUrgoByCmAJuoMoZQI3sGg3JAiMlTfnCIMqyVBoNSaItaPIkaCnrsj6LiusmXV2X9YA==,
       }
 
-  "@browserbasehq/stagehand@3.0.1":
+  "@browserbasehq/stagehand@3.0.2":
     resolution:
       {
-        integrity: sha512-GfI6qWAGBj3obGvIgi8wbE1e65y29hB7u9FUmlQIz2wUX/izFFchlq+PszafPr9d2q4ZzbqzqNoc9WSjhxT65w==,
+        integrity: sha512-m5GSOgHtRlC8wj4cdfJzB6sY6oQsTznmR2fjao0QRbtQd71Eh2dCYzmN/jZtc0K60Ga9ARMVTrix4iSaKaY2eQ==,
       }
     peerDependencies:
       deepmerge: ^4.3.1
@@ -1056,6 +1059,12 @@ packages:
     resolution:
       {
         integrity: sha512-d0F6m9itIPaKnrvEMlzE48UjwZaAnFW7Jwibacw9MNdqadjKNpUm9tfJYDwmShJmgqcoqYUX3EMKO1+RWiuuNg==,
+      }
+
+  "@types/node@24.10.1":
+    resolution:
+      {
+        integrity: sha512-GNWcUTRBgIRJD5zj+Tq0fKOJ5XZajIiBroOF0yvj2bSU1WvNdYS/dn9UxwsujGW4JX06dnHyjV2y9rRaybH0iQ==,
       }
 
   "@types/retry@0.12.0":
@@ -4948,6 +4957,12 @@ packages:
         integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==,
       }
 
+  undici-types@7.16.0:
+    resolution:
+      {
+        integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==,
+      }
+
   universalify@0.1.2:
     resolution:
       {
@@ -5381,7 +5396,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  "@browserbasehq/stagehand@3.0.1(@opentelemetry/api@1.9.0)(bufferutil@4.0.9)(deepmerge@4.3.1)(dotenv@16.6.1)(zod@3.25.76)":
+  "@browserbasehq/stagehand@3.0.2(@opentelemetry/api@1.9.0)(bufferutil@4.0.9)(deepmerge@4.3.1)(dotenv@16.6.1)(zod@3.25.76)":
     dependencies:
       "@ai-sdk/provider": 2.0.0
       "@anthropic-ai/sdk": 0.39.0
@@ -5462,7 +5477,7 @@ snapshots:
     dependencies:
       "@changesets/types": 6.1.0
 
-  "@changesets/cli@2.29.6(@types/node@18.19.119)":
+  "@changesets/cli@2.29.6(@types/node@24.10.1)":
     dependencies:
       "@changesets/apply-release-plan": 7.0.12
       "@changesets/assemble-release-plan": 6.0.9
@@ -5478,7 +5493,7 @@ snapshots:
       "@changesets/should-skip-package": 0.1.2
       "@changesets/types": 6.1.0
       "@changesets/write": 0.4.0
-      "@inquirer/external-editor": 1.0.1(@types/node@18.19.119)
+      "@inquirer/external-editor": 1.0.1(@types/node@24.10.1)
       "@manypkg/get-packages": 1.1.3
       ansi-colors: 4.1.3
       ci-info: 3.9.0
@@ -5728,12 +5743,12 @@ snapshots:
 
   "@humanwhocodes/retry@0.4.3": {}
 
-  "@inquirer/external-editor@1.0.1(@types/node@18.19.119)":
+  "@inquirer/external-editor@1.0.1(@types/node@24.10.1)":
     dependencies:
       chardet: 2.1.0
       iconv-lite: 0.6.3
     optionalDependencies:
-      "@types/node": 18.19.119
+      "@types/node": 24.10.1
 
   "@langchain/core@0.3.79(@opentelemetry/api@1.9.0)(openai@4.104.0(ws@8.18.3(bufferutil@4.0.9))(zod@3.25.76))":
     dependencies:
@@ -5973,7 +5988,7 @@ snapshots:
 
   "@types/node-fetch@2.6.12":
     dependencies:
-      "@types/node": 18.19.119
+      "@types/node": 24.10.1
       form-data: 4.0.3
 
   "@types/node@12.20.55": {}
@@ -5982,13 +5997,17 @@ snapshots:
     dependencies:
       undici-types: 5.26.5
 
+  "@types/node@24.10.1":
+    dependencies:
+      undici-types: 7.16.0
+
   "@types/retry@0.12.0": {}
 
   "@types/uuid@10.0.0": {}
 
   "@types/yauzl@2.10.3":
     dependencies:
-      "@types/node": 18.19.119
+      "@types/node": 24.10.1
     optional: true
 
   "@typescript-eslint/eslint-plugin@8.37.0(@typescript-eslint/parser@8.37.0(eslint@9.31.0)(typescript@5.8.3))(eslint@9.31.0)(typescript@5.8.3)":
@@ -6374,7 +6393,7 @@ snapshots:
 
   chrome-launcher@1.2.1:
     dependencies:
-      "@types/node": 18.19.119
+      "@types/node": 24.10.1
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 2.0.2
@@ -8591,6 +8610,8 @@ snapshots:
     optional: true
 
   undici-types@5.26.5: {}
+
+  undici-types@7.16.0: {}
 
   universalify@0.1.2: {}
 
