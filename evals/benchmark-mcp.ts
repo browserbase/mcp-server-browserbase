@@ -49,10 +49,7 @@ interface StagehandLogContext {
   child: ChildProcess;
   port: number;
   browserbaseSessionId?: string;
-  stagehandTokenTotals?: {
-    inputTokens: number;
-    outputTokens: number;
-  };
+  stagehandTokenTotals?: StagehandUsageTotals;
 }
 
 async function startStagehandServer(
@@ -99,15 +96,44 @@ async function startStagehandServer(
       context.browserbaseSessionId = urlMatch[1];
     }
 
-    // Total token usage line
-    const tokensMatch = trimmed.match(
-      /Total token usage:\s+(\d+)\s+input tokens,\s+(\d+)\s+output tokens/i,
-    );
-    if (tokensMatch) {
-      context.stagehandTokenTotals = {
-        inputTokens: Number.parseInt(tokensMatch[1], 10),
-        outputTokens: Number.parseInt(tokensMatch[2], 10),
-      };
+    // Usage metrics JSON line from Stagehand MCP
+    const metricsMatch = trimmed.match(/^Usage metrics:\s*(\{.*\})$/);
+    if (metricsMatch) {
+      try {
+        const metrics = JSON.parse(metricsMatch[1]) as {
+          totalPromptTokens?: number;
+          totalCompletionTokens?: number;
+          totalInferenceTimeMs?: number;
+          promptTokens?: number;
+          completionTokens?: number;
+          inputTokens?: number;
+          outputTokens?: number;
+          timeMs?: number;
+        };
+
+        const totalInputTokens =
+          metrics.totalPromptTokens ??
+          metrics.promptTokens ??
+          metrics.inputTokens ??
+          0;
+        const totalOutputTokens =
+          metrics.totalCompletionTokens ??
+          metrics.completionTokens ??
+          metrics.outputTokens ??
+          0;
+        const totalTimeMs = metrics.totalInferenceTimeMs ?? metrics.timeMs ?? 0;
+
+        context.stagehandTokenTotals = {
+          totalInputTokens,
+          totalOutputTokens,
+          totalTimeMs,
+        };
+      } catch (err) {
+        console.error(
+          "[benchmark-mcp] Failed to parse Stagehand usage metrics JSON:",
+          err,
+        );
+      }
     }
   };
 
@@ -335,82 +361,6 @@ async function runTaskWithAgent(
   };
 }
 
-async function fetchStagehandTokenUsageSummary(
-  browserbaseSessionId: string,
-): Promise<StagehandUsageTotals | null> {
-  const apiKey = process.env.BROWSERBASE_API_KEY;
-  const projectId = process.env.BROWSERBASE_PROJECT_ID;
-  const modelApiKey =
-    process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || "";
-
-  if (!apiKey || !projectId || !modelApiKey) {
-    console.error(
-      "[benchmark-mcp] Skipping Stagehand replay call due to missing API keys.",
-    );
-    return null;
-  }
-
-  const replayResponse = await fetch(
-    `https://api.stagehand.browserbase.com/v1/sessions/${browserbaseSessionId}/replay`,
-    {
-      method: "GET",
-      headers: {
-        "x-bb-api-key": apiKey,
-        "x-bb-project-id": projectId,
-        "x-bb-session-id": browserbaseSessionId,
-        "x-stream-response": "true",
-        "x-model-api-key": modelApiKey,
-        "x-sent-at": new Date().toISOString(),
-        "x-language": "typescript",
-        "x-sdk-version": "3.0.1",
-      },
-    },
-  );
-
-  try {
-    const replayJson = (await replayResponse.json()) as {
-      data: {
-        pages: Array<{
-          actions: Array<{
-            tokenUsage?: {
-              inputTokens: number;
-              outputTokens: number;
-              timeMs?: number;
-            };
-          }>;
-        }>;
-      };
-    };
-
-    const totals: StagehandUsageTotals = {
-      totalInputTokens: 0,
-      totalOutputTokens: 0,
-      totalTimeMs: 0,
-    };
-
-    for (const page of replayJson.data.pages) {
-      for (const action of page.actions) {
-        if (action.tokenUsage) {
-          totals.totalInputTokens += action.tokenUsage.inputTokens;
-          totals.totalOutputTokens += action.tokenUsage.outputTokens;
-          if (typeof action.tokenUsage.timeMs === "number") {
-            totals.totalTimeMs += action.tokenUsage.timeMs;
-          }
-        }
-      }
-    }
-
-    return totals;
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.error(
-      "[benchmark-mcp] Failed to parse Stagehand replay response:",
-      message,
-    );
-    return null;
-  }
-}
-
 async function runBenchmark(
   mcpName: string,
   datasetName: SupportedDatasetName,
@@ -529,21 +479,7 @@ async function runBenchmark(
     );
 
     if (isStagehand && stagehandContext) {
-      let stagehandTotals: StagehandUsageTotals | null = null;
-
-      if (stagehandContext.browserbaseSessionId) {
-        stagehandTotals = await fetchStagehandTokenUsageSummary(
-          stagehandContext.browserbaseSessionId,
-        );
-      }
-
-      if (!stagehandTotals && stagehandContext.stagehandTokenTotals) {
-        stagehandTotals = {
-          totalInputTokens: stagehandContext.stagehandTokenTotals.inputTokens,
-          totalOutputTokens: stagehandContext.stagehandTokenTotals.outputTokens,
-          totalTimeMs: 0,
-        };
-      }
+      const stagehandTotals = stagehandContext.stagehandTokenTotals;
 
       if (stagehandTotals) {
         console.log(
