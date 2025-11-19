@@ -49,12 +49,12 @@ startCommand:
         description: "The viewport of the browser"
         properties:
           browserWidth:
-            type: "integer"
+            type: "number"
             title: "Browser Width"
             description: "The width of the browser"
             default: 1024
           browserHeight:
-            type: "integer"
+            type: "number"
             title: "Browser Height"
             description: "The height of the browser"
             default: 768
