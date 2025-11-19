@@ -7,7 +7,7 @@
     "url": "https://github.com/browserbase/mcp-server-browserbase",
     "source": "github"
   },
-  "version": "2.2.0",
+  "version": "2.4.2",
   "packages": [
     {
       "registry_type": "npm",

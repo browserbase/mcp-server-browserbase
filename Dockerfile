@@ -1,16 +1,16 @@
-FROM node:22-slim AS builder
+FROM node:22-alpine AS builder
 
 RUN corepack enable
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml .npmrc ./
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
-    pnpm install --frozen-lockfile
+    pnpm install --frozen-lockfile --ignore-scripts
 
 COPY . .
 RUN pnpm run build && \
-    pnpm prune --prod
+    pnpm prune --prod --ignore-scripts
 
 FROM gcr.io/distroless/nodejs22-debian12
 
