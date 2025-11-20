@@ -1,5 +1,4 @@
 import { z } from "zod";
-import sharp from "sharp";
 import type { Tool, ToolSchema, ToolResult } from "./tool.js";
 import type { Context } from "../context.js";
 import type { ToolActionResult } from "../types/types.js";
@@ -37,57 +36,12 @@ async function handleScreenshot(
       }
 
       // We're taking a full page screenshot to give context of the entire page, similar to a snapshot
-      // Enable Page domain if needed
-      await page.sendCDP("Page.enable");
+      const screenshotBuffer = await page.screenshot({
+        fullPage: true,
+      });
 
-      // Use CDP to capture screenshot
-      const { data } = await page.sendCDP<{ data: string }>(
-        "Page.captureScreenshot",
-        {
-          format: "png",
-          fromSurface: true,
-        },
-      );
-
-      // data is already base64 string from CDP
-      let screenshotBase64 = data;
-
-      // Scale down image if needed for Claude's vision API
-      // Claude constraints: max 1568px on any edge AND max 1.15 megapixels
-      // Reference: https://docs.anthropic.com/en/docs/build-with-claude/vision#evaluate-image-size
-      const imageBuffer = Buffer.from(data, "base64");
-      const metadata = await sharp(imageBuffer).metadata();
-
-      if (metadata.width && metadata.height) {
-        const pixels = metadata.width * metadata.height;
-
-        // Min of: width constraint, height constraint, and megapixel constraint
-        const shrink = Math.min(
-          1568 / metadata.width,
-          1568 / metadata.height,
-          Math.sqrt((1.15 * 1024 * 1024) / pixels),
-        );
-
-        // Only resize if we need to shrink (shrink < 1)
-        if (shrink < 1) {
-          const newWidth = Math.floor(metadata.width * shrink);
-          const newHeight = Math.floor(metadata.height * shrink);
-
-          process.stderr.write(
-            `[Screenshot] Scaling image from ${metadata.width}x${metadata.height} (${(pixels / (1024 * 1024)).toFixed(2)}MP) to ${newWidth}x${newHeight} (${((newWidth * newHeight) / (1024 * 1024)).toFixed(2)}MP) for Claude vision API\n`,
-          );
-
-          const resizedBuffer = await sharp(imageBuffer)
-            .resize(newWidth, newHeight, {
-              fit: "inside",
-              withoutEnlargement: true,
-            })
-            .png()
-            .toBuffer();
-
-          screenshotBase64 = resizedBuffer.toString("base64");
-        }
-      }
+      // Convert buffer to base64 string and store in memory
+      const screenshotBase64 = screenshotBuffer.toString("base64");
       const name = params.name
         ? `screenshot-${params.name}-${new Date()
             .toISOString()
