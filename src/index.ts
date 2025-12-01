@@ -139,6 +139,17 @@ export default function ({ config }: { config: z.infer<typeof configSchema> }) {
   const contextId = randomUUID();
   const context = new Context(server.server, internalConfig, contextId);
 
+  // Cleanup handler for when the MCP connection closes (SHTTP/Smithery)
+  server.server.onclose = async () => {
+    try {
+      await context.getSessionManager().closeAllSessions();
+    } catch (err) {
+      process.stderr.write(
+        `[Cleanup] Error during session cleanup: ${err instanceof Error ? err.message : String(err)}\n`,
+      );
+    }
+  };
+
   server.server.registerCapabilities({
     resources: {
       subscribe: true,
