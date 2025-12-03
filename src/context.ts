@@ -2,7 +2,6 @@ import type { Stagehand } from "@browserbasehq/stagehand";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import type { Config } from "../config.d.ts";
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
-import { listResources, readResource } from "./mcp/resources.js";
 import { SessionManager } from "./sessionManager.js";
 import type { MCPTool } from "./types/types.js";
 
@@ -17,6 +16,7 @@ export class Context {
   public readonly config: Config;
   private server: Server;
   private sessionManager: SessionManager;
+  private screenshots: Map<string, string> = new Map();
 
   // currentSessionId is a getter that delegates to SessionManager to ensure synchronization
   // This prevents desync between Context and SessionManager session tracking
@@ -105,11 +105,33 @@ export class Context {
   }
 
   /**
+   * Register a screenshot in this context's storage
+   */
+  registerScreenshot(name: string, data: string): void {
+    this.screenshots.set(name, data);
+  }
+
+  /**
+   * Clear all screenshots in this context
+   */
+  clearScreenshots(): void {
+    this.screenshots.clear();
+  }
+
+  /**
    * List resources
    * Documentation: https://modelcontextprotocol.io/docs/concepts/resources
    */
   listResources() {
-    return listResources();
+    return {
+      resources: [
+        ...Array.from(this.screenshots.keys()).map((name) => ({
+          uri: `screenshot://${name}`,
+          mimeType: "image/png",
+          name: `Screenshot: ${name}`,
+        })),
+      ],
+    };
   }
 
   /**
@@ -117,6 +139,22 @@ export class Context {
    * Documentation: https://modelcontextprotocol.io/docs/concepts/resources
    */
   readResource(uri: string) {
-    return readResource(uri);
+    if (uri.startsWith("screenshot://")) {
+      const name = uri.split("://")[1];
+      const screenshot = this.screenshots.get(name);
+      if (screenshot) {
+        return {
+          contents: [
+            {
+              uri,
+              mimeType: "image/png",
+              blob: screenshot,
+            },
+          ],
+        };
+      }
+    }
+
+    throw new Error(`Resource not found: ${uri}`);
   }
 }

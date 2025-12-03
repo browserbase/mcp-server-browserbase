@@ -1,6 +1,5 @@
 import { Stagehand } from "@browserbasehq/stagehand";
 import type { Config } from "../config.d.ts";
-import { clearScreenshotsForSession } from "./mcp/resources.js";
 import type { BrowserSession, CreateSessionParams } from "./types/types.js";
 import { randomUUID } from "crypto";
 
@@ -243,16 +242,6 @@ export class SessionManager {
           process.stderr.write(
             `[SessionManager] Successfully closed Stagehand and browser for session: ${sessionIdToLog}\n`,
           );
-          // After close, purge any screenshots associated with this session
-          try {
-            clearScreenshotsForSession(sessionIdToLog);
-          } catch (err) {
-            process.stderr.write(
-              `[SessionManager] WARN - Failed to clear screenshots after close for ${sessionIdToLog}: ${
-                err instanceof Error ? err.message : String(err)
-              }\n`,
-            );
-          }
         } catch (closeError) {
           process.stderr.write(
             `[SessionManager] WARN - Error closing Stagehand for session ${sessionIdToLog}: ${
