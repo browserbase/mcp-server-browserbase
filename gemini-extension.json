@@ -1,0 +1,11 @@
+{
+  "name": "mcp-server-browserbase",
+  "version": "2.4.1",
+  "mcpServers": {
+    "browserbase": {
+      "command": "node",
+      "args": ["${extensionPath}${/}cli.js"],
+      "cwd": "${extensionPath}"
+    }
+  }
+}
