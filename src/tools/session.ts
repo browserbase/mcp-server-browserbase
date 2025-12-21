@@ -24,6 +24,10 @@ const createSessionSchema: ToolSchema<typeof CreateSessionInputSchema> = {
   description:
     "Create or reuse a Browserbase browser session and set it as active.",
   inputSchema: CreateSessionInputSchema,
+  annotations: {
+    title: "Create Session",
+    destructiveHint: true,
+  },
 };
 
 // Handle function for CreateSession using SessionManager
@@ -139,6 +143,10 @@ const closeSessionSchema: ToolSchema<typeof CloseSessionInputSchema> = {
   description:
     "Close the current Browserbase session and reset the active context.",
   inputSchema: CloseSessionInputSchema,
+  annotations: {
+    title: "Close Session",
+    destructiveHint: true,
+  },
 };
 
 async function handleCloseSession(context: Context): Promise<ToolResult> {

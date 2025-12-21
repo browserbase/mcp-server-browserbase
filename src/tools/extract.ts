@@ -27,6 +27,10 @@ const extractSchema: ToolSchema<typeof ExtractInputSchema> = {
   name: "browserbase_stagehand_extract",
   description: `Extract structured data or text from the current page using an instruction.`,
   inputSchema: ExtractInputSchema,
+  annotations: {
+    title: "Extract Data",
+    readOnlyHint: true,
+  },
 };
 
 async function handleExtract(

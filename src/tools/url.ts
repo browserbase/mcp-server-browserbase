@@ -18,6 +18,10 @@ const getUrlSchema: ToolSchema<typeof GetUrlInputSchema> = {
   name: "browserbase_stagehand_get_url",
   description: "Return the current page URL (full URL with query/fragment).",
   inputSchema: GetUrlInputSchema,
+  annotations: {
+    title: "Get Current URL",
+    readOnlyHint: true,
+  },
 };
 
 async function handleGetUrl(

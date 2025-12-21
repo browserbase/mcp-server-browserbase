@@ -31,6 +31,10 @@ const actSchema: ToolSchema<typeof ActInputSchema> = {
   name: "browserbase_stagehand_act",
   description: `Perform a single action on the page (e.g., click, type).`,
   inputSchema: ActInputSchema,
+  annotations: {
+    title: "Perform Action",
+    destructiveHint: true,
+  },
 };
 
 async function handleAct(

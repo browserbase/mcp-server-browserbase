@@ -21,6 +21,10 @@ const screenshotSchema: ToolSchema<typeof ScreenshotInputSchema> = {
   name: "browserbase_screenshot",
   description: `Capture a full-page screenshot and return it (and save as a resource).`,
   inputSchema: ScreenshotInputSchema,
+  annotations: {
+    title: "Take Screenshot",
+    readOnlyHint: true,
+  },
 };
 
 async function handleScreenshot(

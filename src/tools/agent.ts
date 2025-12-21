@@ -26,6 +26,10 @@ const agentSchema: ToolSchema<typeof AgentInputSchema> = {
   name: "browserbase_stagehand_agent",
   description: `Execute a task autonomously using Gemini Computer Use agent. The agent will navigate and interact with web pages to complete the given task.`,
   inputSchema: AgentInputSchema,
+  annotations: {
+    title: "Execute Agent Task",
+    destructiveHint: true,
+  },
 };
 
 async function handleAgent(
