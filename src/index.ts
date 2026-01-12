@@ -1,6 +1,3 @@
-import * as dotenv from "dotenv";
-dotenv.config();
-
 import { randomUUID } from "crypto";
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";

@@ -1,6 +1,6 @@
 import { program } from "commander";
 
-import createServerFunction from "./index.js";
+import createServerFunction from "./local.js";
 import { ServerList } from "./server.js";
 import { startHttpTransport, startStdioTransport } from "./transport.js";
 
