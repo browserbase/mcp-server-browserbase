@@ -14,6 +14,7 @@ import { registerScreenshot } from "../mcp/resources.js";
 /**
  * Parse PNG dimensions from base64 data by reading the IHDR chunk.
  * PNG format: 8-byte signature, then IHDR chunk with width/height as big-endian uint32.
+ * Uses pure V8 APIs (atob, Uint8Array, DataView) - no Node.js Buffer.
  */
 function parsePngDimensions(base64Data: string): {
   width: number;
@@ -21,19 +22,24 @@ function parsePngDimensions(base64Data: string): {
 } {
   // 32 base64 chars = 24 bytes, enough for PNG header + IHDR dimensions
   const headerBase64 = base64Data.slice(0, 32);
-  const buffer = Buffer.from(headerBase64, "base64");
+  const binaryString = atob(headerBase64);
+  const bytes = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
 
   // Validate PNG signature
   const pngSignature = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
   for (let i = 0; i < 8; i++) {
-    if (buffer[i] !== pngSignature[i]) {
+    if (bytes[i] !== pngSignature[i]) {
       throw new Error("Invalid PNG signature");
     }
   }
 
   // Width at bytes 16-19, height at 20-23 (big-endian)
-  const width = buffer.readUInt32BE(16);
-  const height = buffer.readUInt32BE(20);
+  const view = new DataView(bytes.buffer);
+  const width = view.getUint32(16, false); // false = big-endian
+  const height = view.getUint32(20, false);
 
   return { width, height };
 }
