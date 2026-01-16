@@ -1,1 +1,3 @@
 runtime: "typescript"
+name: "browserbase"
+
