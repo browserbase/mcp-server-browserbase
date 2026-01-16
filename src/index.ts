@@ -107,6 +107,9 @@ export const configSchema = z
     },
   );
 
+// Smithery v3 expects a named export to signal stateful servers.
+export const stateful = true;
+
 // Default function for Smithery
 export default function ({ config }: { config: z.infer<typeof configSchema> }) {
   if (!config.browserbaseApiKey) {
