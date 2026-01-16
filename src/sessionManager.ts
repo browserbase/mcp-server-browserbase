@@ -1,8 +1,8 @@
-import { Stagehand } from "@browserbasehq/stagehand";
+import type { Stagehand } from "@browserbasehq/stagehand";
 import type { Config } from "../config.d.ts";
 import { clearScreenshotsForSession } from "./mcp/resources.js";
 import type { BrowserSession, CreateSessionParams } from "./types/types.js";
-import { randomUUID } from "crypto";
+import { randomUUID } from "./utils/uuid.js";
 
 /**
  * Create a configured Stagehand instance
@@ -14,6 +14,14 @@ export const createStagehandInstance = async (
   params: CreateSessionParams = {},
   sessionId: string,
 ): Promise<Stagehand> => {
+  const isNodeRuntime =
+    typeof process !== "undefined" && Boolean(process.versions?.node);
+  if (!isNodeRuntime) {
+    throw new Error(
+      "Stagehand requires a Node.js runtime. This deployment does not provide Node built-ins.",
+    );
+  }
+
   const apiKey = params.apiKey || config.browserbaseApiKey;
   const projectId = params.projectId || config.browserbaseProjectId;
 
@@ -24,10 +32,15 @@ export const createStagehandInstance = async (
   const modelName = params.modelName || config.modelName || "gemini-2.0-flash";
   const modelApiKey =
     config.modelApiKey ||
-    process.env.GEMINI_API_KEY ||
-    process.env.GOOGLE_API_KEY;
+    (typeof process !== "undefined"
+      ? process.env?.GEMINI_API_KEY
+      : undefined) ||
+    (typeof process !== "undefined" ? process.env?.GOOGLE_API_KEY : undefined);
 
-  const stagehand = new Stagehand({
+  const stagehandModule = await import("@browserbasehq/stagehand");
+  const StagehandConstructor = stagehandModule.Stagehand;
+
+  const stagehand = new StagehandConstructor({
     env: "BROWSERBASE",
     apiKey,
     projectId,

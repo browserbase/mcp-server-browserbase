@@ -1,5 +1,5 @@
 import { z } from "zod";
-import sharp from "sharp";
+import type { Page } from "@browserbasehq/stagehand";
 import type { Tool, ToolSchema, ToolResult } from "./tool.js";
 import type { Context } from "../context.js";
 import type { ToolActionResult } from "../types/types.js";
@@ -10,6 +10,89 @@ import { registerScreenshot } from "../mcp/resources.js";
  *
  * This tool is used to take a screenshot of the current page.
  */
+
+/**
+ * Parse PNG dimensions from base64 data by reading the IHDR chunk.
+ * PNG format: 8-byte signature, then IHDR chunk with width/height as big-endian uint32.
+ * Uses pure V8 APIs (atob, Uint8Array, DataView) - no Node.js Buffer.
+ */
+function parsePngDimensions(base64Data: string): {
+  width: number;
+  height: number;
+} {
+  // 32 base64 chars = 24 bytes, enough for PNG header + IHDR dimensions
+  const headerBase64 = base64Data.slice(0, 32);
+  const binaryString = atob(headerBase64);
+  const bytes = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+
+  // Validate PNG signature
+  const pngSignature = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+  for (let i = 0; i < 8; i++) {
+    if (bytes[i] !== pngSignature[i]) {
+      throw new Error("Invalid PNG signature");
+    }
+  }
+
+  // Width at bytes 16-19, height at 20-23 (big-endian)
+  const view = new DataView(bytes.buffer);
+  const width = view.getUint32(16, false); // false = big-endian
+  const height = view.getUint32(20, false);
+
+  return { width, height };
+}
+
+/**
+ * Resize an image using OffscreenCanvas and createImageBitmap.
+ * This approach bypasses CSP restrictions because it works with raw binary data,
+ * not URLs. Uses GPU-accelerated rendering with high-quality smoothing.
+ */
+async function resizeImageInBrowser(
+  page: Page,
+  base64Data: string,
+  targetWidth: number,
+  targetHeight: number,
+): Promise<string> {
+  return await page.evaluate(
+    async ({ data, width, height }) => {
+      // Decode base64 to binary - works with raw data, no URL involved
+      const binaryString = atob(data);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      const blob = new Blob([bytes], { type: "image/png" });
+
+      // createImageBitmap works with Blob data directly, bypassing CSP img-src
+      const bitmap = await createImageBitmap(blob);
+
+      // OffscreenCanvas doesn't touch the DOM at all
+      const offscreen = new OffscreenCanvas(width, height);
+      const ctx = offscreen.getContext("2d");
+      if (!ctx) {
+        throw new Error("Failed to get OffscreenCanvas context");
+      }
+
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(bitmap, 0, 0, width, height);
+      bitmap.close();
+
+      // Convert back to base64
+      const resultBlob = await offscreen.convertToBlob({ type: "image/png" });
+      const arrayBuffer = await resultBlob.arrayBuffer();
+      const resultBytes = new Uint8Array(arrayBuffer);
+      let binary = "";
+      for (let i = 0; i < resultBytes.length; i++) {
+        binary += String.fromCharCode(resultBytes[i]);
+      }
+      return btoa(binary);
+    },
+    { data: base64Data, width: targetWidth, height: targetHeight },
+  );
+}
 
 const ScreenshotInputSchema = z.object({
   name: z.string().optional().describe("The name of the screenshot"),
@@ -55,38 +138,36 @@ async function handleScreenshot(
       // Scale down image if needed for Claude's vision API
       // Claude constraints: max 1568px on any edge AND max 1.15 megapixels
       // Reference: https://docs.anthropic.com/en/docs/build-with-claude/vision#evaluate-image-size
-      const imageBuffer = Buffer.from(data, "base64");
-      const metadata = await sharp(imageBuffer).metadata();
+      const { width, height } = parsePngDimensions(data);
+      const pixels = width * height;
 
-      if (metadata.width && metadata.height) {
-        const pixels = metadata.width * metadata.height;
+      // Track final dimensions for output
+      let finalWidth = width;
+      let finalHeight = height;
 
-        // Min of: width constraint, height constraint, and megapixel constraint
-        const shrink = Math.min(
-          1568 / metadata.width,
-          1568 / metadata.height,
-          Math.sqrt((1.15 * 1024 * 1024) / pixels),
+      // Min of: width constraint, height constraint, and megapixel constraint
+      const shrink = Math.min(
+        1568 / width,
+        1568 / height,
+        Math.sqrt((1.15 * 1024 * 1024) / pixels),
+      );
+
+      // Only resize if we need to shrink (shrink < 1)
+      if (shrink < 1) {
+        finalWidth = Math.floor(width * shrink);
+        finalHeight = Math.floor(height * shrink);
+
+        process.stderr.write(
+          `[Screenshot] Scaling image from ${width}x${height} (${(pixels / (1024 * 1024)).toFixed(2)}MP) to ${finalWidth}x${finalHeight} (${((finalWidth * finalHeight) / (1024 * 1024)).toFixed(2)}MP) for Claude vision API\n`,
         );
 
-        // Only resize if we need to shrink (shrink < 1)
-        if (shrink < 1) {
-          const newWidth = Math.floor(metadata.width * shrink);
-          const newHeight = Math.floor(metadata.height * shrink);
-
-          process.stderr.write(
-            `[Screenshot] Scaling image from ${metadata.width}x${metadata.height} (${(pixels / (1024 * 1024)).toFixed(2)}MP) to ${newWidth}x${newHeight} (${((newWidth * newHeight) / (1024 * 1024)).toFixed(2)}MP) for Claude vision API\n`,
-          );
-
-          const resizedBuffer = await sharp(imageBuffer)
-            .resize(newWidth, newHeight, {
-              fit: "inside",
-              withoutEnlargement: true,
-            })
-            .png()
-            .toBuffer();
-
-          screenshotBase64 = resizedBuffer.toString("base64");
-        }
+        // Resize using browser canvas (no sharp dependency needed)
+        screenshotBase64 = await resizeImageInBrowser(
+          page,
+          data,
+          finalWidth,
+          finalHeight,
+        );
       }
       const name = params.name
         ? `screenshot-${params.name}-${new Date()
@@ -112,7 +193,7 @@ async function handleScreenshot(
         content: [
           {
             type: "text",
-            text: `Screenshot taken with name: ${name}`,
+            text: `Screenshot taken with name: ${name} (${finalWidth}x${finalHeight})`,
           },
           {
             type: "image",

@@ -1,7 +1,4 @@
 import { program } from "commander";
-import * as fs from "fs";
-import * as path from "path";
-import { fileURLToPath } from "url";
 
 import createServerFunction from "./index.js";
 import { ServerList } from "./server.js";
@@ -9,25 +6,8 @@ import { startHttpTransport, startStdioTransport } from "./transport.js";
 
 import { resolveConfig } from "./config.js";
 
-let __filename: string;
-let __dirname: string;
-
-try {
-  // Try ES modules first
-  __filename = fileURLToPath(import.meta.url);
-  __dirname = path.dirname(__filename);
-} catch {
-  // Fallback for CommonJS or when import.meta is not available
-  __filename =
-    (globalThis as { __filename: string }).__filename ||
-    process.cwd() + "/dist/program.js";
-  __dirname = path.dirname(__filename);
-}
-
-// Load package.json using fs
-const packageJSONPath = path.resolve(__dirname, "../package.json");
-const packageJSONBuffer = fs.readFileSync(packageJSONPath);
-const packageJSON = JSON.parse(packageJSONBuffer.toString());
+// Import package.json directly using ESM JSON import (no fs needed)
+import packageJSON from "../package.json" with { type: "json" };
 
 program
   .version("Version " + packageJSON.version)

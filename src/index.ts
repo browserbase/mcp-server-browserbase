@@ -1,7 +1,4 @@
-import * as dotenv from "dotenv";
-dotenv.config();
-
-import { randomUUID } from "crypto";
+import { randomUUID } from "./utils/uuid.js";
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
@@ -109,6 +106,9 @@ export const configSchema = z
       path: ["modelApiKey"],
     },
   );
+
+// Smithery v3 expects a named export to signal stateful servers.
+export const stateful = true;
 
 // Default function for Smithery
 export default function ({ config }: { config: z.infer<typeof configSchema> }) {

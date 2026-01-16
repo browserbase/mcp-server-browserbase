@@ -1,6 +1,6 @@
 import http from "node:http";
 import assert from "node:assert";
-import crypto from "node:crypto";
+import { randomUUID } from "./utils/uuid.js";
 
 import { ServerList } from "./server.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
@@ -48,7 +48,7 @@ async function handleStreamable(
   }
 
   if (req.method === "POST") {
-    const sessionId = crypto.randomUUID();
+    const sessionId = randomUUID();
     const transport = new StreamableHTTPServerTransport({
       sessionIdGenerator: () => sessionId,
     });
