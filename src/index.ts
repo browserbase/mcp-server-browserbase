@@ -1,4 +1,4 @@
-import { randomUUID } from "crypto";
+import { randomUUID } from "./utils/uuid.js";
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
