@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- chore: bump stagehand version (republish - 2.4.2 failed)
+- chore: bump stagehand version (republish)
 
 ## 2.4.1
 
