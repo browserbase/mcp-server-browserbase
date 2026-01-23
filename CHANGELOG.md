@@ -1,10 +1,10 @@
 # @browserbasehq/mcp-server-browserbase
 
-## 2.4.2
+## 2.4.3
 
 ### Patch Changes
 
-- chore: bump stagehand version
+- chore: bump stagehand version (republish - 2.4.2 failed)
 
 ## 2.4.1
 
