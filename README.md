@@ -48,6 +48,22 @@ Copy and Paste this link in your Browser:
 cursor://anysphere.cursor-deeplink/mcp/install?name=browserbase&config=eyJjb21tYW5kIjoibnB4IEBicm93c2VyYmFzZWhxL21jcCIsImVudiI6eyJCUk9XU0VSQkFTRV9BUElfS0VZIjoiIiwiQlJPV1NFUkJBU0VfUFJPSkVDVF9JRCI6IiIsIkdFTUlOSV9BUElfS0VZIjoiIn19
 ```
 
+#### Add to AdaL CLI
+
+Run the following commands inside the [AdaL CLI](https://github.com/SylphAI-Inc/adal-cli) prompt:
+
+Using SHTTP (recommended):
+
+```text
+/mcp add browserbase --transport http --url your-smithery-url.com
+```
+
+Using STDIO:
+
+```text
+/mcp add browserbase --command npx --args "-y,@browserbasehq/mcp-server-browserbase" --env "BROWSERBASE_API_KEY=<your-api-key>,BROWSERBASE_PROJECT_ID=<your-project-id>,GEMINI_API_KEY=<your-gemini-key>"
+```
+
 We currently support 2 transports for our MCP server, STDIO and SHTTP. We recommend you use SHTTP with our remote hosted url to take advantage of the server at full capacity.
 
 ## SHTTP:
@@ -85,6 +101,13 @@ If your client doesn't support SHTTP:
 }
 ```
 
+Using [AdaL CLI](https://github.com/SylphAI-Inc/adal-cli):
+
+```text
+# Run inside the AdaL CLI prompt:
+/mcp add browserbase --transport http --url your-smithery-url.com
+```
+
 ## STDIO:
 
 You can either use our Server hosted on NPM or run it completely locally by cloning this repo.
@@ -111,7 +134,14 @@ Go into your MCP Config JSON and add the Browserbase Server:
 }
 ```
 
-That's it! Reload your MCP client and Claude will be able to use Browserbase.
+Using [AdaL CLI](https://github.com/SylphAI-Inc/adal-cli):
+
+```text
+# Run inside the AdaL CLI prompt:
+/mcp add browserbase --command npx --args "-y,@browserbasehq/mcp-server-browserbase" --env "BROWSERBASE_API_KEY=<your-api-key>,BROWSERBASE_PROJECT_ID=<your-project-id>,GEMINI_API_KEY=<your-gemini-key>"
+```
+
+That's it! Reload your MCP client and Claude, AdaL CLI, or any MCP-compatible client will be able to use Browserbase.
 
 ### To run 100% local:
 
