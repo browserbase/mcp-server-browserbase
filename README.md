@@ -1,4 +1,5 @@
 # Browserbase MCP Server
+[![AgentAudit Security](https://agentaudit.dev/api/badge/mcp-server-browserbase)](https://agentaudit.dev/packages/mcp-server-browserbase)
 
 [![smithery badge](https://smithery.ai/badge/@browserbasehq/mcp-browserbase)](https://smithery.ai/server/@browserbasehq/mcp-browserbase)
 
