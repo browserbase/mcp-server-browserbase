@@ -62,6 +62,9 @@ export const createStagehandInstance = async (
         mcp: "true",
       },
     },
+    // Disable pino to prevent pino-pretty errors in production environments
+    // (pino-pretty is not available in serverless/bundled deployments)
+    disablePino: true,
     logger: (logLine) => {
       console.error(`Stagehand[${sessionId}]: ${logLine.message}`);
     },
