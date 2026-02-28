@@ -30,6 +30,10 @@ const observeSchema: ToolSchema<typeof ObserveInputSchema> = {
   name: "browserbase_stagehand_observe",
   description: `Find interactive elements on the page from an instruction; optionally return an action.`,
   inputSchema: ObserveInputSchema,
+  annotations: {
+    title: "Observe Elements",
+    readOnlyHint: true,
+  },
 };
 
 async function handleObserve(

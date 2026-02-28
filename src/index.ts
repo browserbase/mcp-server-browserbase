@@ -189,6 +189,9 @@ export default function ({ config }: { config: z.infer<typeof configSchema> }) {
             );
           }
         },
+        {
+          annotations: tool.schema.annotations,
+        },
       );
     } else {
       console.warn(
