@@ -18,7 +18,7 @@ import {
   ListResourceTemplatesRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 
-// Configuration schema for Smithery - matches existing Config interface
+// Configuration schema - matches existing Config interface
 export const configSchema = z
   .object({
     browserbaseApiKey: z.string().describe("The Browserbase API Key to use"),
@@ -110,7 +110,7 @@ export const configSchema = z
     },
   );
 
-// Default function for Smithery
+// Default function for creating MCP server instance
 export default function ({ config }: { config: z.infer<typeof configSchema> }) {
   if (!config.browserbaseApiKey) {
     throw new Error("browserbaseApiKey is required");
@@ -167,7 +167,7 @@ export default function ({ config }: { config: z.infer<typeof configSchema> }) {
 
   const tools: MCPToolsArray = [...TOOLS];
 
-  // Register each tool with the Smithery server
+  // Register each tool with the MCP server
   tools.forEach((tool) => {
     if (tool.schema.inputSchema instanceof z.ZodObject) {
       server.tool(
@@ -182,7 +182,7 @@ export default function ({ config }: { config: z.infer<typeof configSchema> }) {
             const errorMessage =
               error instanceof Error ? error.message : String(error);
             process.stderr.write(
-              `[Smithery Error] ${new Date().toISOString()} Error running tool ${tool.schema.name}: ${errorMessage}\n`,
+              `[MCP Error] ${new Date().toISOString()} Error running tool ${tool.schema.name}: ${errorMessage}\n`,
             );
             throw new Error(
               `Failed to run tool '${tool.schema.name}': ${errorMessage}`,

@@ -25,6 +25,6 @@ export default defineConfig([
     },
   },
   {
-    ignores: ["dist/**/*", "node_modules/**/*", ".smithery/**/*"],
+    ignores: ["dist/**/*", "node_modules/**/*"],
   },
 ]);

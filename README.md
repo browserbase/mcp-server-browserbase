@@ -1,7 +1,5 @@
 # Browserbase MCP Server
 
-[![smithery badge](https://smithery.ai/badge/@browserbasehq/mcp-browserbase)](https://smithery.ai/server/@browserbasehq/mcp-browserbase)
-
 ![cover](assets/cover.png)
 
 [The Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) is an open protocol that enables seamless integration between LLM applications and external data sources and tools. Whether you're building an AI-powered IDE, enhancing a chat interface, or creating custom AI workflows, MCP provides a standardized way to connect LLMs with the context they need.
@@ -48,16 +46,13 @@ Copy and Paste this link in your Browser:
 cursor://anysphere.cursor-deeplink/mcp/install?name=browserbase&config=eyJjb21tYW5kIjoibnB4IEBicm93c2VyYmFzZWhxL21jcCIsImVudiI6eyJCUk9XU0VSQkFTRV9BUElfS0VZIjoiIiwiQlJPV1NFUkJBU0VfUFJPSkVDVF9JRCI6IiIsIkdFTUlOSV9BUElfS0VZIjoiIn19
 ```
 
-We currently support 2 transports for our MCP server, STDIO and SHTTP. We recommend you use SHTTP with our remote hosted url to take advantage of the server at full capacity.
+We currently support 2 transports for our MCP server, STDIO and SHTTP. We recommend you use SHTTP with our hosted MCP server to take advantage of the server at full capacity.
 
-## SHTTP:
+## SHTTP (Hosted MCP):
 
-To use the Browserbase MCP Server through our remote hosted URL, add the following to your configuration.
+Use the Browserbase hosted MCP server at `https://mcp.browserbase.com/mcp`. This is the easiest way to get started -- we host the server and provide the LLM costs for Gemini, the [best performing model](https://www.stagehand.dev/evals) in [Stagehand](https://www.stagehand.dev).
 
-Go to [smithery.ai](https://smithery.ai/server/@browserbasehq/mcp-browserbase) and enter your API keys and configuration to get a remote hosted URL.
-When using our remote hosted server, we provide the LLM costs for Gemini, the [best performing model](https://www.stagehand.dev/evals) in [Stagehand](https://www.stagehand.dev).
-
-![Smithery Image](assets/smithery.jpg)
+For full setup instructions, see the [Browserbase MCP documentation](https://docs.browserbase.com/integrations/mcp/introduction).
 
 If your client supports SHTTP:
 
@@ -66,7 +61,7 @@ If your client supports SHTTP:
   "mcpServers": {
     "browserbase": {
       "type": "http",
-      "url": "your-smithery-url.com"
+      "url": "https://mcp.browserbase.com/mcp"
     }
   }
 }
@@ -79,7 +74,7 @@ If your client doesn't support SHTTP:
   "mcpServers": {
     "browserbase": {
       "command": "npx",
-      "args": ["mcp-remote", "your-smithery-url.com"]
+      "args": ["mcp-remote", "https://mcp.browserbase.com/mcp"]
     }
   }
 }
