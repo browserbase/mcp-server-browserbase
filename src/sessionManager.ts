@@ -35,6 +35,7 @@ export const createStagehandInstance = async (
       ? {
           apiKey: modelApiKey,
           modelName: modelName,
+          baseURL: config.baseURL,
         }
       : modelName,
     ...(params.browserbaseSessionID && {
