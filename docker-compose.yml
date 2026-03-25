@@ -1,0 +1,28 @@
+services:
+  browserbase-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mcp-browserbase:latest
+    container_name: browserbase-mcp
+    restart: unless-stopped
+    ports:
+      - "${MCP_PORT:-3000}:3000"
+    environment:
+      BROWSERBASE_API_KEY: ${BROWSERBASE_API_KEY}
+      BROWSERBASE_PROJECT_ID: ${BROWSERBASE_PROJECT_ID}
+      MODEL_NAME: ${MODEL_NAME:-gemini-2.0-flash}
+      MODEL_API_KEY: ${MODEL_API_KEY:-}
+      MODEL_BASE_URL: ${MODEL_BASE_URL:-}
+    command:
+      - cli.js
+      - --port
+      - "3000"
+      - --host
+      - 0.0.0.0
+      - --modelName
+      - ${MODEL_NAME:-gemini-2.0-flash}
+      - --modelApiKey
+      - ${MODEL_API_KEY:-}
+      - --baseUrl
+      - ${MODEL_BASE_URL:-}

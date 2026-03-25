@@ -14,6 +14,7 @@ export type CLIOptions = {
   browserHeight?: number;
   modelName?: string;
   modelApiKey?: string;
+  baseUrl?: string;
   keepAlive?: boolean;
   experimental?: boolean;
 };
@@ -95,6 +96,7 @@ export async function configFromCLIOptions(
     advancedStealth: cliOptions.advancedStealth,
     modelName: cliOptions.modelName,
     modelApiKey: cliOptions.modelApiKey,
+    baseURL: cliOptions.baseUrl,
     keepAlive: cliOptions.keepAlive,
     experimental: cliOptions.experimental,
   };

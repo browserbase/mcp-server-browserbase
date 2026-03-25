@@ -104,4 +104,9 @@ export type Config = {
    * @default false
    */
   experimental?: boolean;
+  /**
+   * Base URL for the custom model provider API
+   * Useful for OpenAI-compatible gateways/proxies
+   */
+  baseURL?: string;
 };
