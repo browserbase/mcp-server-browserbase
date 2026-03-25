@@ -87,6 +87,12 @@ export const configSchema = z
       .describe(
         "API key for the custom model provider. Required when using a model other than the default gemini-2.0-flash",
       ),
+    baseURL: z
+      .string()
+      .optional()
+      .describe(
+        "Base URL for the custom model provider API (for OpenAI-compatible endpoints/proxies)",
+      ),
     experimental: z
       .boolean()
       .optional()

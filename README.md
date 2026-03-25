@@ -137,6 +137,56 @@ cd mcp-server-browserbase
 docker build -t mcp-browserbase .
 ```
 
+#### Option 3: Docker Compose (Simplest)
+
+Run the MCP server as an HTTP service (`/mcp`) with one command.
+
+```bash
+# Clone the Repo
+git clone https://github.com/browserbase/mcp-server-browserbase.git
+cd mcp-server-browserbase
+
+# Create your environment file
+cp .env.example .env
+
+# Edit .env and set:
+# - BROWSERBASE_API_KEY
+# - BROWSERBASE_PROJECT_ID
+# - MODEL_NAME / MODEL_API_KEY / MODEL_BASE_URL (optional)
+
+# Start the server
+docker compose up -d --build
+```
+
+The server will be available at:
+
+```text
+http://localhost:3000/mcp
+```
+
+Use this in MCP client config:
+
+```json
+{
+  "mcpServers": {
+    "browserbase": {
+      "type": "http",
+      "url": "http://localhost:3000/mcp"
+    }
+  }
+}
+```
+
+Useful commands:
+
+```bash
+# Follow logs
+docker compose logs -f
+
+# Stop
+docker compose down
+```
+
 Then in your MCP Config JSON run the server. To run locally we can use STDIO or self-host SHTTP.
 
 ### STDIO:
@@ -211,6 +261,7 @@ The Browserbase MCP server accepts the following command-line flags:
 | `--browserHeight <height>` | Browser viewport height (default: 768)                                      |
 | `--modelName <model>`      | The model to use for Stagehand (default: gemini-2.0-flash)                  |
 | `--modelApiKey <key>`      | API key for the custom model provider (required when using custom models)   |
+| `--baseUrl <url>`          | Base URL for custom model provider API (OpenAI-compatible/proxy endpoints)  |
 | `--experimental`           | Enable experimental features (default: false)                               |
 
 These flags can be passed directly to the CLI or configured in your MCP configuration file.
@@ -402,6 +453,31 @@ Here's how to configure different models:
         "anthropic/claude-sonnet-4.5",
         "--modelApiKey",
         "your-anthropic-api-key"
+      ],
+      "env": {
+        "BROWSERBASE_API_KEY": "",
+        "BROWSERBASE_PROJECT_ID": ""
+      }
+    }
+  }
+}
+```
+
+If you are routing model traffic through a custom OpenAI-compatible endpoint, add `--baseUrl`:
+
+```json
+{
+  "mcpServers": {
+    "browserbase": {
+      "command": "npx",
+      "args": [
+        "@browserbasehq/mcp-server-browserbase",
+        "--modelName",
+        "openai/gpt-5",
+        "--modelApiKey",
+        "your-model-api-key",
+        "--baseUrl",
+        "https://your-endpoint.example.com/v1"
       ],
       "env": {
         "BROWSERBASE_API_KEY": "",

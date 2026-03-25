@@ -60,6 +60,10 @@ program
     "--modelApiKey <key>",
     "API key for the custom model provider (required when using custom models)",
   )
+  .option(
+    "--baseUrl <url>",
+    "Base URL for the custom model provider API (for proxies/compatible endpoints)",
+  )
   .option("--keepAlive", "Enable Browserbase Keep Alive Session")
   .option("--experimental", "Enable experimental features")
   .action(async (options) => {
