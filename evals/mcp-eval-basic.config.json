@@ -22,11 +22,7 @@
           "expectedState": "closed"
         }
       ],
-      "expectTools": [
-        "browserbase_session_create",
-        "browserbase_stagehand_navigate",
-        "browserbase_session_close"
-      ]
+      "expectTools": ["start", "navigate", "end"]
     },
     {
       "name": "search-and-extract-test",
@@ -37,12 +33,7 @@
           "expectedState": "Example Domain"
         }
       ],
-      "expectTools": [
-        "browserbase_session_create",
-        "browserbase_stagehand_navigate",
-        "browserbase_stagehand_extract",
-        "browserbase_session_close"
-      ]
+      "expectTools": ["start", "navigate", "extract", "end"]
     },
     {
       "name": "observe-and-interact-test",
@@ -53,28 +44,7 @@
           "expectedState": "closed"
         }
       ],
-      "expectTools": [
-        "browserbase_session_create",
-        "browserbase_stagehand_navigate",
-        "browserbase_stagehand_observe",
-        "browserbase_session_close"
-      ]
-    },
-    {
-      "name": "screenshot-test",
-      "description": "Test screenshot functionality",
-      "steps": [
-        {
-          "user": "Create a browser session, navigate to https://example.com, take a screenshot, and close the session",
-          "expectedState": "closed"
-        }
-      ],
-      "expectTools": [
-        "browserbase_session_create",
-        "browserbase_stagehand_navigate",
-        "browserbase_screenshot",
-        "browserbase_session_close"
-      ]
+      "expectTools": ["start", "navigate", "observe", "end"]
     },
     {
       "name": "form-interaction-test",
@@ -85,12 +55,7 @@
           "expectedState": "closed"
         }
       ],
-      "expectTools": [
-        "browserbase_session_create",
-        "browserbase_stagehand_navigate",
-        "browserbase_stagehand_act",
-        "browserbase_session_close"
-      ]
+      "expectTools": ["start", "navigate", "act", "end"]
     },
     {
       "name": "error-handling-test",
@@ -101,26 +66,7 @@
           "expectedState": "error"
         }
       ],
-      "expectTools": [
-        "browserbase_session_create",
-        "browserbase_stagehand_navigate"
-      ]
-    },
-    {
-      "name": "url-retrieval-test",
-      "description": "Test URL retrieval functionality",
-      "steps": [
-        {
-          "user": "Create a browser session, navigate to https://example.com, get the current URL to verify navigation, and close the session",
-          "expectedState": "https://example.com"
-        }
-      ],
-      "expectTools": [
-        "browserbase_session_create",
-        "browserbase_stagehand_navigate",
-        "browserbase_stagehand_get_url",
-        "browserbase_session_close"
-      ]
+      "expectTools": ["start", "navigate"]
     }
   ]
 }

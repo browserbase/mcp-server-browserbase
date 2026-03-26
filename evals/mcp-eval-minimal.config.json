@@ -26,11 +26,7 @@
           "expectedState": "closed successfully via Stagehand"
         }
       ],
-      "expectTools": [
-        "browserbase_session_create",
-        "browserbase_stagehand_navigate",
-        "browserbase_session_close"
-      ]
+      "expectTools": ["start", "navigate", "end"]
     },
     {
       "name": "smoke-test-extraction",
@@ -45,28 +41,7 @@
           "expectedState": "closed successfully via Stagehand"
         }
       ],
-      "expectTools": [
-        "browserbase_session_create",
-        "browserbase_stagehand_navigate",
-        "browserbase_stagehand_extract",
-        "browserbase_session_close"
-      ]
-    },
-    {
-      "name": "smoke-test-url-tools",
-      "description": "Quick test to verify URL retrieval tools work",
-      "steps": [
-        {
-          "user": "Create a browser session, navigate to example.org, get the current URL, and close the session",
-          "expectedState": "example.org"
-        }
-      ],
-      "expectTools": [
-        "browserbase_session_create",
-        "browserbase_stagehand_navigate",
-        "browserbase_stagehand_get_url",
-        "browserbase_session_close"
-      ]
+      "expectTools": ["start", "navigate", "extract", "end"]
     }
   ]
 }

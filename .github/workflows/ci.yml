@@ -36,6 +36,9 @@ jobs:
       - name: Build project
         run: pnpm build
 
+      - name: Run unit and smoke tests
+        run: pnpm test
+
       - name: Run evaluation tests
         env:
           BROWSERBASE_API_KEY: ${{ secrets.BROWSERBASE_API_KEY }}
