@@ -4,15 +4,14 @@ import type { Context } from "../context.js";
 import type { ToolActionResult } from "../types/types.js";
 
 const NavigateInputSchema = z.object({
-  url: z.string().describe("The URL to navigate to"),
+  url: z.string().min(1),
 });
 
 type NavigateInput = z.infer<typeof NavigateInputSchema>;
 
 const navigateSchema: ToolSchema<typeof NavigateInputSchema> = {
-  name: "browserbase_stagehand_navigate",
-  description: `Navigate to a URL in the browser. Only use this tool with URLs you're confident will work and be up to date. 
-    Otherwise, use https://google.com as the starting point`,
+  name: "navigate",
+  description: "Navigate to a URL",
   inputSchema: NavigateInputSchema,
 };
 
@@ -32,16 +31,14 @@ async function handleNavigate(
       }
       await page.goto(params.url, { waitUntil: "domcontentloaded" });
 
-      const sessionId = stagehand.browserbaseSessionId;
-      if (!sessionId) {
-        throw new Error("No Browserbase session ID available");
-      }
-
       return {
         content: [
           {
             type: "text",
-            text: `Navigated to: ${params.url}`,
+            text: JSON.stringify({
+              success: true,
+              data: { url: params.url },
+            }),
           },
         ],
       };

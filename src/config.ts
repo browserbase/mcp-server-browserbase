@@ -31,7 +31,7 @@ const defaultConfig: Config = {
     browserWidth: 1024,
     browserHeight: 768,
   },
-  modelName: "gemini-2.0-flash", // Default Model
+  modelName: "google/gemini-2.5-flash-lite", // Default Model — matches hosted MCP
 };
 
 // Resolve final configuration by merging defaults, file config, and CLI options

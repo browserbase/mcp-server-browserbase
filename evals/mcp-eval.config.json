@@ -19,14 +19,10 @@
       "steps": [
         {
           "user": "Create a browser session, navigate to https://example.com, and close the session",
-          "expectedState": "closed"
+          "expectedState": "success"
         }
       ],
-      "expectTools": [
-        "browserbase_session_create",
-        "browserbase_stagehand_navigate",
-        "browserbase_session_close"
-      ]
+      "expectTools": ["start", "navigate", "end"]
     },
     {
       "name": "search-and-extract-test",
@@ -37,12 +33,7 @@
           "expectedState": "Example Domain"
         }
       ],
-      "expectTools": [
-        "browserbase_session_create",
-        "browserbase_stagehand_navigate",
-        "browserbase_stagehand_extract",
-        "browserbase_session_close"
-      ]
+      "expectTools": ["start", "navigate", "extract", "end"]
     },
     {
       "name": "observe-and-interact-test",
@@ -50,31 +41,10 @@
       "steps": [
         {
           "user": "Create a browser session, navigate to https://example.com, observe the page elements, and close the session",
-          "expectedState": "closed"
+          "expectedState": "success"
         }
       ],
-      "expectTools": [
-        "browserbase_session_create",
-        "browserbase_stagehand_navigate",
-        "browserbase_stagehand_observe",
-        "browserbase_session_close"
-      ]
-    },
-    {
-      "name": "screenshot-test",
-      "description": "Test screenshot functionality",
-      "steps": [
-        {
-          "user": "Create a browser session, navigate to https://example.com, take a screenshot, and close the session",
-          "expectedState": "closed"
-        }
-      ],
-      "expectTools": [
-        "browserbase_session_create",
-        "browserbase_stagehand_navigate",
-        "browserbase_screenshot",
-        "browserbase_session_close"
-      ]
+      "expectTools": ["start", "navigate", "observe", "end"]
     },
     {
       "name": "form-interaction-test",
@@ -82,15 +52,10 @@
       "steps": [
         {
           "user": "Create a browser session, navigate to https://httpbin.org/forms/post, fill in the customer name field with 'TestUser', and close the session",
-          "expectedState": "closed"
+          "expectedState": "success"
         }
       ],
-      "expectTools": [
-        "browserbase_session_create",
-        "browserbase_stagehand_navigate",
-        "browserbase_stagehand_act",
-        "browserbase_session_close"
-      ]
+      "expectTools": ["start", "navigate", "act", "end"]
     },
     {
       "name": "error-handling-test",
@@ -101,10 +66,7 @@
           "expectedState": "error"
         }
       ],
-      "expectTools": [
-        "browserbase_session_create",
-        "browserbase_stagehand_navigate"
-      ]
+      "expectTools": ["start", "navigate"]
     }
   ]
 }

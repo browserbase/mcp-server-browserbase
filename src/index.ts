@@ -18,7 +18,7 @@ import {
   ListResourceTemplatesRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 
-// Configuration schema for Smithery - matches existing Config interface
+// Configuration schema - matches existing Config interface
 export const configSchema = z
   .object({
     browserbaseApiKey: z.string().describe("The Browserbase API Key to use"),
@@ -80,12 +80,14 @@ export const configSchema = z
     modelName: z
       .string()
       .optional()
-      .describe("The model to use for Stagehand (default: gemini-2.0-flash)"),
+      .describe(
+        "The model to use for Stagehand (default: google/gemini-2.5-flash-lite)",
+      ),
     modelApiKey: z
       .string()
       .optional()
       .describe(
-        "API key for the custom model provider. Required when using a model other than the default gemini-2.0-flash",
+        "API key for the custom model provider. Required when using a model other than the default google/gemini-2.5-flash-lite",
       ),
     experimental: z
       .boolean()
@@ -95,7 +97,7 @@ export const configSchema = z
   .refine(
     (data) => {
       // If a non-default model is explicitly specified, API key is required
-      if (data.modelName && data.modelName !== "gemini-2.0-flash") {
+      if (data.modelName && data.modelName !== "google/gemini-2.5-flash-lite") {
         return (
           data.modelApiKey !== undefined &&
           typeof data.modelApiKey === "string" &&
@@ -110,7 +112,7 @@ export const configSchema = z
     },
   );
 
-// Default function for Smithery
+// Default function for creating MCP server instance
 export default function ({ config }: { config: z.infer<typeof configSchema> }) {
   if (!config.browserbaseApiKey) {
     throw new Error("browserbaseApiKey is required");
@@ -121,7 +123,7 @@ export default function ({ config }: { config: z.infer<typeof configSchema> }) {
 
   const server = new McpServer({
     name: "Browserbase MCP Server",
-    version: "2.3.0",
+    version: "3.0.0",
     description:
       "Cloud browser automation server powered by Browserbase and Stagehand. Enables LLMs to navigate websites, interact with elements, extract data, and capture screenshots using natural language commands.",
     capabilities: {
@@ -167,7 +169,7 @@ export default function ({ config }: { config: z.infer<typeof configSchema> }) {
 
   const tools: MCPToolsArray = [...TOOLS];
 
-  // Register each tool with the Smithery server
+  // Register each tool with the MCP server
   tools.forEach((tool) => {
     if (tool.schema.inputSchema instanceof z.ZodObject) {
       server.tool(
@@ -182,7 +184,7 @@ export default function ({ config }: { config: z.infer<typeof configSchema> }) {
             const errorMessage =
               error instanceof Error ? error.message : String(error);
             process.stderr.write(
-              `[Smithery Error] ${new Date().toISOString()} Error running tool ${tool.schema.name}: ${errorMessage}\n`,
+              `[MCP Error] ${new Date().toISOString()} Error running tool ${tool.schema.name}: ${errorMessage}\n`,
             );
             throw new Error(
               `Failed to run tool '${tool.schema.name}': ${errorMessage}`,
