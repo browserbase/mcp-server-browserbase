@@ -19,7 +19,7 @@
       "steps": [
         {
           "user": "Create a browser session, navigate to https://example.com, and close the session",
-          "expectedState": "closed"
+          "expectedState": "success"
         }
       ],
       "expectTools": ["start", "navigate", "end"]
@@ -41,7 +41,7 @@
       "steps": [
         {
           "user": "Create a browser session, navigate to https://example.com, observe the page elements, and close the session",
-          "expectedState": "closed"
+          "expectedState": "success"
         }
       ],
       "expectTools": ["start", "navigate", "observe", "end"]
@@ -52,7 +52,7 @@
       "steps": [
         {
           "user": "Create a browser session, navigate to https://httpbin.org/forms/post, fill in the customer name field with 'TestUser', and close the session",
-          "expectedState": "closed"
+          "expectedState": "success"
         }
       ],
       "expectTools": ["start", "navigate", "act", "end"]

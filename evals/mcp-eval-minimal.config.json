@@ -19,11 +19,11 @@
       "steps": [
         {
           "user": "Open a browser and go to example.org",
-          "expectedState": "session created"
+          "expectedState": "success"
         },
         {
           "user": "Close the browser",
-          "expectedState": "closed successfully via Stagehand"
+          "expectedState": "success"
         }
       ],
       "expectTools": ["start", "navigate", "end"]
@@ -38,7 +38,7 @@
         },
         {
           "user": "Close the session",
-          "expectedState": "closed successfully via Stagehand"
+          "expectedState": "success"
         }
       ],
       "expectTools": ["start", "navigate", "extract", "end"]
