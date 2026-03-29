@@ -216,3 +216,8 @@ _Note: The model must be supported in Stagehand. Check out the docs [here](https
 Licensed under the Apache 2.0 License.
 
 Copyright 2025 Browserbase, Inc.
+
+## Hosted deployment
+
+A hosted deployment is available on [Fronteir AI](https://fronteir.ai/mcp/browserbase-mcp-server-browserbase).
+
