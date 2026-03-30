@@ -1,5 +1,5 @@
 {
-  "name": "@browserbasehq/mcp-server-browserbase",
+  "name": "@browserbasehq/mcp",
   "version": "3.0.0",
   "description": "MCP server for AI web browser automation using Browserbase and Stagehand",
   "mcpName": "io.github.browserbase/mcp-server-browserbase",
