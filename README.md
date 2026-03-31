@@ -72,7 +72,7 @@ Go into your MCP Config JSON and add the Browserbase Server:
   "mcpServers": {
     "browserbase": {
       "command": "npx",
-      "args": ["@browserbasehq/mcp-server-browserbase"],
+      "args": ["@browserbasehq/mcp"],
       "env": {
         "BROWSERBASE_API_KEY": "",
         "BROWSERBASE_PROJECT_ID": "",
@@ -173,7 +173,7 @@ The Browserbase MCP server accepts the following command-line flags:
 
 These flags can be passed directly to the CLI or configured in your MCP configuration file.
 
-> **Note:** These flags can only be used with the self-hosted server (npx @browserbasehq/mcp-server-browserbase or Docker).
+> **Note:** These flags can only be used with the self-hosted server (npx @browserbasehq/mcp or Docker).
 
 ### Model Configuration
 
@@ -187,7 +187,7 @@ Stagehand defaults to using Google's Gemini 2.5 Flash Lite model, but you can co
     "browserbase": {
       "command": "npx",
       "args": [
-        "@browserbasehq/mcp-server-browserbase",
+        "@browserbasehq/mcp",
         "--modelName",
         "anthropic/claude-sonnet-4.5",
         "--modelApiKey",

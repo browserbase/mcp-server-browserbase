@@ -12,7 +12,7 @@
     {
       "registry_type": "npm",
       "registry_base_url": "https://registry.npmjs.org",
-      "identifier": "@browserbasehq/mcp-server-browserbase",
+      "identifier": "@browserbasehq/mcp",
       "version": "2.2.0",
       "transport": {
         "type": "stdio"

@@ -1,4 +1,4 @@
-# @browserbasehq/mcp-server-browserbase
+# @browserbasehq/mcp
 
 ## 3.0.0
 
