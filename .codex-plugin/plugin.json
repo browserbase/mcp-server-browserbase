@@ -1,0 +1,24 @@
+{
+  "name": "browserbase-mcp",
+  "version": "0.1.0",
+  "description": "Browser automation with Browserbase and Stagehand from Codex via MCP",
+  "author": {
+    "name": "browserbase",
+    "url": "https://github.com/browserbase/mcp-server-browserbase"
+  },
+  "homepage": "https://github.com/browserbase/mcp-server-browserbase",
+  "repository": "https://github.com/browserbase/mcp-server-browserbase",
+  "keywords": [
+    "mcp",
+    "codex"
+  ],
+  "mcpServers": "./.mcp.json",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Browserbase MCP",
+    "shortDescription": "Browser automation with Browserbase and Stagehand from Codex via MCP",
+    "longDescription": "Allow LLMs to control a browser with Browserbase and Stagehand.",
+    "category": "Browser",
+    "websiteURL": "https://github.com/browserbase/mcp-server-browserbase"
+  }
+}
