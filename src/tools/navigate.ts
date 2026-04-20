@@ -13,6 +13,9 @@ const navigateSchema: ToolSchema<typeof NavigateInputSchema> = {
   name: "navigate",
   description: "Navigate to a URL",
   inputSchema: NavigateInputSchema,
+  annotations: {
+    idempotentHint: true,
+  },
 };
 
 async function handleNavigate(

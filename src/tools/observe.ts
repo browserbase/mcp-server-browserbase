@@ -13,6 +13,9 @@ const observeSchema: ToolSchema<typeof ObserveInputSchema> = {
   name: "observe",
   description: "Observe actionable elements on the page",
   inputSchema: ObserveInputSchema,
+  annotations: {
+    readOnlyHint: true,
+  },
 };
 
 async function handleObserve(

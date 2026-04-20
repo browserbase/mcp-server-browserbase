@@ -13,6 +13,9 @@ const actSchema: ToolSchema<typeof ActInputSchema> = {
   name: "act",
   description: "Perform an action on the page",
   inputSchema: ActInputSchema,
+  annotations: {
+    destructiveHint: false,
+  },
 };
 
 async function handleAct(
