@@ -5,10 +5,17 @@ import type {
 import type { z } from "zod";
 import type { Context } from "../context.js";
 
+export type ToolAnnotations = {
+  readOnlyHint?: boolean;
+  destructiveHint?: boolean;
+  idempotentHint?: boolean;
+};
+
 export type ToolSchema<Input extends InputType> = {
   name: string;
   description: string;
   inputSchema: Input;
+  annotations?: ToolAnnotations;
 };
 
 // Export InputType

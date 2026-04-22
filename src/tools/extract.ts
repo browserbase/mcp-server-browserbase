@@ -13,6 +13,9 @@ const extractSchema: ToolSchema<typeof ExtractInputSchema> = {
   name: "extract",
   description: "Extract data from the page",
   inputSchema: ExtractInputSchema,
+  annotations: {
+    readOnlyHint: true,
+  },
 };
 
 async function handleExtract(
