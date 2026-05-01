@@ -5,7 +5,7 @@ export type ToolCapability = "core" | string;
 // Define Command Line Options Structure
 export type CLIOptions = {
   proxies?: boolean;
-  advancedStealth?: boolean;
+  verified?: boolean;
   contextId?: string;
   persist?: boolean;
   port?: number;
@@ -92,7 +92,7 @@ export async function configFromCLIOptions(
       browserWidth: cliOptions.browserWidth,
       browserHeight: cliOptions.browserHeight,
     },
-    advancedStealth: cliOptions.advancedStealth,
+    verified: cliOptions.verified,
     modelName: cliOptions.modelName,
     modelApiKey: cliOptions.modelApiKey,
     keepAlive: cliOptions.keepAlive,

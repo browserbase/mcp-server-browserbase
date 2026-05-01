@@ -29,11 +29,11 @@ export const configSchema = z
       .boolean()
       .optional()
       .describe("Whether or not to use Browserbase proxies"),
-    advancedStealth: z
+    verified: z
       .boolean()
       .optional()
       .describe(
-        "Use advanced stealth mode. Only available to Browserbase Scale Plan users",
+        "Use Verified Browser Mode (formerly Advanced Stealth). Only available to Browserbase Scale Plan users",
       ),
     keepAlive: z
       .boolean()
