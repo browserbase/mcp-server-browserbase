@@ -126,13 +126,6 @@ export default function ({ config }: { config: z.infer<typeof configSchema> }) {
     version: "3.0.0",
     description:
       "Cloud browser automation server powered by Browserbase and Stagehand. Enables LLMs to navigate websites, interact with elements, extract data, and capture screenshots using natural language commands.",
-    capabilities: {
-      resources: {
-        subscribe: true,
-        listChanged: true,
-      },
-      tools: {},
-    },
   });
 
   const internalConfig: Config = config as Config;
