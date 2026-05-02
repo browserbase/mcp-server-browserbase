@@ -49,12 +49,19 @@
     ]
   },
   "dependencies": {
-    "@browserbasehq/sdk": "^2.6.0",
-    "@browserbasehq/stagehand": "^3.0.8",
-    "@modelcontextprotocol/sdk": "^1.13.1",
+    "@browserbasehq/sdk": "^2.10.0",
+    "@browserbasehq/stagehand": "^3.3.0",
+    "@modelcontextprotocol/sdk": "1.26.0",
     "commander": "^14.0.0",
     "dotenv": "^16.4.6",
     "zod": "^3.25.67"
+  },
+  "pnpm": {
+    "overrides": {
+      "@modelcontextprotocol/sdk": "1.26.0",
+      "langsmith": "0.6.0",
+      "uuid": "14.0.0"
+    }
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.6",
