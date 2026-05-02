@@ -36,8 +36,8 @@ program
   .option("--browserbaseProjectId <id>", "The Browserbase Project ID to use")
   .option("--proxies", "Use Browserbase proxies.")
   .option(
-    "--advancedStealth",
-    "Use advanced stealth mode. Only available to Browserbase Scale Plan users.",
+    "--verified",
+    "Use Verified Browser Mode (formerly Advanced Stealth). Only available to Browserbase Scale Plan users.",
   )
   .option("--contextId <contextId>", "Browserbase Context ID to use.")
   .option(

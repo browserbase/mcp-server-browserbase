@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@browserbasehq/sdk": "^2.6.0",
-    "@browserbasehq/stagehand": "^3.0.8",
+    "@browserbasehq/stagehand": "^3.3.0",
     "@modelcontextprotocol/sdk": "^1.13.1",
     "commander": "^14.0.0",
     "dotenv": "^16.4.6",
