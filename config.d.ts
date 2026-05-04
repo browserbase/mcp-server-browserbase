@@ -17,7 +17,7 @@ export type Config = {
    */
   proxies?: boolean;
   /**
-   * Use Verified Browser Mode (formerly Advanced Stealth). Only available to Browserbase Scale Plan users.
+   * Use Browserbase Verified Identity (formerly Advanced Stealth). Only available to Browserbase Scale Plan users.
    *
    * @default false
    */

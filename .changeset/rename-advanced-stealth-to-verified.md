@@ -11,4 +11,4 @@ Rename `advancedStealth` to `verified` to match the renamed Browserbase API fiel
 
 Migration: replace `--advancedStealth` with `--verified` in your CLI invocations, and rename the `advancedStealth` field to `verified` in any config files or `configSchema` overrides.
 
-Also bumps the minimum `@browserbasehq/stagehand` peer to `^3.3.0`, the version that introduced support for the `verified` browser setting.
+Also bumps the minimum `@browserbasehq/stagehand` peer to `^3.3.0`, the version that introduced support for the Verified Identity setting.

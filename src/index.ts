@@ -33,7 +33,7 @@ export const configSchema = z
       .boolean()
       .optional()
       .describe(
-        "Use Verified Browser Mode (formerly Advanced Stealth). Only available to Browserbase Scale Plan users",
+        "Use Browserbase Verified Identity (formerly Advanced Stealth). Only available to Browserbase Scale Plan users",
       ),
     keepAlive: z
       .boolean()
