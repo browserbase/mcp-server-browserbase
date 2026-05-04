@@ -56,7 +56,7 @@ export const createStagehandInstance = async (
               persist: config.context?.persist ?? true,
             }
           : undefined,
-        verified: config.verified ?? undefined,
+        verified: config.verified ?? config.advancedStealth ?? undefined,
       },
       userMetadata: {
         mcp: "true",

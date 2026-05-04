@@ -6,6 +6,7 @@ export type ToolCapability = "core" | string;
 export type CLIOptions = {
   proxies?: boolean;
   verified?: boolean;
+  advancedStealth?: boolean;
   contextId?: string;
   persist?: boolean;
   port?: number;
@@ -38,7 +39,9 @@ const defaultConfig: Config = {
 export async function resolveConfig(cliOptions: CLIOptions): Promise<Config> {
   const cliConfig = await configFromCLIOptions(cliOptions);
   // Order: Defaults < File Config < CLI Overrides
-  const mergedConfig = mergeConfig(defaultConfig, cliConfig);
+  const mergedConfig = normalizeVerifiedConfig(
+    mergeConfig(defaultConfig, cliConfig),
+  );
 
   // --- Add Browserbase Env Vars ---
   if (!mergedConfig.modelApiKey) {
@@ -92,11 +95,21 @@ export async function configFromCLIOptions(
       browserWidth: cliOptions.browserWidth,
       browserHeight: cliOptions.browserHeight,
     },
-    verified: cliOptions.verified,
+    verified: cliOptions.verified ?? cliOptions.advancedStealth,
     modelName: cliOptions.modelName,
     modelApiKey: cliOptions.modelApiKey,
     keepAlive: cliOptions.keepAlive,
     experimental: cliOptions.experimental,
+  };
+}
+
+export function normalizeVerifiedConfig(config: Config): Config {
+  const verified = config.verified ?? config.advancedStealth;
+  if (verified === undefined) return config;
+
+  return {
+    ...config,
+    verified,
   };
 }
 

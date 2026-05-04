@@ -160,6 +160,7 @@ The Browserbase MCP server accepts the following command-line flags:
 | -------------------------- | --------------------------------------------------------------------------- |
 | `--proxies`                | Enable Browserbase proxies for the session                                  |
 | `--verified`               | Enable Browserbase Verified Identity (Only for Scale Plan Users)            |
+| `--advancedStealth`        | Deprecated alias for `--verified`                                           |
 | `--keepAlive`              | Enable Browserbase Keep Alive Session                                       |
 | `--contextId <contextId>`  | Specify a Browserbase Context ID to use                                     |
 | `--persist`                | Whether to persist the Browserbase context (default: true)                  |

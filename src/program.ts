@@ -39,6 +39,7 @@ program
     "--verified",
     "Use Browserbase Verified Identity (formerly Advanced Stealth). Only available to Browserbase Scale Plan users.",
   )
+  .option("--advancedStealth", "Deprecated alias for --verified.")
   .option("--contextId <contextId>", "Browserbase Context ID to use.")
   .option(
     "--persist [boolean]",

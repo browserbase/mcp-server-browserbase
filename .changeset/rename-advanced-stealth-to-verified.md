@@ -1,14 +1,14 @@
 ---
-"@browserbasehq/mcp": major
+"@browserbasehq/mcp": minor
 ---
 
-Rename `advancedStealth` to `verified` to match the renamed Browserbase API field.
+Add `verified` as the canonical Browserbase Verified Identity setting while preserving `advancedStealth` as a deprecated alias.
 
-**Breaking changes:**
+**Changes:**
 
-- CLI flag `--advancedStealth` renamed to `--verified`
-- Config field `advancedStealth` renamed to `verified` (in `config.d.ts` / Smithery `configSchema`)
+- CLI flag `--verified` added; `--advancedStealth` remains supported as a deprecated alias
+- Config field `verified` added; `advancedStealth` remains supported as a deprecated alias in `config.d.ts` and Smithery `configSchema`
 
-Migration: replace `--advancedStealth` with `--verified` in your CLI invocations, and rename the `advancedStealth` field to `verified` in any config files or `configSchema` overrides.
+Migration: prefer `--verified` in CLI invocations and `verified` in config files or `configSchema` overrides.
 
 Also bumps the minimum `@browserbasehq/stagehand` peer to `^3.3.0`, the version that introduced support for the Verified Identity setting.

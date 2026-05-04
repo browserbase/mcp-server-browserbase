@@ -23,6 +23,12 @@ export type Config = {
    */
   verified?: boolean;
   /**
+   * Deprecated alias for verified.
+   *
+   * @default false
+   */
+  advancedStealth?: boolean;
+  /**
    * Whether or not to keep the Browserbase session alive
    *
    * @default false
