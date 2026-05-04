@@ -37,7 +37,7 @@ program
   .option("--proxies", "Use Browserbase proxies.")
   .option(
     "--verified",
-    "Use Browserbase Verified Identity (formerly Advanced Stealth). Only available to Browserbase Scale Plan users.",
+    "Use Browserbase Verified Identity. Only available to Browserbase Scale Plan users.",
   )
   .option("--advancedStealth", "Deprecated alias for --verified.")
   .option("--contextId <contextId>", "Browserbase Context ID to use.")
