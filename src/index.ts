@@ -9,6 +9,7 @@ import type { MCPToolsArray } from "./types/types.js";
 
 import { Context } from "./context.js";
 import type { Config } from "../config.d.ts";
+import { normalizeVerifiedConfig } from "./config.js";
 import { TOOLS } from "./tools/index.js";
 import { RESOURCE_TEMPLATES } from "./mcp/resources.js";
 
@@ -29,12 +30,16 @@ export const configSchema = z
       .boolean()
       .optional()
       .describe("Whether or not to use Browserbase proxies"),
-    advancedStealth: z
+    verified: z
       .boolean()
       .optional()
       .describe(
-        "Use advanced stealth mode. Only available to Browserbase Scale Plan users",
+        "Use Browserbase Verified Identity. Only available to Browserbase Scale Plan users",
       ),
+    advancedStealth: z
+      .boolean()
+      .optional()
+      .describe("Deprecated alias for verified"),
     keepAlive: z
       .boolean()
       .optional()
@@ -135,7 +140,7 @@ export default function ({ config }: { config: z.infer<typeof configSchema> }) {
     },
   });
 
-  const internalConfig: Config = config as Config;
+  const internalConfig: Config = normalizeVerifiedConfig(config as Config);
 
   // Create the context, passing server instance and config
   const contextId = randomUUID();
