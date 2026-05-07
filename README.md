@@ -169,7 +169,7 @@ The Browserbase MCP server accepts the following command-line flags:
 | `--browserWidth <width>`   | Browser viewport width (default: 1024)                                      |
 | `--browserHeight <height>` | Browser viewport height (default: 768)                                      |
 | `--modelName <model>`      | The model to use for Stagehand (default: google/gemini-2.5-flash-lite)      |
-| `--modelApiKey <key>`      | API key for the custom model provider (required when using custom models)   |
+| `--modelApiKey <key>`      | Optional API key for a custom model provider                                |
 | `--experimental`           | Enable experimental features (default: false)                               |
 
 These flags can be passed directly to the CLI or configured in your MCP configuration file.
@@ -180,7 +180,7 @@ These flags can be passed directly to the CLI or configured in your MCP configur
 
 Stagehand defaults to using Google's Gemini 2.5 Flash Lite model, but you can configure it to use other models like GPT-4o, Claude, or other providers.
 
-**Important**: When using any custom model (non-default), you must provide your own API key for that model provider using the `--modelApiKey` flag.
+When `--modelApiKey` is omitted, Browserbase routes supported provider/model names through the Browserbase model gateway using your Browserbase API key. Provide `--modelApiKey` only when you want to bring your own provider key.
 
 ```json
 {
@@ -190,9 +190,7 @@ Stagehand defaults to using Google's Gemini 2.5 Flash Lite model, but you can co
       "args": [
         "@browserbasehq/mcp",
         "--modelName",
-        "anthropic/claude-sonnet-4.5",
-        "--modelApiKey",
-        "your-anthropic-api-key"
+        "anthropic/claude-sonnet-4.5"
       ],
       "env": {
         "BROWSERBASE_API_KEY": "",

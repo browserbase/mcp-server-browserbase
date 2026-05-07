@@ -55,11 +55,11 @@ program
   .option("--browserHeight <height>", "Browser height to use for the browser.")
   .option(
     "--modelName <model>",
-    "The model to use for Stagehand (default: gemini-2.0-flash)",
+    "The model to use for Stagehand (default: google/gemini-2.5-flash-lite)",
   )
   .option(
     "--modelApiKey <key>",
-    "API key for the custom model provider (required when using custom models)",
+    "Optional API key for a custom model provider. When omitted, Browserbase routes supported provider/model names through the model gateway.",
   )
   .option("--keepAlive", "Enable Browserbase Keep Alive Session")
   .option("--experimental", "Enable experimental features")
@@ -74,7 +74,7 @@ program
 
     if (options.port)
       startHttpTransport(+options.port, options.host, serverList);
-    else await startStdioTransport(serverList, config);
+    else await startStdioTransport(serverList);
   });
 
 function setupExitWatchdog(serverList: ServerList) {

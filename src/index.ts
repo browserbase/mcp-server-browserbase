@@ -20,102 +20,78 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 
 // Configuration schema - matches existing Config interface
-export const configSchema = z
-  .object({
-    browserbaseApiKey: z.string().describe("The Browserbase API Key to use"),
-    browserbaseProjectId: z
-      .string()
-      .describe("The Browserbase Project ID to use"),
-    proxies: z
-      .boolean()
-      .optional()
-      .describe("Whether or not to use Browserbase proxies"),
-    verified: z
-      .boolean()
-      .optional()
-      .describe(
-        "Use Browserbase Verified Identity. Only available to Browserbase Scale Plan users",
-      ),
-    advancedStealth: z
-      .boolean()
-      .optional()
-      .describe("Deprecated alias for verified"),
-    keepAlive: z
-      .boolean()
-      .optional()
-      .describe("Whether or not to keep the Browserbase session alive"),
-    context: z
-      .object({
-        contextId: z
-          .string()
-          .optional()
-          .describe("The ID of the context to use"),
-        persist: z
-          .boolean()
-          .optional()
-          .describe("Whether or not to persist the context"),
-      })
-      .optional(),
-    viewPort: z
-      .object({
-        browserWidth: z
-          .number()
-          .optional()
-          .describe("The width of the browser"),
-        browserHeight: z
-          .number()
-          .optional()
-          .describe("The height of the browser"),
-      })
-      .optional(),
-    server: z
-      .object({
-        port: z
-          .number()
-          .optional()
-          .describe("The port to listen on for SHTTP or MCP transport"),
-        host: z
-          .string()
-          .optional()
-          .describe(
-            "The host to bind the server to. Default is localhost. Use 0.0.0.0 to bind to all interfaces",
-          ),
-      })
-      .optional(),
-    modelName: z
-      .string()
-      .optional()
-      .describe(
-        "The model to use for Stagehand (default: google/gemini-2.5-flash-lite)",
-      ),
-    modelApiKey: z
-      .string()
-      .optional()
-      .describe(
-        "API key for the custom model provider. Required when using a model other than the default google/gemini-2.5-flash-lite",
-      ),
-    experimental: z
-      .boolean()
-      .optional()
-      .describe("Enable experimental Stagehand features"),
-  })
-  .refine(
-    (data) => {
-      // If a non-default model is explicitly specified, API key is required
-      if (data.modelName && data.modelName !== "google/gemini-2.5-flash-lite") {
-        return (
-          data.modelApiKey !== undefined &&
-          typeof data.modelApiKey === "string" &&
-          data.modelApiKey.length > 0
-        );
-      }
-      return true;
-    },
-    {
-      message: "modelApiKey is required when specifying a custom model",
-      path: ["modelApiKey"],
-    },
-  );
+export const configSchema = z.object({
+  browserbaseApiKey: z.string().describe("The Browserbase API Key to use"),
+  browserbaseProjectId: z
+    .string()
+    .describe("The Browserbase Project ID to use"),
+  proxies: z
+    .boolean()
+    .optional()
+    .describe("Whether or not to use Browserbase proxies"),
+  verified: z
+    .boolean()
+    .optional()
+    .describe(
+      "Use Browserbase Verified Identity. Only available to Browserbase Scale Plan users",
+    ),
+  advancedStealth: z
+    .boolean()
+    .optional()
+    .describe("Deprecated alias for verified"),
+  keepAlive: z
+    .boolean()
+    .optional()
+    .describe("Whether or not to keep the Browserbase session alive"),
+  context: z
+    .object({
+      contextId: z.string().optional().describe("The ID of the context to use"),
+      persist: z
+        .boolean()
+        .optional()
+        .describe("Whether or not to persist the context"),
+    })
+    .optional(),
+  viewPort: z
+    .object({
+      browserWidth: z.number().optional().describe("The width of the browser"),
+      browserHeight: z
+        .number()
+        .optional()
+        .describe("The height of the browser"),
+    })
+    .optional(),
+  server: z
+    .object({
+      port: z
+        .number()
+        .optional()
+        .describe("The port to listen on for SHTTP or MCP transport"),
+      host: z
+        .string()
+        .optional()
+        .describe(
+          "The host to bind the server to. Default is localhost. Use 0.0.0.0 to bind to all interfaces",
+        ),
+    })
+    .optional(),
+  modelName: z
+    .string()
+    .optional()
+    .describe(
+      "The model to use for Stagehand (default: google/gemini-2.5-flash-lite)",
+    ),
+  modelApiKey: z
+    .string()
+    .optional()
+    .describe(
+      "Optional API key for a custom model provider. When omitted, Browserbase routes supported provider/model names through the model gateway.",
+    ),
+  experimental: z
+    .boolean()
+    .optional()
+    .describe("Enable experimental Stagehand features"),
+});
 
 // Default function for creating MCP server instance
 export default function ({ config }: { config: z.infer<typeof configSchema> }) {

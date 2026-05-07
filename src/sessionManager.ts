@@ -4,6 +4,9 @@ import type { Config } from "../config.d.ts";
 import type { BrowserSession, CreateSessionParams } from "./types/types.js";
 import { randomUUID } from "crypto";
 
+const DEFAULT_MODEL_NAME = "google/gemini-2.5-flash-lite";
+const GATEWAY_MODEL_PREFIX = "gateway/";
+
 /**
  * Create a configured Stagehand instance
  * This is used internally by SessionManager to initialize browser sessions
@@ -21,22 +24,28 @@ export const createStagehandInstance = async (
     throw new Error("Browserbase API Key and Project ID are required");
   }
 
-  const modelName = params.modelName || config.modelName || "gemini-2.0-flash";
+  const modelName = params.modelName || config.modelName || DEFAULT_MODEL_NAME;
   const modelApiKey =
     config.modelApiKey ||
     process.env.GEMINI_API_KEY ||
     process.env.GOOGLE_API_KEY;
+  const model = modelApiKey
+    ? {
+        apiKey: modelApiKey,
+        modelName,
+      }
+    : {
+        apiKey,
+        modelName: modelName.startsWith(GATEWAY_MODEL_PREFIX)
+          ? modelName
+          : `${GATEWAY_MODEL_PREFIX}${modelName}`,
+      };
 
   const stagehand = new Stagehand({
     env: "BROWSERBASE",
     apiKey,
     projectId,
-    model: modelApiKey
-      ? {
-          apiKey: modelApiKey,
-          modelName: modelName,
-        }
-      : modelName,
+    model,
     ...(params.browserbaseSessionID && {
       browserbaseSessionID: params.browserbaseSessionID,
     }),

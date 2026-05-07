@@ -96,12 +96,12 @@ export type Config = {
    * The Model that Stagehand uses
    * Available models: OpenAI, Claude, Gemini, Cerebras, Groq, and other providers
    *
-   * @default "gemini-2.0-flash"
+   * @default "google/gemini-2.5-flash-lite"
    */
   modelName?: z.infer<typeof AvailableModelSchema>;
   /**
-   * API key for the custom model provider
-   * Required when using a model other than the default gemini-2.0-flash
+   * Optional API key for a custom model provider.
+   * When omitted, Browserbase routes supported provider/model names through the model gateway.
    */
   modelApiKey?: string;
   /**

@@ -5,27 +5,8 @@ import crypto from "node:crypto";
 import { ServerList } from "./server.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
-import type { Config } from "../config.d.ts";
 
-export async function startStdioTransport(
-  serverList: ServerList,
-  config?: Config,
-) {
-  // Check if we're using the default model without an API key
-  if (config) {
-    const modelName = config.modelName || "gemini-2.0-flash";
-    const hasModelApiKey =
-      config.modelApiKey ||
-      process.env.GEMINI_API_KEY ||
-      process.env.GOOGLE_API_KEY;
-
-    if (modelName.includes("gemini") && !hasModelApiKey) {
-      console.error(
-        `Need to set GEMINI_API_KEY or GOOGLE_API_KEY in your environment variables`,
-      );
-    }
-  }
-
+export async function startStdioTransport(serverList: ServerList) {
   const server = await serverList.create();
   await server.connect(new StdioServerTransport());
 }

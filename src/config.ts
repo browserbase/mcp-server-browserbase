@@ -65,13 +65,6 @@ export async function resolveConfig(cliOptions: CLIOptions): Promise<Config> {
     mergedConfig.browserbaseProjectId = "dummy-browserbase-project-id";
   }
 
-  if (!mergedConfig.modelApiKey) {
-    console.warn(
-      "Warning: MODEL_API_KEY environment variable not set. Using dummy value.",
-    );
-    mergedConfig.modelApiKey = "dummy-api-key";
-  }
-
   return mergedConfig;
 }
 
