@@ -65,11 +65,66 @@ async function handleStreamable(
   res.end("Invalid request");
 }
 
+/**
+ * Constant-time comparison to avoid timing side-channels when validating
+ * a bearer token. Returns false if lengths differ or buffers don't match.
+ */
+function safeTokenEqual(a: string, b: string): boolean {
+  const aBuf = Buffer.from(a, "utf8");
+  const bBuf = Buffer.from(b, "utf8");
+  if (aBuf.length !== bBuf.length) return false;
+  return crypto.timingSafeEqual(aBuf, bBuf);
+}
+
+/**
+ * Extract a bearer token from the Authorization header.
+ */
+function extractBearerToken(req: http.IncomingMessage): string | undefined {
+  const auth = req.headers["authorization"];
+  if (!auth || typeof auth !== "string") return undefined;
+  const match = auth.match(/^Bearer\s+(.+)$/i);
+  return match ? match[1].trim() : undefined;
+}
+
+function isLoopback(host: string | undefined): boolean {
+  if (!host) return true; // Node defaults to listening on localhost when host is undefined
+  return (
+    host === "localhost" ||
+    host === "127.0.0.1" ||
+    host === "::1" ||
+    host === "::ffff:127.0.0.1"
+  );
+}
+
 export function startHttpTransport(
   port: number,
   hostname: string | undefined,
   serverList: ServerList,
 ) {
+  // Resolve the auth token. When the server binds to a non-loopback
+  // interface we REQUIRE an auth token, otherwise the MCP server (and the
+  // configured Browserbase / model API keys behind it) would be exposed to
+  // anyone able to reach the port. See CWE-319.
+  const authToken =
+    process.env.MCP_AUTH_TOKEN && process.env.MCP_AUTH_TOKEN.length > 0
+      ? process.env.MCP_AUTH_TOKEN
+      : undefined;
+
+  if (!isLoopback(hostname) && !authToken) {
+    console.error(
+      `Refusing to start HTTP transport on non-loopback host '${hostname}' without authentication.\n` +
+        `Set the MCP_AUTH_TOKEN environment variable to a strong secret, or bind to localhost (omit --host or use --host localhost).`,
+    );
+    process.exit(1);
+  }
+
+  if (!authToken) {
+    console.error(
+      "Warning: HTTP transport is starting without authentication (MCP_AUTH_TOKEN is not set). " +
+        "Only loopback connections will be accepted; do not expose this port to other hosts.",
+    );
+  }
+
   // In-memory Map of SHTTP sessions
   const streamableSessions = new Map<string, StreamableHTTPServerTransport>();
   const httpServer = http.createServer(async (req, res) => {
@@ -78,6 +133,20 @@ export function startHttpTransport(
       res.end("Bad request: missing URL");
       return;
     }
+
+    // Authenticate every request to the /mcp endpoint when a token is
+    // configured. Use a constant-time comparison to avoid leaking the token
+    // through timing side-channels.
+    if (authToken) {
+      const provided = extractBearerToken(req);
+      if (!provided || !safeTokenEqual(provided, authToken)) {
+        res.statusCode = 401;
+        res.setHeader("WWW-Authenticate", 'Bearer realm="mcp"');
+        res.end("Unauthorized");
+        return;
+      }
+    }
+
     const url = new URL(`http://localhost${req.url}`);
     if (url.pathname.startsWith("/mcp"))
       await handleStreamable(req, res, serverList, streamableSessions);
@@ -105,6 +174,13 @@ export function startHttpTransport(
             browserbase: {
               type: "http",
               url: `${url}/mcp`,
+              ...(authToken
+                ? {
+                    headers: {
+                      Authorization: "Bearer <MCP_AUTH_TOKEN>",
+                    },
+                  }
+                : {}),
             },
           },
         },
