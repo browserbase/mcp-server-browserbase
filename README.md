@@ -1,4 +1,5 @@
 # Browserbase MCP Server
+[![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/browserbase/mcp-server-browserbase)](https://archestra.ai/mcp-catalog/browserbase__mcp-server-browserbase)
 
 ![cover](assets/cover.png)
 
