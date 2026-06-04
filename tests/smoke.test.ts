@@ -9,6 +9,7 @@ const EXPECTED_TOOLS = [
   "act",
   "observe",
   "extract",
+  "console_logs",
 ];
 
 describe("MCP server smoke test", () => {
@@ -30,7 +31,7 @@ describe("MCP server smoke test", () => {
       await client.connect(transport);
       const { tools } = await client.listTools();
 
-      expect(tools).toHaveLength(6);
+      expect(tools).toHaveLength(7);
 
       const names = tools.map((t) => t.name).sort();
       expect(names).toEqual([...EXPECTED_TOOLS].sort());

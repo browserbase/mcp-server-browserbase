@@ -2,6 +2,7 @@ import type { Stagehand, Page } from "@browserbasehq/stagehand";
 import { ImageContent, TextContent } from "@modelcontextprotocol/sdk/types.js";
 import { Tool } from "../tools/tool.js";
 import { InputType } from "../tools/tool.js";
+import type { ConsoleTelemetry } from "../consoleTelemetry.js";
 
 export type StagehandSession = {
   id: string; // MCP-side ID
@@ -25,6 +26,7 @@ export type BrowserSession = {
   page: Page;
   sessionId: string;
   stagehand: Stagehand;
+  consoleTelemetry?: ConsoleTelemetry;
 };
 
 export type ToolActionResult =

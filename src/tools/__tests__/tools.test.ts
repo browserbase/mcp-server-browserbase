@@ -8,13 +8,14 @@ const EXPECTED_NAMES = [
   "act",
   "observe",
   "extract",
+  "console_logs",
 ];
 
 const tool = (name: string) => TOOLS.find((t) => t.schema.name === name)!;
 
 describe("TOOLS array", () => {
-  it("exports exactly 6 tools", () => {
-    expect(TOOLS).toHaveLength(6);
+  it("exports exactly 7 tools", () => {
+    expect(TOOLS).toHaveLength(7);
   });
 
   it("has correct tool names matching hosted MCP", () => {
@@ -96,6 +97,26 @@ describe("tool input schemas", () => {
     expect(
       tool("extract").schema.inputSchema.safeParse({ instruction: "get title" })
         .success,
+    ).toBe(true);
+  });
+
+  it("console_logs accepts bounded debug filters", () => {
+    expect(tool("console_logs").schema.inputSchema.safeParse({}).success).toBe(
+      true,
+    );
+    expect(
+      tool("console_logs").schema.inputSchema.safeParse({ limit: 25 }).success,
+    ).toBe(true);
+    expect(
+      tool("console_logs").schema.inputSchema.safeParse({
+        limit: 201,
+      }).success,
+    ).toBe(false);
+    expect(
+      tool("console_logs").schema.inputSchema.safeParse({
+        types: ["error", "warning"],
+        clear: true,
+      }).success,
     ).toBe(true);
   });
 });
