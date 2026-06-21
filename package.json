@@ -13,7 +13,7 @@
   },
   "type": "module",
   "main": "./cli.js",
-  "module": "./src/index.ts",
+  "module": "./index.js",
   "bin": {
     "mcp-server-browserbase": "cli.js"
   },
