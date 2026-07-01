@@ -5,6 +5,12 @@ import type { ToolActionResult } from "../types/types.js";
 
 const NavigateInputSchema = z.object({
   url: z.string().min(1),
+  sessionId: z
+    .string()
+    .optional()
+    .describe(
+      "The Browserbase session ID to act on. Defaults to the active session. Pass the sessionId returned by start to target a specific session.",
+    ),
 });
 
 type NavigateInput = z.infer<typeof NavigateInputSchema>;
@@ -21,7 +27,7 @@ async function handleNavigate(
 ): Promise<ToolResult> {
   const action = async (): Promise<ToolActionResult> => {
     try {
-      const stagehand = await context.getStagehand();
+      const stagehand = await context.getStagehand(params.sessionId);
 
       const pages = stagehand.context.pages();
       const page = pages[0];

@@ -98,6 +98,39 @@ describe("tool input schemas", () => {
         .success,
     ).toBe(true);
   });
+
+  it("start accepts an optional sessionId to resume a session", () => {
+    expect(
+      tool("start").schema.inputSchema.safeParse({ sessionId: "bb-session-123" })
+        .success,
+    ).toBe(true);
+  });
+
+  it("navigate/act/observe/extract accept an optional sessionId", () => {
+    expect(
+      tool("navigate").schema.inputSchema.safeParse({
+        url: "https://example.com",
+        sessionId: "bb-session-123",
+      }).success,
+    ).toBe(true);
+    expect(
+      tool("act").schema.inputSchema.safeParse({
+        action: "click button",
+        sessionId: "bb-session-123",
+      }).success,
+    ).toBe(true);
+    expect(
+      tool("observe").schema.inputSchema.safeParse({
+        instruction: "find links",
+        sessionId: "bb-session-123",
+      }).success,
+    ).toBe(true);
+    expect(
+      tool("extract").schema.inputSchema.safeParse({
+        sessionId: "bb-session-123",
+      }).success,
+    ).toBe(true);
+  });
 });
 
 describe("tool capabilities", () => {

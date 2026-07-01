@@ -5,7 +5,16 @@ import type { ToolActionResult } from "../types/types.js";
 import type { BrowserSession } from "../types/types.js";
 
 // --- Tool: start ---
-const StartInputSchema = z.object({});
+const StartInputSchema = z.object({
+  sessionId: z
+    .string()
+    .optional()
+    .describe(
+      "An existing Browserbase session ID to resume. If omitted, a new session is created. Pass the sessionId returned by a previous start call to reconnect to the same browser.",
+    ),
+});
+
+type StartInput = z.infer<typeof StartInputSchema>;
 
 const startSchema: ToolSchema<typeof StartInputSchema> = {
   name: "start",
@@ -13,15 +22,20 @@ const startSchema: ToolSchema<typeof StartInputSchema> = {
   inputSchema: StartInputSchema,
 };
 
-async function handleStart(context: Context): Promise<ToolResult> {
+async function handleStart(
+  context: Context,
+  params: StartInput,
+): Promise<ToolResult> {
   const action = async (): Promise<ToolActionResult> => {
     try {
       const sessionManager = context.getSessionManager();
       const config = context.config;
-      const targetSessionId = sessionManager.getDefaultSessionId();
+      const targetSessionId =
+        params.sessionId ?? sessionManager.getDefaultSessionId();
 
-      const session: BrowserSession =
-        await sessionManager.ensureDefaultSessionInternal(config);
+      const session: BrowserSession | null = params.sessionId
+        ? await sessionManager.getSession(params.sessionId, config, true)
+        : await sessionManager.ensureDefaultSessionInternal(config);
 
       if (
         !session ||

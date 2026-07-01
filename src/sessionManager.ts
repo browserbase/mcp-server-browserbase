@@ -375,6 +375,34 @@ export class SessionManager {
     const sessionObj = this.browsers.get(sessionId);
 
     if (!sessionObj) {
+      // The session isn't tracked in this process. This is expected when the
+      // MCP transport session was not preserved between tool calls (e.g. the
+      // request was routed to a different server replica, or the client did
+      // not reuse the Mcp-Session-Id). If the caller supplied an explicit
+      // Browserbase session ID, attempt to reconnect to that live session
+      // instead of failing, so state can be recovered across calls.
+      if (createIfMissing) {
+        process.stderr.write(
+          `[SessionManager] Session ${sessionId} not tracked locally, attempting to reconnect to Browserbase session.\n`,
+        );
+        try {
+          return await this.createNewBrowserSession(
+            sessionId,
+            config,
+            sessionId,
+          );
+        } catch (reconnectError) {
+          process.stderr.write(
+            `[SessionManager] WARN - Failed to reconnect to Browserbase session ${sessionId}: ${
+              reconnectError instanceof Error
+                ? reconnectError.message
+                : String(reconnectError)
+            }\n`,
+          );
+          return null;
+        }
+      }
+
       process.stderr.write(
         `[SessionManager] WARN - Session not found in map: ${sessionId}\n`,
       );
