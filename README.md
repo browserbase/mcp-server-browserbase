@@ -1,5 +1,11 @@
 # Browserbase MCP Server
 
+# Archived
+
+This repository is archived and no longer maintained.
+
+It was originally published as a reference implementation and is retained for historical purposes. It should not be interpreted as representative of Browserbase's current production services or implementation.
+
 ![cover](assets/cover.png)
 
 [The Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) is an open protocol that enables seamless integration between LLM applications and external data sources and tools. Whether you're building an AI-powered IDE, enhancing a chat interface, or creating custom AI workflows, MCP provides a standardized way to connect LLMs with the context they need.
