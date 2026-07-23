@@ -50,6 +50,14 @@ If your client supports SHTTP:
 }
 ```
 
+[Autohand Code](https://github.com/autohandai/code-cli/) users can register the hosted endpoint from the CLI:
+
+```bash
+autohand mcp add --transport http browserbase https://mcp.browserbase.com/mcp
+```
+
+Add `--scope project` to keep the registration in the current workspace.
+
 If your client doesn't support SHTTP:
 
 ```json
