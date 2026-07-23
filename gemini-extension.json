@@ -1,10 +1,10 @@
 {
   "name": "mcp-server-browserbase",
-  "version": "2.4.1",
+  "version": "3.0.0",
+  "description": "AI web browser automation via the hosted Browserbase MCP server (Browserbase + Stagehand).",
   "mcpServers": {
     "mcp-server-browserbase": {
-      "command": "npx",
-      "args": ["@browserbasehq/mcp"]
+      "httpUrl": "https://mcp.browserbase.com/mcp"
     }
   }
 }

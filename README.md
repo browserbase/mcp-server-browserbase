@@ -12,7 +12,7 @@ It was originally published as a reference implementation and is retained for hi
 
 This server provides cloud browser automation capabilities using [Browserbase](https://www.browserbase.com/) and [Stagehand](https://github.com/browserbase/stagehand). It enables LLMs to interact with web pages, extract information, and perform automated actions.
 
-This is a self-hostable version of the [Browserbase hosted MCP server](https://mcp.browserbase.com/mcp) with the same tools and functionality. **We recommend using the hosted version for the easiest setup.**
+> **Use the hosted server.** This repository is the open-source **reference implementation**. The recommended, fully supported way to use the Browserbase MCP server is the hosted endpoint at **[`https://mcp.browserbase.com/mcp`](https://mcp.browserbase.com/mcp)** — we run it for you and cover the LLM costs. **Self-hosting is not officially supported.** The setup instructions below are provided for reference only.
 
 ## Tools
 
