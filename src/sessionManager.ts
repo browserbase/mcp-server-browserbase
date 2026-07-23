@@ -3,6 +3,7 @@ import type { Config } from "../config.d.ts";
 
 import type { BrowserSession, CreateSessionParams } from "./types/types.js";
 import { randomUUID } from "crypto";
+import { ConsoleTelemetry } from "./consoleTelemetry.js";
 
 /**
  * Create a configured Stagehand instance
@@ -189,7 +190,13 @@ export class SessionManager {
         page,
         sessionId: browserbaseSessionId,
         stagehand,
+        consoleTelemetry: new ConsoleTelemetry({
+          page,
+          sessionId: newSessionId,
+          browserbaseSessionId,
+        }),
       };
+      sessionObj.consoleTelemetry?.attach();
 
       this.browsers.set(newSessionId, sessionObj);
 
@@ -236,6 +243,7 @@ export class SessionManager {
       // Close Stagehand instance which handles browser cleanup
       if (session?.stagehand) {
         try {
+          session.consoleTelemetry?.detach();
           process.stderr.write(
             `[SessionManager] Closing Stagehand for session: ${sessionIdToLog}\n`,
           );

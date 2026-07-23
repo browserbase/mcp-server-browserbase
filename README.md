@@ -16,7 +16,7 @@ This is a self-hostable version of the [Browserbase hosted MCP server](https://m
 
 ## Tools
 
-This server exposes 6 tools that match the [hosted Browserbase MCP server](https://docs.browserbase.com/integrations/mcp/introduction):
+This server exposes browser automation tools that match the [hosted Browserbase MCP server](https://docs.browserbase.com/integrations/mcp/introduction), plus a self-hosted debug tool for console telemetry:
 
 | Tool       | Description                             | Input                      |
 | ---------- | --------------------------------------- | -------------------------- |
@@ -26,6 +26,21 @@ This server exposes 6 tools that match the [hosted Browserbase MCP server](https
 | `act`      | Perform an action on the page           | `{ action: string }`       |
 | `observe`  | Observe actionable elements on the page | `{ instruction: string }`  |
 | `extract`  | Extract data from the page              | `{ instruction?: string }` |
+| `console_logs` | Read recent console messages and page errors from the active browser session | `{ limit?: number, types?: string[], clear?: boolean }` |
+
+### Console telemetry
+
+Self-hosted sessions capture browser `console` messages and `pageerror` events in a bounded in-memory buffer. Use `console_logs` after `navigate`, `act`, or `extract` to inspect client-side failures that would otherwise be hidden from the MCP client.
+
+Examples:
+
+```json
+{ "limit": 20 }
+```
+
+```json
+{ "types": ["error", "warning"], "clear": true }
+```
 
 ## How to Setup
 
