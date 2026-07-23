@@ -5,6 +5,12 @@ import type { ToolActionResult } from "../types/types.js";
 
 const ActInputSchema = z.object({
   action: z.string().min(1),
+  sessionId: z
+    .string()
+    .optional()
+    .describe(
+      "The Browserbase session ID to act on. Defaults to the active session. Pass the sessionId returned by start to target a specific session.",
+    ),
 });
 
 type ActInput = z.infer<typeof ActInputSchema>;
@@ -21,7 +27,7 @@ async function handleAct(
 ): Promise<ToolResult> {
   const action = async (): Promise<ToolActionResult> => {
     try {
-      const stagehand = await context.getStagehand();
+      const stagehand = await context.getStagehand(params.sessionId);
 
       const result = await stagehand.act(params.action);
 

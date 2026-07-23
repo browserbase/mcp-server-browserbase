@@ -5,6 +5,12 @@ import type { ToolActionResult } from "../types/types.js";
 
 const ObserveInputSchema = z.object({
   instruction: z.string().min(1),
+  sessionId: z
+    .string()
+    .optional()
+    .describe(
+      "The Browserbase session ID to act on. Defaults to the active session. Pass the sessionId returned by start to target a specific session.",
+    ),
 });
 
 type ObserveInput = z.infer<typeof ObserveInputSchema>;
@@ -21,7 +27,7 @@ async function handleObserve(
 ): Promise<ToolResult> {
   const action = async (): Promise<ToolActionResult> => {
     try {
-      const stagehand = await context.getStagehand();
+      const stagehand = await context.getStagehand(params.sessionId);
 
       const observations = await stagehand.observe(params.instruction);
 
