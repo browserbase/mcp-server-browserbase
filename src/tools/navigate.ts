@@ -4,7 +4,7 @@ import type { Context } from "../context.js";
 import type { ToolActionResult } from "../types/types.js";
 
 const NavigateInputSchema = z.object({
-  url: z.string().min(1),
+  url: z.string().url(),
 });
 
 type NavigateInput = z.infer<typeof NavigateInputSchema>;
