@@ -53,10 +53,13 @@ async function handleStreamable(
       sessionIdGenerator: () => sessionId,
     });
     sessions.set(sessionId, transport);
+    const server = await serverList.create();
     transport.onclose = () => {
       if (transport.sessionId) sessions.delete(transport.sessionId);
+      void serverList.close(server).catch((error: unknown) => {
+        console.error("Error closing HTTP MCP session:", error);
+      });
     };
-    const server = await serverList.create();
     await server.connect(transport);
     return await transport.handleRequest(req, res);
   }

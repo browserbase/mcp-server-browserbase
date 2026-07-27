@@ -12,6 +12,7 @@ import type { Config } from "../config.d.ts";
 import { normalizeVerifiedConfig } from "./config.js";
 import { TOOLS } from "./tools/index.js";
 import { RESOURCE_TEMPLATES } from "./mcp/resources.js";
+import { registerServerCleanup } from "./server.js";
 
 import {
   ListResourcesRequestSchema,
@@ -145,6 +146,9 @@ export default function ({ config }: { config: z.infer<typeof configSchema> }) {
   // Create the context, passing server instance and config
   const contextId = randomUUID();
   const context = new Context(server.server, internalConfig, contextId);
+  registerServerCleanup(server.server, () =>
+    context.getSessionManager().closeAllSessions(),
+  );
 
   server.server.registerCapabilities({
     resources: {
